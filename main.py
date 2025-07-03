@@ -181,3 +181,12 @@ def register():
         
         return redirect(url_for('login')) # 登録後ログインページへ
     return render_template('register.html')
+
+if __name__ == '__main__':
+    # GitHubのUser-Agentポリシーに準拠するため、必要な環境変数が設定されているか確認
+    if not GITHUB_TOKEN or not GITHUB_OWNER or not GITHUB_REPO:
+        print("エラー: .env ファイルに GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO が設定されていません。")
+        print(".env ファイルを作成し、必要な情報を記述してください。")
+        exit(1)
+    
+    app.run(debug=True)
