@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ワールド設定 - マイクラプロジェクト</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>ワールド設定</h1>
+        <nav>
+            <ul>
+                <li><a href="/">ホーム</a></li>
+                <li><a href="/setting">設定</a></li>
+                <li><a href="/store">マーケットプレイス</a></li>
+                <li><a href="/menu">ゲームメニュー</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>既存ワールドの設定</h2>
+        {% if worlds %}
+            <form method="POST" action="/World-setting">
+                <label for="selected_world">ワールドを選択:</label><br>
+                <select id="selected_world" name="selected_world" required>
+                    {% for world in worlds %}
+                        <option value="{{ world.world_name }}">{{ world.world_name }}</option>
+                    {% endfor %}
+                </select><br><br>
+
+                <label>ゲームモード:</label><br>
+                <input type="radio" id="ws_survival" name="game_mode" value="survival">
+                <label for="ws_survival">サバイバル</label><br>
+                <input type="radio" id="ws_creative" name="game_mode" value="creative">
+                <label for="ws_creative">クリエイティブ</label><br>
+                <input type="radio" id="ws_adventure" name="game_mode" value="adventure">
+                <label for="ws_adventure">アドベンチャー</label><br>
+                <input type="radio" id="ws_spectator" name="game_mode" value="spectator">
+                <label for="ws_spectator">スペクテイター</label><br><br>
+
+                <input type="checkbox" id="ws_cheats_enabled" name="cheats_enabled">
+                <label for="ws_cheats_enabled">チートを許可</label><br><br>
+
+                <h3>リソースパック・ビヘイビアパック (未実装)</h3>
+                <p>※ここは後ほど選択肢を追加します。</p>
+                <br>
+                <button type="submit">設定を保存</button>
+            </form>
+        {% else %}
+            <p>まだワールドがありません。<a href="/New-World">新しいワールドを作成</a>してください。</p>
+        {% endif %}
+    </main>
+    <footer>
+        <p>&copy; 2025 マイクラプロジェクト</p>
+    </footer>
+</body>
+</html>
