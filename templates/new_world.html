@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新しいワールドを作成 - マイクラプロジェクト</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>新しいワールドを作成</h1>
+        <nav>
+            <ul>
+                <li><a href="/">ホーム</a></li>
+                <li><a href="/setting">設定</a></li>
+                <li><a href="/store">マーケットプレイス</a></li>
+                <li><a href="/menu">ゲームメニュー</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>ワールド作成</h2>
+        <form method="POST" action="/New-World">
+            <label for="world_name">ワールド名:</label><br>
+            <input type="text" id="world_name" name="world_name" required><br><br>
+
+            <label for="seed">シード値 (任意):</label><br>
+            <input type="text" id="seed" name="seed"><br><br>
+
+            <label>ゲームモード:</label><br>
+            <input type="radio" id="survival" name="game_mode" value="survival" checked>
+            <label for="survival">サバイバル</label><br>
+            <input type="radio" id="creative" name="game_mode" value="creative">
+            <label for="creative">クリエイティブ</label><br>
+            <input type="radio" id="adventure" name="game_mode" value="adventure">
+            <label for="adventure">アドベンチャー</label><br>
+            <input type="radio" id="spectator" name="game_mode" value="spectator">
+            <label for="spectator">スペクテイター</label><br><br>
+
+            <input type="checkbox" id="cheats_enabled" name="cheats_enabled">
+            <label for="cheats_enabled">チートを許可</label><br><br>
+
+            <h3>リソースパック・ビヘイビアパック (未実装)</h3>
+            <p>※ここは後ほど選択肢を追加します。</p>
+            <br>
+            <button type="submit">ワールド作成</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2025 マイクラプロジェクト</p>
+    </footer>
+</body>
+</html>
