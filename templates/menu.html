@@ -3,25 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>マーケットプレイス - マイクラプロジェクト</title>
+    <title>ゲームメニュー - マイクラプロジェクト</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <header>
-        <h1>マーケットプレイス</h1>
+        <h1>ゲームメニュー</h1>
         <nav>
             <ul>
                 <li><a href="/">ホーム</a></li>
                 <li><a href="/setting">設定</a></li>
                 <li><a href="/store">マーケットプレイス</a></li>
                 <li><a href="/menu">ゲームメニュー</a></li>
+                {% if session.username %}
+                    <li><a href="/logout">ログアウト ({{ session.username }})</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>
     <main>
-        <h2>マーケットプレイス (擬似)</h2>
-        <p>ここでは、mcpackなどのリソースを閲覧・ダウンロードできるような仕組みを想定しています。</p>
-        </main>
+        <h2>ゲーム選択</h2>
+        {% if session.username %}
+            <p>ようこそ、{{ session.username }}さん！</p>
+            <button onclick="location.href='/New-World'">新しいワールドを生成</button>
+            <button onclick="location.href='/World-setting'">ワールド設定</button>
+            
+            <h3>あなたのワールド</h3>
+            {% if worlds %}
+                <ul>
+                    {% for world in worlds %}
+                        <li>
+                            {{ world.world_name }} (モード: {{ world.game_mode }})
+                            <button onclick="alert('ワールド「{{ world.world_name }}」をプレイします！(まだゲームは起動しません)')">プレイ</button>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>まだワールドがありません。<a href="/New-World">新しいワールドを作成</a>してください。</p>
+            {% endif %}
+        {% else %}
+            <p>ゲームメニューにアクセスするには<a href="/login">ログイン</a>してください。</p>
+        {% endif %}
+    </main>
     <footer>
         <p>&copy; 2025 マイクラプロジェクト</p>
     </footer>
