@@ -5,3 +5,4 @@ panda3d
 Flask
 requests 
 python-dotenv
+noise
