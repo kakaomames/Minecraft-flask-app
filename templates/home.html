@@ -15,11 +15,15 @@
                 <li><a href="/setting">設定</a></li>
                 <li><a href="/store">マーケットプレイス</a></li>
                 <li><a href="/menu">ゲームメニュー</a></li>
+                <li><a href="/import">パックをインポート</a></li> <!-- 追加 -->
             </ul>
         </nav>
     </header>
     <main>
         <h2>ようこそ、マイクラプロジェクトへ！</h2>
+        {% if message %}
+            <p style="color: green; font-weight: bold;">{{ message }}</p> <!-- 追加: メッセージ表示 -->
+        {% endif %}
         <p>ここはホーム画面です。各メニューから移動してください。</p>
     </main>
     <footer>
