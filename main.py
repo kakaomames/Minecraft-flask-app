@@ -1,13 +1,28 @@
 # app.pyに追記
-
-from flask import request, redirect, url_for, session # sessionとrequestを追加
-import hashlib # パスワードハッシュ化用 (簡易版)
+from flask import Flask, render_template, request, redirect, url_for, session
+import hashlib
 import json
-import os # ファイル操作用
-import uuid # UUID生成用
+import os
+import uuid
+import requests
+from dotenv import load_dotenv # 追加
 
-# セッションを有効にするための設定（秘密鍵を設定）
-app.secret_key = os.urandom(24) # 本番環境では環境変数などから安全に取得すること
+# .envファイルをロード
+load_dotenv()
+
+app = Flask(__name__)
+app.secret_key = os.urandom(24) # セッションを有効にするための秘密鍵
+
+# --- GitHub API 設定 ---
+GITHUB_TOKEN = os.getenv('GITHUB_TOKEN') # 環境変数からPATを読み込む
+GITHUB_OWNER = os.getenv('GITHUB_OWNER') # .envから読み込む
+GITHUB_REPO = os.getenv('GITHUB_REPO')   # .envから読み込む
+
+GITHUB_API_BASE_URL = f'https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/contents'
+HEADERS = {
+    'Authorization': f'token {GITHUB_TOKEN}',
+    'Accept': 'application/vnd.github.v3+json',
+    'User-Agent': 'Flask-Minecraft-App'
 
 # 保存先のディレクトリを設定
 DATA_DIR = 'data'
