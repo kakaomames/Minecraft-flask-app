@@ -8,9 +8,9 @@ import base64
 from dotenv import load_dotenv
 import noise
 import random
-import zipfile # 追加: ZIPファイルの操作用
-import shutil # 追加: ディレクトリ削除用
-import tempfile # 追加: 一時ディレクトリ作成用
+import zipfile
+import shutil
+import tempfile
 
 # .envファイルをロード
 load_dotenv()
@@ -95,16 +95,16 @@ SUFFOCATION_DAMAGE_INTERVAL = 0.5
 suffocation_timer = 0.0
 
 # --- ブロック定義とテクスチャ ---
-# ブロックの識別子と、そのプロパティ、テクスチャURL、内部IDをマッピングする辞書
+# ブロックの識別子と、そのプロパティ、テクスチャキー、内部IDをマッピングする辞書
 # デフォルトのブロック定義 (パックで上書きされる可能性あり)
 BLOCK_DEFINITIONS = {
-    "minecraft:air": {"id": 0, "texture_url": None, "is_solid": False, "is_falling_block": False},
-    "minecraft:grass": {"id": 1, "texture_url": 'https://placehold.co/64x64/00FF00/FFFFFF?text=Grass', "is_solid": True, "is_falling_block": False},
-    "minecraft:dirt": {"id": 2, "texture_url": 'https://placehold.co/64x64/8B4513/FFFFFF?text=Dirt', "is_solid": True, "is_falling_block": False},
-    "minecraft:stone": {"id": 3, "texture_url": 'https://placehold.co/64x64/808080/FFFFFF?text=Stone', "is_solid": True, "is_falling_block": False},
-    "minecraft:sand": {"id": 4, "texture_url": 'https://placehold.co/64x64/FFFF00/000000?text=Sand', "is_solid": True, "is_falling_block": True},
-    "minecraft:gravel": {"id": 5, "texture_url": 'https://placehold.co/64x64/A9A9A9/FFFFFF?text=Gravel', "is_solid": True, "is_falling_block": True},
-    "minecraft:concrete_powder": {"id": 6, "texture_url": 'https://placehold.co/64x64/B0C4DE/000000?text=ConcretePowder', "is_solid": True, "is_falling_block": True},
+    "minecraft:air": {"id": 0, "texture_key": None, "is_solid": False, "is_falling_block": False},
+    "minecraft:grass": {"id": 1, "texture_key": "grass", "is_solid": True, "is_falling_block": False},
+    "minecraft:dirt": {"id": 2, "texture_key": "dirt", "is_solid": True, "is_falling_block": False},
+    "minecraft:stone": {"id": 3, "texture_key": "stone", "is_solid": True, "is_falling_block": False},
+    "minecraft:sand": {"id": 4, "texture_key": "sand", "is_solid": True, "is_falling_block": True},
+    "minecraft:gravel": {"id": 5, "texture_key": "gravel", "is_solid": True, "is_falling_block": True},
+    "minecraft:concrete_powder": {"id": 6, "texture_key": "concrete_powder", "is_solid": True, "is_falling_block": True},
 }
 
 # 識別子から内部IDへのマップ (動的に更新される)
@@ -118,36 +118,50 @@ FALLING_BLOCK_IDS = [
     if props.get("is_falling_block", False)
 ]
 
-# ロードされたテクスチャを保持する辞書
+# デフォルトのテクスチャURL (パックで上書きされない場合に使用)
+DEFAULT_TEXTURE_URLS = {
+    "grass": 'https://placehold.co/64x64/00FF00/FFFFFF?text=Grass',
+    "dirt": 'https://placehold.co/64x64/8B4513/FFFFFF?text=Dirt',
+    "stone": 'https://placehold.co/64x64/808080/FFFFFF?text=Stone',
+    "sand": 'https://placehold.co/64x64/FFFF00/000000?text=Sand',
+    "gravel": 'https://placehold.co/64x64/A9A9A9/FFFFFF?text=Gravel',
+    "concrete_powder": 'https://placehold.co/64x64/B0C4DE/000000?text=ConcretePowder',
+}
+
+# ロードされたテクスチャを保持する辞書 (texture_key: pyglet.image.Texture)
 textures = {}
 
-def load_texture(url):
-    """URLからテクスチャをロードする"""
-    if url in textures:
-        return textures[url]
-    
+def load_image_to_texture_cache(texture_key, image_source_path_or_url, is_url=True):
+    """
+    画像ソース（URLまたはファイルパス）からテクスチャをロードし、
+    textures辞書にtexture_keyでキャッシュする。
+    """
     try:
-        response = requests.get(url, stream=True)
-        response.raise_for_status()
-        from io import BytesIO
-        image_data = BytesIO(response.content)
+        if is_url:
+            response = requests.get(image_source_path_or_url, stream=True)
+            response.raise_for_status()
+            from io import BytesIO
+            image_data = BytesIO(response.content)
+            image = pyglet.image.load('', file=image_data)
+        else: # ローカルファイルパスの場合
+            image = pyglet.image.load(image_source_path_or_url)
         
-        image = pyglet.image.load('', file=image_data)
         texture = image.get_texture()
-        textures[url] = texture
-        print(f"Loaded texture from {url}")
+        textures[texture_key] = texture
+        print(f"Loaded texture '{texture_key}' from {image_source_path_or_url}")
         return texture
     except Exception as e:
-        print(f"Failed to load texture from {url}: {e}")
+        print(f"Failed to load texture '{texture_key}' from {image_source_path_or_url}: {e}")
+        # フォールバックとして赤いテクスチャを生成
         fallback_image = pyglet.image.create(64, 64, pyglet.image.SolidColorImagePattern((255, 0, 0, 255)))
         fallback_texture = fallback_image.get_texture()
-        textures[url] = fallback_texture
+        textures[texture_key] = fallback_texture
         return fallback_texture
 
-# 全てのブロックテクスチャを事前にロード (初期定義から)
-for identifier, props in BLOCK_DEFINITIONS.items():
-    if props["texture_url"]:
-        load_texture(props["texture_url"])
+# 全てのデフォルトブロックテクスチャを事前にロード
+def load_default_textures():
+    for texture_key, url in DEFAULT_TEXTURE_URLS.items():
+        load_image_to_texture_cache(texture_key, url, is_url=True)
 
 # ワールドデータ (辞書: キーは "(x,y,z)" 形式の文字列、値はブロックID)
 world_data = {}
@@ -165,7 +179,7 @@ PLAYER_POS_FILE_PATH = f'worlds/{current_player_uuid}/{current_world_name}-{curr
 def load_and_process_pack(pack_path):
     """
     .mcpackまたは.mcaddonファイルを読み込み、展開し、
-    その中のmanifest.jsonとblocks.jsonを処理する。
+    その中のmanifest.jsonとblocks.json、テクスチャを処理する。
     """
     print(f"Loading pack: {pack_path}")
     try:
@@ -185,7 +199,7 @@ def load_and_process_pack(pack_path):
                 manifest = json.load(f)
             
             pack_name = manifest['header']['name']
-            pack_type = manifest['modules'][0]['type'] # 最初のモジュールのタイプをチェック
+            pack_type = manifest['modules'][0]['type']
             print(f"Detected pack: {pack_name}, Type: {pack_type}")
 
             if pack_type == 'data': # ビヘイビアパック
@@ -194,43 +208,71 @@ def load_and_process_pack(pack_path):
                     with open(blocks_json_path, 'r', encoding='utf-8') as f:
                         block_properties_data = json.load(f)
                     
-                    # BLOCK_DEFINITIONSを更新
+                    global BLOCK_DEFINITIONS, BLOCK_IDENTIFIER_TO_ID, BLOCK_ID_TO_IDENTIFIER, FALLING_BLOCK_IDS
+                    
                     for block_def in block_properties_data.get('minecraft:block_properties', []):
                         identifier = block_def['identifier']
                         properties = block_def['properties']
                         
-                        # 既存のIDを保持するか、新しいIDを割り当てる
-                        if identifier in BLOCK_DEFINITIONS:
-                            current_id = BLOCK_DEFINITIONS[identifier]['id']
-                        else:
-                            # 新しいブロックIDを割り当てる (既存の最大ID+1)
+                        current_id = BLOCK_DEFINITIONS.get(identifier, {}).get("id")
+                        if current_id is None: # 新しいブロックの場合
                             current_id = max(BLOCK_IDENTIFIER_TO_ID.values()) + 1 if BLOCK_IDENTIFIER_TO_ID else 1
-                            print(f"Assigned new ID {current_id} to block {identifier}")
+                            print(f"Assigned new ID {current_id} to block {identifier} from behavior pack.")
 
+                        # 既存の定義を更新または新規追加
                         BLOCK_DEFINITIONS[identifier] = {
                             "id": current_id,
-                            "texture_url": BLOCK_DEFINITIONS.get(identifier, {}).get("texture_url"), # 既存のテクスチャURLを保持
-                            "is_solid": properties.get("is_solid", True), # デフォルトはソリッド
-                            "is_falling_block": properties.get("is_falling_block", False) # デフォルトは落下しない
+                            "texture_key": BLOCK_DEFINITIONS.get(identifier, {}).get("texture_key"), # 既存のテクスチャキーを保持
+                            "is_solid": properties.get("is_solid", True),
+                            "is_falling_block": properties.get("is_falling_block", False)
                         }
-                        # テクスチャURLがパック内で定義されていれば更新するロジックも追加可能
-                        # 例: if "texture" in properties: BLOCK_DEFINITIONS[identifier]["texture_url"] = "path/to/texture"
-
+                    
                     # マッピングを再構築
-                    global BLOCK_IDENTIFIER_TO_ID, BLOCK_ID_TO_IDENTIFIER, FALLING_BLOCK_IDS
                     BLOCK_IDENTIFIER_TO_ID = {identifier: props["id"] for identifier, props in BLOCK_DEFINITIONS.items()}
                     BLOCK_ID_TO_IDENTIFIER = {props["id"]: identifier for identifier, props in BLOCK_DEFINITIONS.items()}
                     FALLING_BLOCK_IDS = [
                         props["id"] for identifier, props in BLOCK_DEFINITIONS.items() 
                         if props.get("is_falling_block", False)
                     ]
-                    print(f"Updated block definitions from {pack_path}")
+                    print(f"Updated block definitions from behavior pack {pack_path}")
                 else:
                     print(f"blocks.json not found in behavior pack {pack_path}. Skipping block properties.")
+            
             elif pack_type == 'resources': # リソースパック (テクスチャなど)
-                print(f"Resource pack {pack_name} detected. Texture loading logic would go here.")
-                # ここでリソースパック内のテクスチャを読み込むロジックを実装
-                # 例: textures/blocks/grass.png などを読み込み、BLOCK_DEFINITIONSのtexture_urlを更新
+                print(f"Resource pack {pack_name} detected. Loading textures.")
+                # textures/blocks/ ディレクトリ内のPNGファイルを検索
+                resource_textures_path = os.path.join(tmpdir, 'textures', 'blocks')
+                if os.path.exists(resource_textures_path):
+                    for root, _, files in os.walk(resource_textures_path):
+                        for file in files:
+                            if file.endswith('.png'):
+                                texture_filename = os.path.splitext(file)[0] # 拡張子なしのファイル名 (例: "grass", "my_new_block")
+                                texture_full_path = os.path.join(root, file)
+                                
+                                # テクスチャをロードしてキャッシュ
+                                load_image_to_texture_cache(texture_filename, texture_full_path, is_url=False)
+
+                                # もし新しいブロックであれば、BLOCK_DEFINITIONSに追加
+                                identifier = f"minecraft:{texture_filename}" # 簡易的な識別子
+                                if identifier not in BLOCK_DEFINITIONS:
+                                    global BLOCK_DEFINITIONS, BLOCK_IDENTIFIER_TO_ID, BLOCK_ID_TO_IDENTIFIER
+                                    new_id = max(BLOCK_IDENTIFIER_TO_ID.values()) + 1 if BLOCK_IDENTIFIER_TO_ID else 1
+                                    BLOCK_DEFINITIONS[identifier] = {
+                                        "id": new_id,
+                                        "texture_key": texture_filename,
+                                        "is_solid": True, # デフォルトはソリッド
+                                        "is_falling_block": False # デフォルトは落下しない
+                                    }
+                                    # マッピングを更新
+                                    BLOCK_IDENTIFIER_TO_ID[identifier] = new_id
+                                    BLOCK_ID_TO_IDENTIFIER[new_id] = identifier
+                                    print(f"Added new block '{identifier}' from resource pack with ID {new_id}.")
+                                else:
+                                    # 既存のブロックであれば、テクスチャキーを更新（テクスチャが上書きされたことを示す）
+                                    BLOCK_DEFINITIONS[identifier]["texture_key"] = texture_filename
+                                    print(f"Updated texture for existing block '{identifier}' from resource pack.")
+                else:
+                    print(f"No 'textures/blocks' directory found in resource pack {pack_path}.")
             
     except zipfile.BadZipFile:
         print(f"Error: {pack_path} is not a valid ZIP file.")
@@ -335,7 +377,7 @@ def generate_noise_terrain(seed):
 # --- ブロックの描画関数 (テクスチャ対応) ---
 def draw_block(x, y, z, block_id):
     """指定された位置に、指定されたブロックIDのブロックを描画する（テクスチャ付き）"""
-    if block_id == 0: # 空気ブロックは描画しない
+    if block_id == BLOCK_IDENTIFIER_TO_ID["minecraft:air"]: # 空気ブロックは描画しない
         return
 
     identifier = BLOCK_ID_TO_IDENTIFIER.get(block_id)
@@ -344,13 +386,13 @@ def draw_block(x, y, z, block_id):
         return
 
     block_props = BLOCK_DEFINITIONS.get(identifier)
-    if not block_props or not block_props.get("texture_url"):
-        # print(f"Warning: No texture URL defined for block {identifier}. Skipping draw.") # 頻繁に出るのでコメントアウト
+    if not block_props or not block_props.get("texture_key"):
+        # print(f"Warning: No texture key defined for block {identifier}. Skipping draw.") # 頻繁に出るのでコメントアウト
         return
 
-    texture = textures.get(block_props["texture_url"])
+    texture = textures.get(block_props["texture_key"])
     if not texture:
-        # print(f"Warning: Texture not loaded for block {identifier} (URL: {block_props['texture_url']}). Skipping draw.") # 頻繁に出るのでコメントアウト
+        # print(f"Warning: Texture not loaded for block {identifier} (Key: {block_props['texture_key']}). Skipping draw.") # 頻繁に出るのでコメントアウト
         return
 
     glBindTexture(texture.target, texture.id)
@@ -454,7 +496,7 @@ def get_looked_at_block_and_face():
         current_block_pos = (block_x, block_y, block_z)
         pos_key = f"{block_x},{block_y},{block_z}"
         
-        if world_data.get(pos_key, 0) != 0: # 空気でなければブロックがある
+        if get_block_at_coords(block_x, block_y, block_z) != BLOCK_IDENTIFIER_TO_ID["minecraft:air"]: # 空気でなければブロックがある
             if last_block_pos:
                 face_normal = (
                     block_x - last_block_pos[0],
@@ -488,10 +530,10 @@ def on_mouse_press(x, y, button, modifiers):
     if block_pos:
         if button == pyglet.window.mouse.LEFT: # 左クリックで破壊
             pos_key = f"{block_pos[0]},{block_pos[1]},{block_pos[2]}"
-            if world_data.get(pos_key, 0) != 0: # 空気でなければ削除
-                world_data[pos_key] = BLOCK_IDENTIFIER_TO_ID["minecraft:air"] # ブロックを空気に設定
+            if world_data.get(pos_key, BLOCK_IDENTIFIER_TO_ID["minecraft:air"]) != BLOCK_IDENTIFIER_TO_ID["minecraft:air"]:
+                world_data[pos_key] = BLOCK_IDENTIFIER_TO_ID["minecraft:air"]
                 print(f"Broke block at {block_pos}")
-                save_world_blocks() # ワールドデータ保存
+                save_world_blocks()
         elif button == pyglet.window.mouse.RIGHT and face_normal: # 右クリックで設置
             place_x = block_pos[0] + int(round(face_normal[0]))
             place_y = block_pos[1] + int(round(face_normal[1]))
@@ -519,10 +561,15 @@ def on_mouse_press(x, y, button, modifiers):
             
             if not is_overlapping_player:
                 pos_key = f"{place_x},{place_y},{place_z}"
-                # ここで設置するブロックのIDを動的に選択できるようにする（今は草ブロック）
-                world_data[pos_key] = BLOCK_IDENTIFIER_TO_ID["minecraft:grass"] # 仮に草ブロックを設置
-                print(f"Placed block at {place_x},{place_y},{place_z}")
-                save_world_blocks() # ワールドデータ保存
+                # ここで新しいブロックを設置できるようにテスト
+                # 例: "minecraft:my_new_block" がパックから追加された場合
+                if "minecraft:my_new_block" in BLOCK_IDENTIFIER_TO_ID:
+                    world_data[pos_key] = BLOCK_IDENTIFIER_TO_ID["minecraft:my_new_block"]
+                    print(f"Placed new block at {place_x},{place_y},{place_z}")
+                else:
+                    world_data[pos_key] = BLOCK_IDENTIFIER_TO_ID["minecraft:grass"]
+                    print(f"Placed grass block at {place_x},{place_y},{place_z}")
+                save_world_blocks()
             else:
                 print("Cannot place block inside player.")
 
@@ -536,7 +583,7 @@ def is_solid(block_id):
     identifier = BLOCK_ID_TO_IDENTIFIER.get(block_id)
     if identifier and identifier in BLOCK_DEFINITIONS:
         return BLOCK_DEFINITIONS[identifier].get('is_solid', False)
-    return False # 未知のブロックはソリッドではないとみなす
+    return False
 
 def is_falling_block(block_id):
     """ブロックIDが落下ブロックかどうかを判定する"""
@@ -781,12 +828,11 @@ def update(dt):
     handle_suffocation(dt)
 
     # 落下ブロックの処理 (簡易版: 毎フレーム全ブロックをチェック)
-    # 大規模ワールドではチャンクベースで処理する必要がある
     blocks_to_update = []
     for pos_str, block_id in list(world_data.items()): # 辞書をイテレート中に変更するためコピー
         if is_falling_block(block_id):
             x, y, z = map(int, pos_str.split(','))
-            # 落下ブロックの真下に空気ブロックがあるか、または落下ブロック自体が空気ブロックの上にあるか
+            # 落下ブロックの真下に空気ブロックがあるか
             if get_block_at_coords(x, y - 1, z) == BLOCK_IDENTIFIER_TO_ID["minecraft:air"]:
                 blocks_to_update.append((x, y, z, block_id))
     
@@ -798,7 +844,7 @@ def update(dt):
         print(f"Falling block {BLOCK_ID_TO_IDENTIFIER.get(block_id)} moved from ({x},{y},{z}) to ({x},{y-1},{z})")
     
     if blocks_to_update:
-        save_world_blocks() # 落下ブロックが動いたらワールドデータを保存
+        save_world_blocks()
 
     # プレイヤー位置の保存（例：5秒に1回）
     if update.counter % (5 * 60) == 0:
@@ -813,6 +859,9 @@ window.set_mouse_visible(False)
 window.set_exclusive_mouse(True)
 
 # --- ゲーム開始時のパック読み込み ---
+# デフォルトテクスチャを最初にロード
+load_default_textures()
+
 PACKS_DIR = 'packs'
 if os.path.exists(PACKS_DIR):
     for filename in os.listdir(PACKS_DIR):
