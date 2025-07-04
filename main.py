@@ -6,6 +6,7 @@ import os
 import uuid
 import requests
 from dotenv import load_dotenv # 追加
+import base64
 
 # .envファイルをロード
 load_dotenv()
