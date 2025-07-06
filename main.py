@@ -21,7 +21,9 @@ GITHUB_REPO = os.getenv('GITHUB_REPO')   # .envから読み込む
 
 GITHUB_API_BASE_URL = f'https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/contents'
 HEADERS = {
-    'Authorization': f'token {GITHUB_TOKEN}','Accept': 'application/vnd.github.v3+json','User-Agent': 'Flask-Minecraft-App'}
+    'Authorization': f'token {GITHUB_TOKEN}',
+    'Accept': 'application/vnd.github.v3+json',
+    'User-Agent': 'Flask-Minecraft-App'}
 
 # 保存先のディレクトリを設定
 DATA_DIR = 'data'
