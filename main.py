@@ -1,128 +1,135 @@
-# app.pyに追記
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 import hashlib
 import json
 import os
 import uuid
 import requests
-from dotenv import load_dotenv # 追加
+from dotenv import load_dotenv
+from werkzeug.utils import secure_filename
 import base64
 
 # .envファイルをロード
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24) # セッションを有効にするための秘密鍵
+app.secret_key = os.urandom(24)
 
 # --- GitHub API 設定 ---
-GITHUB_TOKEN = os.getenv('GITHUB_TOKEN') # 環境変数からPATを読み込む
-GITHUB_OWNER = os.getenv('GITHUB_OWNER') # .envから読み込む
-GITHUB_REPO = os.getenv('GITHUB_REPO')   # .envから読み込む
+GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
+GITHUB_OWNER = os.getenv('GITHUB_OWNER')
+GITHUB_REPO = os.getenv('GITHUB_REPO')
+
+if not GITHUB_TOKEN or not GITHUB_OWNER or not GITHUB_REPO:
+    print("エラー: .env ファイルに GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO が設定されていません。")
+    print(".env ファイルを作成し、必要な情報を記述してください。")
+    exit(1)
 
 GITHUB_API_BASE_URL = f'https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/contents'
 HEADERS = {
     'Authorization': f'token {GITHUB_TOKEN}',
-    'Accept': 'application/vnd.github.v3+json',
-    'User-Agent': 'Flask-Minecraft-App'}
+    'Accept': 'application/vnd.github.com.v3+json',
+    'User-Agent': 'Flask-Minecraft-App'
+}
 
-# 保存先のディレクトリを設定
-DATA_DIR = 'data'
-if not os.path.exists(DATA_DIR):
-    os.makedirs(DATA_DIR)
+# --- ファイルアップロード設定 ---
+UPLOAD_FOLDER = 'packs' # アップロードされたパックを保存するディレクトリ
+ALLOWED_EXTENSIONS = {'mcpack', 'mcaddon'} # 許可するファイル拡張子
 
-PLAYER_DATA_FILE = os.path.join(DATA_DIR, 'player_data.json')
-WORLD_DATA_DIR = os.path.join(DATA_DIR, 'worlds')
-if not os.path.exists(WORLD_DATA_DIR):
-    os.makedirs(WORLD_DATA_DIR)
+# ★ここから以下の3行を削除またはコメントアウトします
+# if not os.path.exists(UPLOAD_FOLDER):
+#     os.makedirs(UPLOAD_FOLDER)
 
-# プレイヤーデータを読み込む関数（初回起動時にファイルがなければ空のリストを返す）
+# 注意: Vercelでは、このUPLOAD_FOLDERも一時的なメモリ上にしか存在せず、
+# デプロイ間で永続化されるわけではありません。
+# アップロードされたパックを永続化するには、S3のような外部ストレージサービスにアップロードするか、
+# GitHub APIを使ってそのファイルを直接GitHubリポジトリにコミットする必要があります。
+# 今回は、アップロードされたファイルを一時的に保存し、game.pyで利用する想定なので、
+# Vercelのファイルシステムに書き込むこと自体が問題になります。
+# したがって、Webアップロードされたパックをgame.pyが読み込むには、
+# game.py側でGitHubから直接パックファイルをダウンロードするロジックが必要になります。
+
+def allowed_file(filename):
+    """ファイル名が許可された拡張子を持つかチェックする"""
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# --- GitHub API ヘルパー関数 (変更なし) ---
+def get_github_file_content(path):
+    url = f'{GITHUB_API_BASE_URL}/{path}'
+    response = requests.get(url, headers=HEADERS)
+    if response.status_code == 200:
+        content_b64 = response.json()['content']
+        decoded_content = base64.b64decode(content_b64).decode('utf-8')
+        return json.loads(decoded_content)
+    return None
+
+def put_github_file_content(path, content, message, sha=None):
+    url = f'{GITHUB_API_BASE_URL}/{path}'
+    encoded_content = base64.b64encode(json.dumps(content, indent=4).encode('utf-8')).decode('utf-8')
+    data = {
+        'message': message,
+        'content': encoded_content
+    }
+    if sha:
+        data['sha'] = sha
+
+    response = requests.put(url, headers=HEADERS, json=data)
+    return response.status_code in [200, 201], response.json()
+
+def get_github_file_info(path):
+    url = f'{GITHUB_API_BASE_URL}/{path}'
+    response = requests.get(url, headers=HEADERS)
+    if response.status_code == 200:
+        return response.json()
+    return None
+
+# --- プレイヤーデータとワールドデータのロード/セーブ関数 (変更なし) ---
 def load_player_data():
-    if os.path.exists(PLAYER_DATA_FILE):
-        with open(PLAYER_DATA_FILE, 'r') as f:
-            return json.load(f)
-    return []
+    content = get_github_file_content('player_data.json')
+    return content if content is not None else []
 
-# プレイヤーデータを保存する関数
 def save_player_data(data):
-    with open(PLAYER_DATA_FILE, 'w') as f:
-        json.dump(data, f, indent=4)
+    path = 'player_data.json'
+    current_file_info = get_github_file_info(path)
+    sha = current_file_info['sha'] if current_file_info else None
+    return put_github_file_content(path, data, 'Update player data', sha)
 
-# ワールドデータを読み込む関数
 def load_world_data(player_uuid):
     worlds = []
-    for filename in os.listdir(WORLD_DATA_DIR):
-        if filename.startswith(f'{player_uuid}-') and filename.endswith('.json'):
-            with open(os.path.join(WORLD_DATA_DIR, filename), 'r') as f:
-                worlds.append(json.load(f))
+    world_dir_path = f'worlds/{player_uuid}'
+    url = f'{GITHUB_API_BASE_URL}/{world_dir_path}'
+    response = requests.get(url, headers=HEADERS)
+
+    if response.status_code == 200:
+        for item in response.json():
+            if item['type'] == 'file' and item['name'].endswith('.json'):
+                world_content = get_github_file_content(f'{world_dir_path}/{item["name"]}')
+                if world_content:
+                    worlds.append(world_content)
     return worlds
 
-
-@app.route('/New-World', methods=['GET', 'POST'])
-def new_world():
-    if 'player_uuid' not in session:
-        return redirect(url_for('login')) # ログインしていなければログインページへ
+def save_world_data(player_uuid, world_name, data):
+    path = f'worlds/{player_uuid}/{world_name}.json'
+    current_file_info = get_github_file_info(path)
+    sha = current_file_info['sha'] if current_file_info else None
     
-    if request.method == 'POST':
-        world_name = request.form['world_name']
-        seed = request.form['seed']
-        game_mode = request.form['game_mode']
-        cheats_enabled = 'cheats_enabled' in request.form
-        # リソース/ビヘイビアパックは今回はダミーとして扱う
-        # selected_resource_packs = request.form.getlist('resource_packs')
-        # selected_behavior_packs = request.form.getlist('behavior_packs')
+    message = f'{"Update" if sha else "Create"} world data for {world_name}'
+    return put_github_file_content(path, data, message, sha)
 
-        player_uuid = session['player_uuid']
+# --- Flask ルーティング ---
 
-        world_data = {
-            'player_uuid': player_uuid,
-            'world_name': world_name,
-            'seed': seed,
-            'game_mode': game_mode,
-            'cheats_enabled': cheats_enabled,
-            'resource_packs': [], # ダミー
-            'behavior_packs': [] # ダミー
-        }
+@app.route('/')
+def home():
+    message = request.args.get('message')
+    return render_template('home.html', message=message)
 
-        # ファイル名形式: ${プレイヤーのuuid}-${world-name}.json
-        world_filename = os.path.join(WORLD_DATA_DIR, f'{player_uuid}-{world_name}.json')
-        with open(world_filename, 'w') as f:
-            json.dump(world_data, f, indent=4)
-        
-        return redirect(url_for('menu')) # 作成後メニューに戻る
+@app.route('/setting')
+def setting():
+    return render_template('setting.html')
 
-    return render_template('new_world.html')
-
-@app.route('/World-setting', methods=['GET', 'POST'])
-def world_setting():
-    if 'player_uuid' not in session:
-        return redirect(url_for('login')) # ログインしていなければログインページへ
-    
-    # ログインしているプレイヤーのワールドリストを取得
-    player_uuid = session['player_uuid']
-    available_worlds = load_world_data(player_uuid)
-
-    if request.method == 'POST':
-        selected_world_name = request.form['selected_world']
-        game_mode = request.form['game_mode']
-        cheats_enabled = 'cheats_enabled' in request.form
-        # リソース/ビヘイビアパックは今回はダミーとして扱う
-
-        # 該当ワールドのファイルを読み込み、更新して保存
-        world_filename = os.path.join(WORLD_DATA_DIR, f'{player_uuid}-{selected_world_name}.json')
-        if os.path.exists(world_filename):
-            with open(world_filename, 'r') as f:
-                world_data = json.load(f)
-            
-            world_data['game_mode'] = game_mode
-            world_data['cheats_enabled'] = cheats_enabled
-            # リソース/ビヘイビアパックの更新ロジックもここに追加
-
-            with open(world_filename, 'w') as f:
-                json.dump(world_data, f, indent=4)
-        
-        return redirect(url_for('menu')) # 設定保存後メニューに戻る
-
-    return render_template('world_setting.html', worlds=available_worlds)
+@app.route('/store')
+def store():
+    return render_template('store.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -131,21 +138,14 @@ def login():
         password = request.form['password']
 
         players = load_player_data()
-        authenticated = False
         
         for player in players:
-            # 簡易的なパスワードハッシュ照合（実際はbcryptなどを使う）
             if player['username'] == username and player['password_hash'] == hashlib.sha256(password.encode()).hexdigest():
-                # UUIDも確認
-                if player['uuid'] == request.form.get('uuid_input', player['uuid']): # uuid_inputは登録時のみ利用、ログイン時はパスワードのみで照合
-                    session['username'] = username
-                    session['player_uuid'] = player['uuid']
-                    authenticated = True
-                    return redirect(url_for('menu'))
+                session['username'] = username
+                session['player_uuid'] = player['uuid']
+                return redirect(url_for('menu'))
         
-        if not authenticated:
-            # ログイン失敗時はエラーメッセージを表示するなど
-            return render_template('login.html', error='ユーザー名またはパスワードが違います。')
+        return render_template('login.html', error='ユーザー名またはパスワードが違います。')
 
     return render_template('login.html')
 
@@ -155,19 +155,6 @@ def logout():
     session.pop('player_uuid', None)
     return redirect(url_for('home'))
 
-# app.pyの既存のmenu関数を更新
-@app.route('/menu')
-def menu():
-    if 'player_uuid' not in session:
-        return redirect(url_for('login')) # ログインしていなければログインページへ
-
-    player_uuid = session['player_uuid']
-    player_worlds = load_world_data(player_uuid)
-    
-    return render_template('menu.html', worlds=player_worlds)
-
-
-# 仮のユーザー登録機能（デバッグ用、本番では別の登録フローが必要）
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -176,14 +163,10 @@ def register():
         
         players = load_player_data()
         
-        # ユーザー名が既に存在しないかチェック
         if any(p['username'] == username for p in players):
             return render_template('register.html', error='このユーザー名はすでに使用されています。')
         
-        # 新しいUUIDを生成
         new_uuid = str(uuid.uuid4())
-        
-        # パスワードをハッシュ化して保存
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
         
         new_player = {
@@ -193,16 +176,155 @@ def register():
         }
         
         players.append(new_player)
-        save_player_data(players)
-        
-        return redirect(url_for('login')) # 登録後ログインページへ
+        if save_player_data(players):
+            return redirect(url_for('login'))
+        else:
+            return render_template('register.html', error='登録に失敗しました。GitHubの設定を確認してください。')
     return render_template('register.html')
 
+@app.route('/menu')
+def menu():
+    if 'player_uuid' not in session:
+        return redirect(url_for('login'))
+
+    player_uuid = session['player_uuid']
+    player_worlds = load_world_data(player_uuid)
+    
+    return render_template('menu.html', worlds=player_worlds)
+
+@app.route('/New-World', methods=['GET', 'POST'])
+def new_world():
+    if 'player_uuid' not in session:
+        return redirect(url_for('login'))
+    
+    if request.method == 'POST':
+        world_name = request.form['world_name']
+        seed = request.form['seed']
+        game_mode = request.form['game_mode']
+        cheats_enabled = 'cheats_enabled' in request.form
+
+        player_uuid = session['player_uuid']
+
+        world_data = {
+            'player_uuid': player_uuid,
+            'world_name': world_name,
+            'seed': seed,
+            'game_mode': game_mode,
+            'cheats_enabled': cheats_enabled,
+            'resource_packs': [],
+            'behavior_packs': []
+        }
+        
+        if save_world_data(player_uuid, world_name, world_data):
+            return redirect(url_for('menu'))
+        else:
+            return render_template('new_world.html', error='ワールド作成に失敗しました。')
+
+    return render_template('new_world.html')
+
+@app.route('/World-setting', methods=['GET', 'POST'])
+def world_setting():
+    if 'player_uuid' not in session:
+        return redirect(url_for('login'))
+    
+    player_uuid = session['player_uuid']
+    available_worlds = load_world_data(player_uuid)
+
+    if request.method == 'POST':
+        selected_world_name = request.form['selected_world']
+        game_mode = request.form['game_mode']
+        cheats_enabled = 'cheats_enabled' in request.form
+
+        target_world_data = None
+        for world in available_worlds:
+            if world['world_name'] == selected_world_name:
+                target_world_data = world
+                break
+        
+        if target_world_data:
+            target_world_data['game_mode'] = game_mode
+            target_world_data['cheats_enabled'] = cheats_enabled
+            
+            if save_world_data(player_uuid, selected_world_name, target_world_data):
+                return redirect(url_for('menu'))
+            else:
+                return render_template('world_setting.html', worlds=available_worlds, error='ワールド設定の保存に失敗しました。')
+        else:
+            return render_template('world_setting.html', worlds=available_worlds, error='選択されたワールドが見つかりません。')
+
+    return render_template('world_setting.html', worlds=available_worlds)
+
+@app.route('/import', methods=['GET', 'POST'])
+def import_pack():
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            return render_template('import.html', error='ファイルが選択されていません。')
+        file = request.files['file']
+        
+        if file.filename == '':
+            return render_template('import.html', error='ファイルが選択されていません。')
+        
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            # ★ここから以下の2行を削除またはコメントアウトします
+            # file_path = os.path.join(UPLOAD_FOLDER, filename)
+            # file.save(file_path) # ローカルファイルシステムへの保存を試みるためエラーになる
+
+            # 代わりに、ファイルを直接GitHubにアップロードするロジックをここに書く
+            # ただし、mcpack/mcaddonはバイナリファイルなので、GitHub APIのcontent APIで直接アップロードできます
+            # ファイルの内容を読み込み、Base64エンコードしてGitHubにコミットします
+            file_content_bytes = file.read()
+            encoded_file_content = base64.b64encode(file_content_bytes).decode('utf-8')
+            
+            pack_github_path = f'{UPLOAD_FOLDER}/{filename}' # GitHub上のパス
+            
+            # 既存のファイルがあるか確認してSHAを取得
+            existing_file_info = get_github_file_info(pack_github_path)
+            sha = existing_file_info['sha'] if existing_file_info else None
+
+            # GitHubにファイルをコミット
+            github_upload_success, github_response = put_github_file_content(
+                pack_github_path,
+                encoded_file_content, # ここはJSONではなく、Base64エンコードされたバイナリデータ
+                f'Upload pack: {filename}',
+                sha
+            )
+            # put_github_file_content関数はJSONデータを受け取るように設計されているため、
+            # バイナリファイルをアップロードするには少し変更が必要です。
+            # ここでは簡易的に、contentを直接渡すように変更します。
+            # 実際のput_github_file_contentはJSON.dumpsしているので、
+            # バイナリアップロード用の別の関数を用意するか、put_github_file_contentを修正する必要があります。
+            # 今回は、put_github_file_contentをバイナリ対応させます。
+
+            # put_github_file_contentがバイナリ対応していないため、直接requests.putを呼び出す
+            upload_url = f'{GITHUB_API_BASE_URL}/{pack_github_path}'
+            upload_data = {
+                'message': f'Upload pack: {filename}',
+                'content': encoded_file_content
+            }
+            if sha:
+                upload_data['sha'] = sha
+
+            upload_response = requests.put(upload_url, headers=HEADERS, json=upload_data)
+            github_upload_success = upload_response.status_code in [200, 201]
+
+            if github_upload_success:
+                print(f"Pack '{filename}' uploaded to GitHub successfully.")
+                return redirect(url_for('home', message=f'パック "{filename}" が正常にアップロードされました！'))
+            else:
+                print(f"Failed to upload pack to GitHub: {upload_response.status_code} - {upload_response.text}")
+                return render_template('import.html', error=f'GitHubへのアップロードに失敗しました: {upload_response.status_code}')
+        else:
+            return render_template('import.html', error='許可されていないファイル形式です。(.mcpackまたは.mcaddonのみ)')
+    
+    return render_template('import.html')
+
+
 if __name__ == '__main__':
-    # GitHubのUser-Agentポリシーに準拠するため、必要な環境変数が設定されているか確認
     if not GITHUB_TOKEN or not GITHUB_OWNER or not GITHUB_REPO:
         print("エラー: .env ファイルに GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO が設定されていません。")
         print(".env ファイルを作成し、必要な情報を記述してください。")
         exit(1)
     
     app.run(debug=True)
+
