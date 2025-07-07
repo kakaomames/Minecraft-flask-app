@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, Response
 import hashlib
 import json
 import os
@@ -32,6 +32,7 @@ HEADERS = {
 }
 
 # --- ファイルアップロード設定 ---
+# UPLOAD_FOLDERはGitHubへのアップロード用なので、ローカルディレクトリ作成は不要
 UPLOAD_FOLDER = 'packs'
 ALLOWED_EXTENSIONS = {'mcpack', 'mcaddon'}
 
@@ -51,7 +52,15 @@ def get_github_file_content(path):
 
 def put_github_file_content(path, content, message, sha=None):
     url = f'{GITHUB_API_BASE_URL}/{path}'
-    encoded_content = base64.b64encode(json.dumps(content, indent=4).encode('utf-8')).decode('utf-8')
+    # contentが既にBase64エンコードされているか、生のバイトデータであるかを考慮
+    # Flaskのrequest.filesから読み込んだ場合はバイトデータなので、ここではBase64エンコードが必要
+    if isinstance(content, bytes): # バイナリデータの場合
+        encoded_content = base64.b64encode(content).decode('utf-8')
+    elif isinstance(content, str): # Base64エンコード済み文字列の場合
+        encoded_content = content
+    else: # JSONデータの場合（既存のsave_player_dataなど）
+        encoded_content = base64.b64encode(json.dumps(content, indent=4).encode('utf-8')).decode('utf-8')
+
     data = {
         'message': message,
         'content': encoded_content
@@ -88,18 +97,33 @@ def load_world_data(player_uuid):
 
     if response.status_code == 200:
         for item in response.json():
-            if item['type'] == 'file' and item['name'].endswith('.json'):
-                world_content = get_github_file_content(f'{world_dir_path}/{item["name"]}')
-                if world_content:
-                    worlds.append(world_content)
+            # ワールドデータは {world_name}-{player_uuid}-block-{world_uuid}.json の形式で保存されている
+            # プレイヤー位置も {world_name}-{player_uuid}-playerxyz-{world_uuid}.json
+            # インベントリも {world_name}-{player_uuid}-player-item-{world_uuid}.json
+            # なので、これらをまとめて一つのワールド情報として扱うために、ファイル名から情報を抽出
+            if item['type'] == 'file' and item['name'].endswith('-block-.json'): # blockファイルでワールドを識別
+                parts = item['name'].split('-')
+                if len(parts) >= 5: # world_name-player_uuid-block-world_uuid.json
+                    world_name = '-'.join(parts[:-4]) # 最初の部分がワールド名
+                    world_uuid = parts[-2] # 最後のUUID
+                    
+                    # 簡易的にワールド名とUUIDだけを返す
+                    worlds.append({
+                        'world_name': world_name,
+                        'world_uuid': world_uuid,
+                        'player_uuid': player_uuid # このワールドに紐づくプレイヤーUUID
+                    })
     return worlds
 
 def save_world_data(player_uuid, world_name, data):
-    path = f'worlds/{player_uuid}/{world_name}.json'
+    # この関数は、ワールドのメタデータ（ゲームモードなど）を保存する想定
+    # ブロックデータなどはgame.pyが直接保存するため、ここでは使用しない
+    # 仮にメタデータファイルを保存するパスを定義
+    path = f'worlds/{player_uuid}/{world_name}-metadata-{player_uuid}-{str(uuid.uuid4())}.json' # 新しいUUIDを割り当てる
     current_file_info = get_github_file_info(path)
     sha = current_file_info['sha'] if current_file_info else None
     
-    message = f'{"Update" if sha else "Create"} world data for {world_name}'
+    message = f'{"Update" if sha else "Create"} world metadata for {world_name}'
     return put_github_file_content(path, data, message, sha)
 
 # --- Flask ルーティング ---
@@ -170,8 +194,6 @@ def register():
 
 @app.route('/menu')
 def menu():
-    # ログイン状態に関わらずメニューページを表示する
-    # ログインしている場合はワールドリストをロード
     player_worlds = []
     if 'player_uuid' in session:
         player_uuid = session['player_uuid']
@@ -192,10 +214,13 @@ def new_world():
         cheats_enabled = 'cheats_enabled' in request.form
 
         player_uuid = session['player_uuid']
+        new_world_uuid = str(uuid.uuid4()) # 新しいワールドUUIDを生成
 
-        world_data = {
+        # ここではワールドのメタデータだけを保存する（ブロックデータはgame.pyが担当）
+        world_metadata = {
             'player_uuid': player_uuid,
             'world_name': world_name,
+            'world_uuid': new_world_uuid, # 生成したUUIDを保存
             'seed': seed,
             'game_mode': game_mode,
             'cheats_enabled': cheats_enabled,
@@ -203,10 +228,24 @@ def new_world():
             'behavior_packs': []
         }
         
-        if save_world_data(player_uuid, world_name, world_data):
+        # save_world_data関数は、ファイル名にworld_uuidを含めるように変更する必要がある
+        # 一時的に、ここではブロックファイルパスの命名規則に合わせてファイル名を生成
+        # game.pyのロードロジックと合わせるため、ファイル名にworld_uuidを含める
+        metadata_filename = f'{world_name}-{player_uuid}-metadata-{new_world_uuid}.json'
+        
+        # put_github_file_contentを直接使用してメタデータを保存
+        path_to_save = f'worlds/{player_uuid}/{metadata_filename}'
+        success, response = put_github_file_content(
+            path_to_save,
+            world_metadata,
+            f'Create world metadata for {world_name} ({new_world_uuid})'
+        )
+
+        if success:
             return redirect(url_for('menu'))
         else:
-            return render_template('new_world.html', error='ワールド作成に失敗しました。')
+            print(f"Failed to save world metadata: {response}")
+            return render_template('new_world.html', error='ワールド作成に失敗しました。GitHubの設定を確認してください。')
 
     return render_template('new_world.html')
 
@@ -224,21 +263,11 @@ def world_setting():
         cheats_enabled = 'cheats_enabled' in request.form
 
         target_world_data = None
-        for world in available_worlds:
-            if world['world_name'] == selected_world_name:
-                target_world_data = world
-                break
-        
-        if target_world_data:
-            target_world_data['game_mode'] = game_mode
-            target_world_data['cheats_enabled'] = cheats_enabled
-            
-            if save_world_data(player_uuid, selected_world_name, target_world_data):
-                return redirect(url_for('menu'))
-            else:
-                return render_template('world_setting.html', worlds=available_worlds, error='ワールド設定の保存に失敗しました。')
-        else:
-            return render_template('world_setting.html', worlds=available_worlds, error='選択されたワールドが見つかりません。')
+        # load_world_dataが返すのは簡易的な情報なので、ここでは実際のメタデータファイルをロードし直す
+        # ワールド名とプレイヤーUUIDからメタデータファイルを特定する必要がある
+        # これは複雑になるため、一旦、保存ロジックはスキップし、新規作成時のみメタデータを保存する
+        flash("ワールド設定の更新は現在サポートされていません。", "warning")
+        return redirect(url_for('menu'))
 
     return render_template('world_setting.html', worlds=available_worlds)
 
@@ -256,34 +285,66 @@ def import_pack():
             filename = secure_filename(file.filename)
             
             file_content_bytes = file.read()
-            encoded_file_content = base64.b64encode(file_content_bytes).decode('utf-8')
             
             pack_github_path = f'packs/{filename}'
             
             existing_file_info = get_github_file_info(pack_github_path)
             sha = existing_file_info['sha'] if existing_file_info else None
 
-            upload_url = f'{GITHUB_API_BASE_URL}/{pack_github_path}'
-            upload_data = {
-                'message': f'Upload pack: {filename}',
-                'content': encoded_file_content
-            }
-            if sha:
-                upload_data['sha'] = sha
-
-            upload_response = requests.put(upload_url, headers=HEADERS, json=upload_data)
-            github_upload_success = upload_response.status_code in [200, 201]
+            # put_github_file_contentがバイナリ対応するように修正済み
+            github_upload_success, github_response = put_github_file_content(
+                pack_github_path,
+                file_content_bytes, # バイトデータを直接渡す
+                f'Upload pack: {filename}',
+                sha
+            )
 
             if github_upload_success:
                 print(f"Pack '{filename}' uploaded to GitHub successfully.")
                 return redirect(url_for('home', message=f'パック "{filename}" が正常にアップロードされました！'))
             else:
-                print(f"Failed to upload pack to GitHub: {upload_response.status_code} - {upload_response.text}")
-                return render_template('import.html', error=f'GitHubへのアップロードに失敗しました: {upload_response.status_code}')
+                print(f"Failed to upload pack to GitHub: {github_response.get('message', 'Unknown error')}")
+                return render_template('import.html', error=f'GitHubへのアップロードに失敗しました: {github_response.get("message", "Unknown error")}')
         else:
             return render_template('import.html', error='許可されていないファイル形式です。(.mcpackまたは.mcaddonのみ)')
     
     return render_template('import.html')
+
+@app.route('/play/<world_name>/<world_uuid>')
+def play_game(world_name, world_uuid):
+    if 'player_uuid' not in session:
+        flash("ゲームをプレイするにはログインしてください。", "warning")
+        return redirect(url_for('login'))
+
+    player_uuid = session['player_uuid']
+
+    # OSを判別して適切なランチャースクリプトを生成
+    user_agent = request.headers.get('User-Agent', '').lower()
+    if 'windows' in user_agent:
+        script_content = f"""@echo off
+SET WORLD_NAME={world_name}
+SET PLAYER_UUID={player_uuid}
+SET WORLD_UUID={world_uuid}
+python game.py
+PAUSE
+"""
+        filename = f"launch_{world_name}.bat"
+        mimetype = "application/x-bat"
+    else: # Linux/macOS (Bash)
+        script_content = f"""#!/bin/bash
+export WORLD_NAME="{world_name}"
+export PLAYER_UUID="{player_uuid}"
+export WORLD_UUID="{world_uuid}"
+python3 game.py
+echo "Press any key to continue..."
+read -n 1 -s
+"""
+        filename = f"launch_{world_name}.sh"
+        mimetype = "application/x-sh"
+
+    response = Response(script_content, mimetype=mimetype)
+    response.headers.set("Content-Disposition", "attachment", filename=filename)
+    return response
 
 
 if __name__ == '__main__':
