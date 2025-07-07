@@ -11,6 +11,7 @@ import random
 import zipfile
 import shutil
 import tempfile
+from io import BytesIO
 
 # .envファイルをロード
 load_dotenv()
@@ -34,7 +35,7 @@ HEADERS = {
 
 # --- GitHub API ヘルパー関数 ---
 def get_github_file_content(path):
-    """GitHubからファイルの内容を取得し、JSONとしてデコードする"""
+    """GitHubからファイルの内容を取得し、JSONとしてデコードする (コンテンツAPI用)"""
     url = f'{GITHUB_API_BASE_URL}/{path}'
     response = requests.get(url, headers=HEADERS)
     if response.status_code == 200:
@@ -44,7 +45,7 @@ def get_github_file_content(path):
     return None
 
 def put_github_file_content(path, content, message, sha=None):
-    """GitHubにファイルの内容をJSONとしてエンコードし、保存する"""
+    """GitHubにファイルの内容をJSONとしてエンコードし、保存する (コンテンツAPI用)"""
     url = f'{GITHUB_API_BASE_URL}/{path}'
     encoded_content = base64.b64encode(json.dumps(content, indent=4).encode('utf-8')).decode('utf-8')
     data = {
@@ -58,20 +59,41 @@ def put_github_file_content(path, content, message, sha=None):
     return response.status_code in [200, 201], response.json()
 
 def get_github_file_info(path):
-    """GitHubからファイルのSHAなどの情報を取得する"""
+    """GitHubからファイルのSHAなどの情報を取得する (コンテンツAPI用)"""
     url = f'{GITHUB_API_BASE_URL}/{path}'
     response = requests.get(url, headers=HEADERS)
     if response.status_code == 200:
         return response.json()
     return None
 
+def download_github_raw_file(path):
+    """GitHubからファイルの生データ (バイナリ) をダウンロードする"""
+    url = f'https://raw.githubusercontent.com/{GITHUB_OWNER}/{GITHUB_REPO}/main/{path}'
+    response = requests.get(url, headers={'Authorization': f'token {GITHUB_TOKEN}'})
+    if response.status_code == 200:
+        return response.content
+    print(f"Failed to download raw file from GitHub: {url} (Status: {response.status_code})")
+    return None
+
+def list_github_directory(path):
+    """GitHubディレクトリ内のファイルとディレクトリをリストアップする"""
+    url = f'{GITHUB_API_BASE_URL}/{path}'
+    response = requests.get(url, headers=HEADERS)
+    if response.status_code == 200:
+        return response.json()
+    print(f"Failed to list GitHub directory {path}: {response.status_code} - {response.text}")
+    return []
+
+
 # --- グローバル変数と初期設定 ---
-window = pyglet.window.Window(width=1024, height=768, caption='Cave Game (mcpack/mcaddon support)', resizable=True)
+window = pyglet.window.Window(width=1024, height=768, caption='Cave Game', resizable=True)
 
 # OpenGLの設定
 glEnable(GL_DEPTH_TEST)
 glEnable(GL_CULL_FACE)
 glEnable(GL_TEXTURE_2D)
+glEnable(GL_BLEND)
+glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
 camera_x, camera_y, camera_z = 0.0, 0.0, -5.0
 camera_rot_x, camera_rot_y = 0.0, 0.0
@@ -94,9 +116,13 @@ player_hp = 20.0
 SUFFOCATION_DAMAGE_INTERVAL = 0.5
 suffocation_timer = 0.0
 
+# --- インベントリ設定 ---
+INVENTORY_SLOT_COUNT = 9
+ITEM_STACK_LIMIT = 64
+player_inventory = []
+selected_slot = 0
+
 # --- ブロック定義とテクスチャ ---
-# ブロックの識別子と、そのプロパティ、テクスチャキー、内部IDをマッピングする辞書
-# デフォルトのブロック定義 (パックで上書きされる可能性あり)
 BLOCK_DEFINITIONS = {
     "minecraft:air": {"id": 0, "texture_key": None, "is_solid": False, "is_falling_block": False},
     "minecraft:grass": {"id": 1, "texture_key": "grass", "is_solid": True, "is_falling_block": False},
@@ -107,18 +133,14 @@ BLOCK_DEFINITIONS = {
     "minecraft:concrete_powder": {"id": 6, "texture_key": "concrete_powder", "is_solid": True, "is_falling_block": True},
 }
 
-# 識別子から内部IDへのマップ (動的に更新される)
 BLOCK_IDENTIFIER_TO_ID = {identifier: props["id"] for identifier, props in BLOCK_DEFINITIONS.items()}
-# 内部IDから識別子へのマップ (動的に更新される)
 BLOCK_ID_TO_IDENTIFIER = {props["id"]: identifier for identifier, props in BLOCK_DEFINITIONS.items()}
 
-# 落下ブロックのIDリスト (動的に更新される)
 FALLING_BLOCK_IDS = [
     props["id"] for identifier, props in BLOCK_DEFINITIONS.items() 
     if props.get("is_falling_block", False)
 ]
 
-# デフォルトのテクスチャURL (パックで上書きされない場合に使用)
 DEFAULT_TEXTURE_URLS = {
     "grass": 'https://placehold.co/64x64/00FF00/FFFFFF?text=Grass',
     "dirt": 'https://placehold.co/64x64/8B4513/FFFFFF?text=Dirt',
@@ -128,156 +150,55 @@ DEFAULT_TEXTURE_URLS = {
     "concrete_powder": 'https://placehold.co/64x64/B0C4DE/000000?text=ConcretePowder',
 }
 
-# ロードされたテクスチャを保持する辞書 (texture_key: pyglet.image.Texture)
 textures = {}
 
-def load_image_to_texture_cache(texture_key, image_source_path_or_url, is_url=True):
+def load_image_to_texture_cache(texture_key, image_source, is_bytes=False):
     """
-    画像ソース（URLまたはファイルパス）からテクスチャをロードし、
+    画像ソース（URLまたはバイトデータ）からテクスチャをロードし、
     textures辞書にtexture_keyでキャッシュする。
     """
     try:
-        if is_url:
-            response = requests.get(image_source_path_or_url, stream=True)
+        if is_bytes:
+            from io import BytesIO
+            image_data = BytesIO(image_source)
+            image = pyglet.image.load('', file=image_data)
+        else:
+            response = requests.get(image_source, stream=True)
             response.raise_for_status()
             from io import BytesIO
             image_data = BytesIO(response.content)
             image = pyglet.image.load('', file=image_data)
-        else: # ローカルファイルパスの場合
-            image = pyglet.image.load(image_source_path_or_url)
         
         texture = image.get_texture()
         textures[texture_key] = texture
-        print(f"Loaded texture '{texture_key}' from {image_source_path_or_url}")
+        print(f"Loaded texture '{texture_key}' from {'bytes' if is_bytes else image_source}")
         return texture
     except Exception as e:
-        print(f"Failed to load texture '{texture_key}' from {image_source_path_or_url}: {e}")
-        # フォールバックとして赤いテクスチャを生成
+        print(f"Failed to load texture '{texture_key}' from {'bytes' if is_bytes else image_source}: {e}")
         fallback_image = pyglet.image.create(64, 64, pyglet.image.SolidColorImagePattern((255, 0, 0, 255)))
         fallback_texture = fallback_image.get_texture()
         textures[texture_key] = fallback_texture
         return fallback_texture
 
-# 全てのデフォルトブロックテクスチャを事前にロード
 def load_default_textures():
     for texture_key, url in DEFAULT_TEXTURE_URLS.items():
-        load_image_to_texture_cache(texture_key, url, is_url=True)
+        load_image_to_texture_cache(texture_key, url, is_bytes=False)
 
 # ワールドデータ (辞書: キーは "(x,y,z)" 形式の文字列、値はブロックID)
 world_data = {}
 
-# 現在のワールド名とプレイヤーUUID、ワールドUUID (仮)
-current_world_name = "MyFirstCave"
-current_player_uuid = "test-player-uuid-1234"
-current_world_uuid = "test-world-uuid-abcd"
+# --- ワールド名とUUID、プレイヤーUUIDを環境変数から取得 ---
+# 環境変数が設定されていない場合は、テスト用のデフォルト値を使用
+current_world_name = os.getenv('WORLD_NAME', "MyFirstCave")
+current_player_uuid = os.getenv('PLAYER_UUID', "test-player-uuid-1234")
+current_world_uuid = os.getenv('WORLD_UUID', "test-world-uuid-abcd")
+
+print(f"Game starting with: World='{current_world_name}', Player='{current_player_uuid}', World_UUID='{current_world_uuid}'")
 
 # ワールドデータのファイルパス
 WORLD_BLOCK_FILE_PATH = f'worlds/{current_player_uuid}/{current_world_name}-{current_player_uuid}-block-{current_world_uuid}.json'
 PLAYER_POS_FILE_PATH = f'worlds/{current_player_uuid}/{current_world_name}-{current_player_uuid}-playerxyz-{current_world_uuid}.json'
-
-# --- パック読み込みと処理 ---
-def load_and_process_pack(pack_path):
-    """
-    .mcpackまたは.mcaddonファイルを読み込み、展開し、
-    その中のmanifest.jsonとblocks.json、テクスチャを処理する。
-    """
-    print(f"Loading pack: {pack_path}")
-    try:
-        # 一時ディレクトリを作成
-        with tempfile.TemporaryDirectory() as tmpdir:
-            # ZIPファイルを展開
-            with zipfile.ZipFile(pack_path, 'r') as zip_ref:
-                zip_ref.extractall(tmpdir)
-            
-            # manifest.jsonを読み込む
-            manifest_path = os.path.join(tmpdir, 'manifest.json')
-            if not os.path.exists(manifest_path):
-                print(f"Warning: manifest.json not found in {pack_path}. Skipping.")
-                return
-
-            with open(manifest_path, 'r', encoding='utf-8') as f:
-                manifest = json.load(f)
-            
-            pack_name = manifest['header']['name']
-            pack_type = manifest['modules'][0]['type']
-            print(f"Detected pack: {pack_name}, Type: {pack_type}")
-
-            if pack_type == 'data': # ビヘイビアパック
-                blocks_json_path = os.path.join(tmpdir, 'blocks.json') # 仮のblocks.jsonパス
-                if os.path.exists(blocks_json_path):
-                    with open(blocks_json_path, 'r', encoding='utf-8') as f:
-                        block_properties_data = json.load(f)
-                    
-                    global BLOCK_DEFINITIONS, BLOCK_IDENTIFIER_TO_ID, BLOCK_ID_TO_IDENTIFIER, FALLING_BLOCK_IDS
-                    
-                    for block_def in block_properties_data.get('minecraft:block_properties', []):
-                        identifier = block_def['identifier']
-                        properties = block_def['properties']
-                        
-                        current_id = BLOCK_DEFINITIONS.get(identifier, {}).get("id")
-                        if current_id is None: # 新しいブロックの場合
-                            current_id = max(BLOCK_IDENTIFIER_TO_ID.values()) + 1 if BLOCK_IDENTIFIER_TO_ID else 1
-                            print(f"Assigned new ID {current_id} to block {identifier} from behavior pack.")
-
-                        # 既存の定義を更新または新規追加
-                        BLOCK_DEFINITIONS[identifier] = {
-                            "id": current_id,
-                            "texture_key": BLOCK_DEFINITIONS.get(identifier, {}).get("texture_key"), # 既存のテクスチャキーを保持
-                            "is_solid": properties.get("is_solid", True),
-                            "is_falling_block": properties.get("is_falling_block", False)
-                        }
-                    
-                    # マッピングを再構築
-                    BLOCK_IDENTIFIER_TO_ID = {identifier: props["id"] for identifier, props in BLOCK_DEFINITIONS.items()}
-                    BLOCK_ID_TO_IDENTIFIER = {props["id"]: identifier for identifier, props in BLOCK_DEFINITIONS.items()}
-                    FALLING_BLOCK_IDS = [
-                        props["id"] for identifier, props in BLOCK_DEFINITIONS.items() 
-                        if props.get("is_falling_block", False)
-                    ]
-                    print(f"Updated block definitions from behavior pack {pack_path}")
-                else:
-                    print(f"blocks.json not found in behavior pack {pack_path}. Skipping block properties.")
-            
-            elif pack_type == 'resources': # リソースパック (テクスチャなど)
-                print(f"Resource pack {pack_name} detected. Loading textures.")
-                # textures/blocks/ ディレクトリ内のPNGファイルを検索
-                resource_textures_path = os.path.join(tmpdir, 'textures', 'blocks')
-                if os.path.exists(resource_textures_path):
-                    for root, _, files in os.walk(resource_textures_path):
-                        for file in files:
-                            if file.endswith('.png'):
-                                texture_filename = os.path.splitext(file)[0] # 拡張子なしのファイル名 (例: "grass", "my_new_block")
-                                texture_full_path = os.path.join(root, file)
-                                
-                                # テクスチャをロードしてキャッシュ
-                                load_image_to_texture_cache(texture_filename, texture_full_path, is_url=False)
-
-                                # もし新しいブロックであれば、BLOCK_DEFINITIONSに追加
-                                identifier = f"minecraft:{texture_filename}" # 簡易的な識別子
-                                if identifier not in BLOCK_DEFINITIONS:
-                                    global BLOCK_DEFINITIONS, BLOCK_IDENTIFIER_TO_ID, BLOCK_ID_TO_IDENTIFIER
-                                    new_id = max(BLOCK_IDENTIFIER_TO_ID.values()) + 1 if BLOCK_IDENTIFIER_TO_ID else 1
-                                    BLOCK_DEFINITIONS[identifier] = {
-                                        "id": new_id,
-                                        "texture_key": texture_filename,
-                                        "is_solid": True, # デフォルトはソリッド
-                                        "is_falling_block": False # デフォルトは落下しない
-                                    }
-                                    # マッピングを更新
-                                    BLOCK_IDENTIFIER_TO_ID[identifier] = new_id
-                                    BLOCK_ID_TO_IDENTIFIER[new_id] = identifier
-                                    print(f"Added new block '{identifier}' from resource pack with ID {new_id}.")
-                                else:
-                                    # 既存のブロックであれば、テクスチャキーを更新（テクスチャが上書きされたことを示す）
-                                    BLOCK_DEFINITIONS[identifier]["texture_key"] = texture_filename
-                                    print(f"Updated texture for existing block '{identifier}' from resource pack.")
-                else:
-                    print(f"No 'textures/blocks' directory found in resource pack {pack_path}.")
-            
-    except zipfile.BadZipFile:
-        print(f"Error: {pack_path} is not a valid ZIP file.")
-    except Exception as e:
-        print(f"Error processing pack {pack_path}: {e}")
+PLAYER_ITEM_FILE_PATH = f'worlds/{current_player_uuid}/{current_world_name}-{current_player_uuid}-player-item-{current_world_uuid}.json'
 
 # --- ワールドデータのロード/セーブ関数 ---
 def load_world_blocks():
@@ -305,7 +226,6 @@ def load_world_blocks():
         camera_x, camera_y, camera_z = float(initial_x), float(initial_y), float(initial_z)
         print(f"No player position found. Setting default: ({camera_x}, {camera_y}, {camera_z})")
         save_player_position()
-
 
 def save_world_blocks():
     """ワールドブロックデータをGitHubに保存する"""
@@ -336,6 +256,40 @@ def save_player_position():
     if not success:
         print(f"Failed to save player position: {response}")
 
+def load_player_inventory():
+    """プレイヤーのインベントリをGitHubからロードする"""
+    global player_inventory
+    loaded_inventory = get_github_file_content(PLAYER_ITEM_FILE_PATH)
+    if loaded_inventory:
+        player_inventory = loaded_inventory
+        print(f"Loaded player inventory from {PLAYER_ITEM_FILE_PATH}")
+    else:
+        player_inventory = [
+            {"id": BLOCK_IDENTIFIER_TO_ID["minecraft:grass"], "count": 64},
+            {"id": BLOCK_IDENTIFIER_TO_ID["minecraft:dirt"], "count": 64},
+            {"id": BLOCK_IDENTIFIER_TO_ID["minecraft:stone"], "count": 64},
+            {"id": BLOCK_IDENTIFIER_TO_ID["minecraft:sand"], "count": 64},
+            {"id": BLOCK_IDENTIFIER_TO_ID["minecraft:gravel"], "count": 64},
+            {"id": BLOCK_IDENTIFIER_TO_ID["minecraft:concrete_powder"], "count": 64},
+        ]
+        player_inventory = player_inventory[:INVENTORY_SLOT_COUNT] + [{"id": BLOCK_IDENTIFIER_TO_ID["minecraft:air"], "count": 0}] * (INVENTORY_SLOT_COUNT - len(player_inventory))
+        print("No existing player inventory found. Initializing default inventory.")
+        save_player_inventory()
+
+def save_player_inventory():
+    """プレイヤーのインベントリをGitHubに保存する"""
+    file_info = get_github_file_info(PLAYER_ITEM_FILE_PATH)
+    sha = file_info['sha'] if file_info else None
+
+    success, response = put_github_file_content(
+        PLAYER_ITEM_FILE_PATH,
+        player_inventory,
+        f'Update player inventory for {current_world_name}',
+        sha
+    )
+    if not success:
+        print(f"Failed to save player inventory: {response}")
+
 # --- 地形生成関数 (ノイズベース) ---
 WORLD_SIZE_X = 64
 WORLD_SIZE_Y = 64
@@ -360,15 +314,12 @@ def generate_noise_terrain(seed):
         for z in range(WORLD_SIZE_Z):
             height = get_terrain_height(x, z, seed)
             
-            # 地表は草ブロック
             world_data[f"{x},{height},{z}"] = BLOCK_IDENTIFIER_TO_ID["minecraft:grass"]
             
-            # その下は土ブロック
             for y_dirt in range(height - 1, height - 3, -1):
                 if y_dirt >= 0:
                     world_data[f"{x},{y_dirt},{z}"] = BLOCK_IDENTIFIER_TO_ID["minecraft:dirt"]
             
-            # その下は石ブロック
             for y_stone in range(height - 3, -WORLD_SIZE_Y, -1):
                 if y_stone >= -WORLD_SIZE_Y:
                     world_data[f"{x},{y_stone},{z}"] = BLOCK_IDENTIFIER_TO_ID["minecraft:stone"]
@@ -377,7 +328,7 @@ def generate_noise_terrain(seed):
 # --- ブロックの描画関数 (テクスチャ対応) ---
 def draw_block(x, y, z, block_id):
     """指定された位置に、指定されたブロックIDのブロックを描画する（テクスチャ付き）"""
-    if block_id == BLOCK_IDENTIFIER_TO_ID["minecraft:air"]: # 空気ブロックは描画しない
+    if block_id == BLOCK_IDENTIFIER_TO_ID["minecraft:air"]:
         return
 
     identifier = BLOCK_ID_TO_IDENTIFIER.get(block_id)
@@ -387,12 +338,10 @@ def draw_block(x, y, z, block_id):
 
     block_props = BLOCK_DEFINITIONS.get(identifier)
     if not block_props or not block_props.get("texture_key"):
-        # print(f"Warning: No texture key defined for block {identifier}. Skipping draw.") # 頻繁に出るのでコメントアウト
         return
 
     texture = textures.get(block_props["texture_key"])
     if not texture:
-        # print(f"Warning: Texture not loaded for block {identifier} (Key: {block_props['texture_key']}). Skipping draw.") # 頻繁に出るのでコメントアウト
         return
 
     glBindTexture(texture.target, texture.id)
@@ -440,6 +389,8 @@ def draw_block(x, y, z, block_id):
 @window.event
 def on_draw():
     window.clear()
+    
+    # 3D描画モード
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
     gluPerspective(75, window.width / window.height, 0.1, 100.0)
@@ -461,6 +412,16 @@ def on_draw():
         if dist_sq < render_distance_blocks**2:
             draw_block(x, y, z, block_id)
 
+    # 2D描画モード (UI用)
+    glMatrixMode(GL_PROJECTION)
+    glLoadIdentity()
+    gluOrtho2D(0, window.width, 0, window.height)
+
+    glMatrixMode(GL_MODELVIEW)
+    glLoadIdentity()
+
+    draw_hotbar()
+
 @window.event
 def on_mouse_motion(x, y, dx, dy):
     global camera_rot_y, camera_rot_x
@@ -468,6 +429,16 @@ def on_mouse_motion(x, y, dx, dy):
     camera_rot_x += dy * mouse_sensitivity
     if camera_rot_x > 90: camera_rot_x = 90
     if camera_rot_x < -90: camera_rot_x = -90
+
+@window.event
+def on_key_press(symbol, modifiers):
+    global selected_slot
+    # 数字キー1-9でスロット選択
+    if pyglet.window.key._1 <= symbol <= pyglet.window.key._9:
+        slot_index = symbol - pyglet.window.key._1
+        if slot_index < INVENTORY_SLOT_COUNT:
+            selected_slot = slot_index
+            print(f"Selected slot: {selected_slot + 1}")
 
 # --- ブロックの設置・破壊 (Raycasting) ---
 def get_looked_at_block_and_face():
@@ -496,7 +467,7 @@ def get_looked_at_block_and_face():
         current_block_pos = (block_x, block_y, block_z)
         pos_key = f"{block_x},{block_y},{block_z}"
         
-        if get_block_at_coords(block_x, block_y, block_z) != BLOCK_IDENTIFIER_TO_ID["minecraft:air"]: # 空気でなければブロックがある
+        if get_block_at_coords(block_x, block_y, block_z) != BLOCK_IDENTIFIER_TO_ID["minecraft:air"]:
             if last_block_pos:
                 face_normal = (
                     block_x - last_block_pos[0],
@@ -530,10 +501,13 @@ def on_mouse_press(x, y, button, modifiers):
     if block_pos:
         if button == pyglet.window.mouse.LEFT: # 左クリックで破壊
             pos_key = f"{block_pos[0]},{block_pos[1]},{block_pos[2]}"
-            if world_data.get(pos_key, BLOCK_IDENTIFIER_TO_ID["minecraft:air"]) != BLOCK_IDENTIFIER_TO_ID["minecraft:air"]:
+            broken_block_id = world_data.get(pos_key, BLOCK_IDENTIFIER_TO_ID["minecraft:air"])
+            if broken_block_id != BLOCK_IDENTIFIER_TO_ID["minecraft:air"]:
                 world_data[pos_key] = BLOCK_IDENTIFIER_TO_ID["minecraft:air"]
                 print(f"Broke block at {block_pos}")
+                add_item_to_inventory(broken_block_id)
                 save_world_blocks()
+                save_player_inventory()
         elif button == pyglet.window.mouse.RIGHT and face_normal: # 右クリックで設置
             place_x = block_pos[0] + int(round(face_normal[0]))
             place_y = block_pos[1] + int(round(face_normal[1]))
@@ -560,18 +534,107 @@ def on_mouse_press(x, y, button, modifiers):
             )
             
             if not is_overlapping_player:
-                pos_key = f"{place_x},{place_y},{place_z}"
-                # ここで新しいブロックを設置できるようにテスト
-                # 例: "minecraft:my_new_block" がパックから追加された場合
-                if "minecraft:my_new_block" in BLOCK_IDENTIFIER_TO_ID:
-                    world_data[pos_key] = BLOCK_IDENTIFIER_TO_ID["minecraft:my_new_block"]
-                    print(f"Placed new block at {place_x},{place_y},{place_z}")
+                if selected_slot < len(player_inventory) and player_inventory[selected_slot]["count"] > 0:
+                    block_to_place_id = player_inventory[selected_slot]["id"]
+                    
+                    if block_to_place_id != BLOCK_IDENTIFIER_TO_ID["minecraft:air"]:
+                        pos_key = f"{place_x},{place_y},{place_z}"
+                        world_data[pos_key] = block_to_place_id
+                        player_inventory[selected_slot]["count"] -= 1
+                        print(f"Placed block {BLOCK_ID_TO_IDENTIFIER.get(block_to_place_id)} at {place_x},{place_y},{place_z}")
+                        save_world_blocks()
+                        save_player_inventory()
+                    else:
+                        print("Selected slot is empty or contains air block.")
                 else:
-                    world_data[pos_key] = BLOCK_IDENTIFIER_TO_ID["minecraft:grass"]
-                    print(f"Placed grass block at {place_x},{place_y},{place_z}")
-                save_world_blocks()
+                    print("No block selected or selected slot is empty.")
             else:
                 print("Cannot place block inside player.")
+
+# --- インベントリヘルパー関数 ---
+def add_item_to_inventory(block_id):
+    """
+    指定されたブロックIDをインベントリに追加する。
+    スタック可能であれば既存のスタックに加える。
+    """
+    if block_id == BLOCK_IDENTIFIER_TO_ID["minecraft:air"]:
+        return
+
+    for item in player_inventory:
+        if item["id"] == block_id and item["count"] < ITEM_STACK_LIMIT:
+            item["count"] += 1
+            print(f"Added 1 {BLOCK_ID_TO_IDENTIFIER.get(block_id)} to inventory. Count: {item['count']}")
+            return
+
+    for i in range(INVENTORY_SLOT_COUNT):
+        if player_inventory[i]["id"] == BLOCK_IDENTIFIER_TO_ID["minecraft:air"] or player_inventory[i]["count"] == 0:
+            player_inventory[i] = {"id": block_id, "count": 1}
+            print(f"Added 1 {BLOCK_ID_TO_IDENTIFIER.get(block_id)} to new slot {i}. Count: 1")
+            return
+    
+    print(f"Inventory full! Could not add {BLOCK_ID_TO_IDENTIFIER.get(block_id)}.")
+
+# --- UI描画関数 ---
+def draw_hotbar():
+    """ホットバーを画面下部に描画する"""
+    slot_size = 64
+    padding = 8
+    total_width = INVENTORY_SLOT_COUNT * (slot_size + padding) - padding
+    start_x = (window.width - total_width) / 2
+    start_y = 20
+
+    for i in range(INVENTORY_SLOT_COUNT):
+        x = start_x + i * (slot_size + padding)
+        y = start_y
+
+        # スロットの背景 (半透明の黒)
+        glColor4f(0.0, 0.0, 0.0, 0.5)
+        glRectf(x, y, x + slot_size, y + slot_size)
+
+        # 選択中のスロットのハイライト
+        if i == selected_slot:
+            glColor4f(1.0, 1.0, 1.0, 0.8)
+            glLineWidth(3)
+            glBegin(GL_LINE_LOOP)
+            glVertex2f(x, y)
+            glVertex2f(x + slot_size, y)
+            glVertex2f(x + slot_size, y + slot_size)
+            glVertex2f(x, y + slot_size)
+            glEnd()
+
+        # スロット内のアイテムを描画
+        if i < len(player_inventory) and player_inventory[i]["count"] > 0:
+            item_id = player_inventory[i]["id"]
+            item_count = player_inventory[i]["count"]
+            
+            identifier = BLOCK_ID_TO_IDENTIFIER.get(item_id)
+            if identifier and identifier in BLOCK_DEFINITIONS:
+                block_props = BLOCK_DEFINITIONS[identifier]
+                texture_key = block_props.get("texture_key")
+                
+                if texture_key and texture_key in textures:
+                    texture = textures[texture_key]
+                    glBindTexture(texture.target, texture.id)
+                    glColor4f(1.0, 1.0, 1.0, 1.0)
+                    
+                    tex_draw_size = slot_size * 0.8
+                    tex_offset = (slot_size - tex_draw_size) / 2
+                    glBegin(GL_QUADS)
+                    glTexCoord2f(0.0, 0.0); glVertex2f(x + tex_offset, y + tex_offset)
+                    glTexCoord2f(1.0, 0.0); glVertex2f(x + tex_offset + tex_draw_size, y + tex_offset)
+                    glTexCoord2f(1.0, 1.0); glVertex2f(x + tex_offset + tex_draw_size, y + tex_offset + tex_draw_size)
+                    glTexCoord2f(0.0, 1.0); glVertex2f(x + tex_offset, y + tex_offset + tex_draw_size)
+                    glEnd()
+                    glBindTexture(texture.target, 0)
+
+                    count_label = pyglet.text.Label(str(item_count),
+                                                    font_name='Arial',
+                                                    font_size=16,
+                                                    x=x + slot_size - 10, y=y + 5,
+                                                    anchor_x='right', anchor_y='bottom',
+                                                    color=(255, 255, 255, 255))
+                    count_label.draw()
+
 
 # --- 衝突判定ヘルパー関数 ---
 def get_block_at_coords(x, y, z):
@@ -829,17 +892,14 @@ def update(dt):
 
     # 落下ブロックの処理 (簡易版: 毎フレーム全ブロックをチェック)
     blocks_to_update = []
-    for pos_str, block_id in list(world_data.items()): # 辞書をイテレート中に変更するためコピー
+    for pos_str, block_id in list(world_data.items()):
         if is_falling_block(block_id):
             x, y, z = map(int, pos_str.split(','))
-            # 落下ブロックの真下に空気ブロックがあるか
             if get_block_at_coords(x, y - 1, z) == BLOCK_IDENTIFIER_TO_ID["minecraft:air"]:
                 blocks_to_update.append((x, y, z, block_id))
     
     for x, y, z, block_id in blocks_to_update:
-        # 現在位置を空気にする
         world_data[f"{x},{y},{z}"] = BLOCK_IDENTIFIER_TO_ID["minecraft:air"]
-        # 1つ下の位置にブロックを移動
         world_data[f"{x},{y-1},{z}"] = block_id
         print(f"Falling block {BLOCK_ID_TO_IDENTIFIER.get(block_id)} moved from ({x},{y},{z}) to ({x},{y-1},{z})")
     
@@ -849,6 +909,7 @@ def update(dt):
     # プレイヤー位置の保存（例：5秒に1回）
     if update.counter % (5 * 60) == 0:
         save_player_position()
+        save_player_inventory()
     update.counter += 1
 
 update.counter = 0
@@ -859,19 +920,30 @@ window.set_mouse_visible(False)
 window.set_exclusive_mouse(True)
 
 # --- ゲーム開始時のパック読み込み ---
-# デフォルトテクスチャを最初にロード
 load_default_textures()
 
-PACKS_DIR = 'packs'
-if os.path.exists(PACKS_DIR):
-    for filename in os.listdir(PACKS_DIR):
-        if filename.endswith(('.mcpack', '.mcaddon')):
-            load_and_process_pack(os.path.join(PACKS_DIR, filename))
-else:
-    print(f"'{PACKS_DIR}' directory not found. No packs loaded.")
+PACKS_GITHUB_PATH = 'packs'
+github_packs_list = list_github_directory(PACKS_GITHUB_PATH)
 
-# ゲーム開始時にワールドデータをロード
+if github_packs_list:
+    for item in github_packs_list:
+        if item['type'] == 'file' and item['name'].endswith(('.mcpack', '.mcaddon')):
+            pack_filename = item['name']
+            pack_github_full_path = f"{PACKS_GITHUB_PATH}/{pack_filename}"
+            print(f"Attempting to download pack from GitHub: {pack_github_full_path}")
+            
+            pack_content_bytes = download_github_raw_file(pack_github_full_path)
+            if pack_content_bytes:
+                load_and_process_pack(pack_filename, pack_content_bytes)
+            else:
+                print(f"Could not download pack: {pack_filename}. Skipping.")
+else:
+    print(f"No packs found in GitHub directory '{PACKS_GITHUB_PATH}'.")
+
+
+# ゲーム開始時にワールドデータとインベントリをロード
 load_world_blocks()
+load_player_inventory()
 
 # アプリケーションの実行
 pyglet.app.run()
