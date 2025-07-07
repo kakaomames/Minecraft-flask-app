@@ -32,28 +32,14 @@ HEADERS = {
 }
 
 # --- ファイルアップロード設定 ---
-UPLOAD_FOLDER = 'packs' # アップロードされたパックを保存するディレクトリ
-ALLOWED_EXTENSIONS = {'mcpack', 'mcaddon'} # 許可するファイル拡張子
-
-# ★ここから以下の3行を削除またはコメントアウトします
-# if not os.path.exists(UPLOAD_FOLDER):
-#     os.makedirs(UPLOAD_FOLDER)
-
-# 注意: Vercelでは、このUPLOAD_FOLDERも一時的なメモリ上にしか存在せず、
-# デプロイ間で永続化されるわけではありません。
-# アップロードされたパックを永続化するには、S3のような外部ストレージサービスにアップロードするか、
-# GitHub APIを使ってそのファイルを直接GitHubリポジトリにコミットする必要があります。
-# 今回は、アップロードされたファイルを一時的に保存し、game.pyで利用する想定なので、
-# Vercelのファイルシステムに書き込むこと自体が問題になります。
-# したがって、Webアップロードされたパックをgame.pyが読み込むには、
-# game.py側でGitHubから直接パックファイルをダウンロードするロジックが必要になります。
+UPLOAD_FOLDER = 'packs'
+ALLOWED_EXTENSIONS = {'mcpack', 'mcaddon'}
 
 def allowed_file(filename):
-    """ファイル名が許可された拡張子を持つかチェックする"""
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# --- GitHub API ヘルパー関数 (変更なし) ---
+# --- GitHub API ヘルパー関数 ---
 def get_github_file_content(path):
     url = f'{GITHUB_API_BASE_URL}/{path}'
     response = requests.get(url, headers=HEADERS)
@@ -83,7 +69,7 @@ def get_github_file_info(path):
         return response.json()
     return None
 
-# --- プレイヤーデータとワールドデータのロード/セーブ関数 (変更なし) ---
+# --- プレイヤーデータとワールドデータのロード/セーブ関数 ---
 def load_player_data():
     content = get_github_file_content('player_data.json')
     return content if content is not None else []
@@ -184,13 +170,15 @@ def register():
 
 @app.route('/menu')
 def menu():
-    if 'player_uuid' not in session:
-        return redirect(url_for('login'))
-
-    player_uuid = session['player_uuid']
-    player_worlds = load_world_data(player_uuid)
+    # ログイン状態に関わらずメニューページを表示する
+    # ログインしている場合はワールドリストをロード
+    player_worlds = []
+    if 'player_uuid' in session:
+        player_uuid = session['player_uuid']
+        player_worlds = load_world_data(player_uuid)
     
     return render_template('menu.html', worlds=player_worlds)
+
 
 @app.route('/New-World', methods=['GET', 'POST'])
 def new_world():
@@ -266,37 +254,15 @@ def import_pack():
         
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            # ★ここから以下の2行を削除またはコメントアウトします
-            # file_path = os.path.join(UPLOAD_FOLDER, filename)
-            # file.save(file_path) # ローカルファイルシステムへの保存を試みるためエラーになる
-
-            # 代わりに、ファイルを直接GitHubにアップロードするロジックをここに書く
-            # ただし、mcpack/mcaddonはバイナリファイルなので、GitHub APIのcontent APIで直接アップロードできます
-            # ファイルの内容を読み込み、Base64エンコードしてGitHubにコミットします
+            
             file_content_bytes = file.read()
             encoded_file_content = base64.b64encode(file_content_bytes).decode('utf-8')
             
-            pack_github_path = f'{UPLOAD_FOLDER}/{filename}' # GitHub上のパス
+            pack_github_path = f'packs/{filename}'
             
-            # 既存のファイルがあるか確認してSHAを取得
             existing_file_info = get_github_file_info(pack_github_path)
             sha = existing_file_info['sha'] if existing_file_info else None
 
-            # GitHubにファイルをコミット
-            github_upload_success, github_response = put_github_file_content(
-                pack_github_path,
-                encoded_file_content, # ここはJSONではなく、Base64エンコードされたバイナリデータ
-                f'Upload pack: {filename}',
-                sha
-            )
-            # put_github_file_content関数はJSONデータを受け取るように設計されているため、
-            # バイナリファイルをアップロードするには少し変更が必要です。
-            # ここでは簡易的に、contentを直接渡すように変更します。
-            # 実際のput_github_file_contentはJSON.dumpsしているので、
-            # バイナリアップロード用の別の関数を用意するか、put_github_file_contentを修正する必要があります。
-            # 今回は、put_github_file_contentをバイナリ対応させます。
-
-            # put_github_file_contentがバイナリ対応していないため、直接requests.putを呼び出す
             upload_url = f'{GITHUB_API_BASE_URL}/{pack_github_path}'
             upload_data = {
                 'message': f'Upload pack: {filename}',
