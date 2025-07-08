@@ -15,6 +15,9 @@
                 <li><a href="/setting">設定</a></li>
                 <li><a href="/store">マーケットプレイス</a></li>
                 <li><a href="/menu">ゲームメニュー</a></li>
+                <li><a href="/import">パックをインポート</a></li>
+                <li><a href="/server">サーバー</a></li>
+                <li><a href="/offline">オフラインプレイ</a></li>
             </ul>
         </nav>
     </header>
@@ -29,32 +32,46 @@
                 </ul>
             {% endif %}
         {% endwith %}
-        <h2>ワールド作成</h2>
-        <form method="POST" action="/New-World">
+
+        <h2>新しいワールドの作成</h2>
+        <form method="POST">
             <label for="world_name">ワールド名:</label><br>
             <input type="text" id="world_name" name="world_name" required><br><br>
-
+            
             <label for="seed">シード値 (任意):</label><br>
             <input type="text" id="seed" name="seed"><br><br>
-
-            <label>ゲームモード:</label><br>
-            <input type="radio" id="survival" name="game_mode" value="survival" checked>
-            <label for="survival">サバイバル</label><br>
-            <input type="radio" id="creative" name="game_mode" value="creative">
-            <label for="creative">クリエイティブ</label><br>
-            <input type="radio" id="adventure" name="game_mode" value="adventure">
-            <label for="adventure">アドベンチャー</label><br>
-            <input type="radio" id="spectator" name="game_mode" value="spectator">
-            <label for="spectator">スペクテイター</label><br><br>
-
+            
+            <label for="game_mode">ゲームモード:</label><br>
+            <select id="game_mode" name="game_mode">
+                <option value="survival">サバイバル</option>
+                <option value="creative">クリエイティブ</option>
+            </select><br><br>
+            
             <input type="checkbox" id="cheats_enabled" name="cheats_enabled">
             <label for="cheats_enabled">チートを許可</label><br><br>
 
-            <h3>リソースパック・ビヘイビアパック (未実装)</h3>
-            <p>※ここは後ほど選択肢を追加します。</p>
-            <br>
-            <button type="submit">ワールド作成</button>
-        </form><br><br><br><br><br><br><br><br>
+            <h3>パック設定</h3>
+            <label for="resource_packs">リソースパック (複数選択可):</label><br>
+            <select id="resource_packs" name="resource_packs" multiple size="5"> {# size属性で表示行数を調整 #}
+                {% for pack in available_packs %}
+                    {% if pack.endswith('.mcpack') %}
+                        <option value="{{ pack }}">{{ pack }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select><br><br>
+
+            <label for="behavior_packs">ビヘイビアパック (複数選択可):</label><br>
+            <select id="behavior_packs" name="behavior_packs" multiple size="5"> {# size属性で表示行数を調整 #}
+                {% for pack in available_packs %}
+                    {% if pack.endswith('.mcaddon') %}
+                        <option value="{{ pack }}">{{ pack }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select><br><br>
+            
+            <input type="submit" value="ワールドを作成">
+        </form>
+        <p><a href="{{ url_for('menu') }}">ゲームメニューに戻る</a></p>
     </main>
     <footer>
         <p>&copy; 2025 マイクラプロジェクト</p>
