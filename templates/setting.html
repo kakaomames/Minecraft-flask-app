@@ -19,6 +19,16 @@
         </nav>
     </header>
     <main>
+        {# Flashメッセージ表示ブロック #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
         <h2>設定画面</h2>
         <p>ここにゲームやアプリケーションの設定項目が表示されます。</p>
         </main>
