@@ -2,11 +2,12 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 import hashlib
 import json
 import os
-import base64
 import uuid
 import requests
+import base64
 from dotenv import load_dotenv
-from werkzeug.utils import secure_filename
+import random # オフラインプレイヤー名生成用
+import string # オフラインプレイヤー名生成用
 
 # .envファイルをロード
 load_dotenv()
@@ -19,7 +20,7 @@ GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
 GITHUB_OWNER = os.getenv('GITHUB_OWNER')
 GITHUB_REPO = os.getenv('GITHUB_REPO')
 
-# ★ここから追加: GitHub設定を起動時にチェックする関数
+# GitHub設定を起動時にチェックする関数
 def check_github_config():
     """
     GitHubトークン、オーナー、リポジトリの設定をチェックし、
@@ -46,7 +47,7 @@ def check_github_config():
 
     # player_data.jsonの情報を取得して、トークンの有効性を確認
     # ファイルが存在しない場合でも、404は成功とみなす
-    test_file_path = 'player_data.json'
+    test_file_path = 'player_data.json' # 以前のplayer_data.jsonのパス
     url = f'{api_base_url}/{test_file_path}'
 
     print(f"DEBUG: GitHub APIアクセスをテスト中: {url}")
@@ -58,7 +59,7 @@ def check_github_config():
         response = requests.get(url, headers=headers)
 
         print(f"DEBUG: レスポンスステータスコード: {response.status_code}")
-        print(f"DEBUG: レスポンスボディ: {response.text}")
+        # print(f"DEBUG: レスポンスボディ: {response.text}") # 長いのでコメントアウト
 
         if response.status_code == 200 or response.status_code == 404:
             print("成功: GitHub APIへのアクセスが確認できました。トークンとリポジトリ設定は有効です。")
@@ -84,7 +85,6 @@ def check_github_config():
         print(f"\nネットワークエラーが発生しました: {e}")
         print("GitHub APIに接続できませんでした。インターネット接続を確認するか、GitHubのステータスを確認してください。")
         return False
-# ★ここまで追加
 
 GITHUB_API_BASE_URL = f'https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/contents'
 HEADERS = {
@@ -105,12 +105,35 @@ def allowed_file(filename):
 def get_github_file_content(path):
     url = f'{GITHUB_API_BASE_URL}/{path}'
     response = requests.get(url, headers=HEADERS)
+    
     if response.status_code == 200:
-        content_b64 = response.json()['content']
-        decoded_content = base64.b64decode(content_b64).decode('utf-8')
-        return json.loads(decoded_content)
-    print(f"DEBUG: Failed to get content for {path}. Status: {response.status_code}, Response: {response.text}")
-    return None
+        try:
+            json_response = response.json()
+            content_b64 = json_response.get('content')
+            
+            if content_b64:
+                decoded_content = base64.b64decode(content_b64).decode('utf-8')
+                if decoded_content.strip():
+                    return json.loads(decoded_content)
+                else:
+                    print(f"DEBUG: Decoded content for {path} is empty or whitespace only.")
+                    return None
+            else:
+                print(f"DEBUG: 'content' key not found in GitHub API response for {path}.")
+                return None
+        except json.JSONDecodeError as e:
+            print(f"ERROR: JSONDecodeError when parsing GitHub API response for {path}: {e}")
+            print(f"Response text: {response.text[:200]}...")
+            return None
+        except Exception as e:
+            print(f"ERROR: Unexpected error in get_github_file_content for {path}: {e}")
+            return None
+    elif response.status_code == 404:
+        print(f"DEBUG: File not found on GitHub: {path}. Status: 404.")
+        return None
+    else:
+        print(f"DEBUG: Failed to get content for {path}. Status: {response.status_code}, Response: {response.text}")
+        return None
 
 def put_github_file_content(path, content, message, sha=None):
     url = f'{GITHUB_API_BASE_URL}/{path}'
@@ -150,20 +173,47 @@ def get_github_file_info(path):
         print(f"DEBUG: Failed to get file info for {path}. Status: {response.status_code}, Response: {response.text}")
     return None
 
-# --- プレイヤーデータとワールドデータのロード/セーブ関数 ---
-def load_player_data():
-    content = get_github_file_content('player_data.json')
-    return content if content is not None else []
+# --- プレイヤーデータ管理のリファクタリング ---
+PLAYERS_DIR_PATH = 'players' # プレイヤーデータを格納するGitHub上のディレクトリ
 
-def save_player_data(data):
-    path = 'player_data.json'
+def load_all_player_data():
+    """GitHubの'players/'ディレクトリからすべてのプレイヤーデータをロードする"""
+    all_players = []
+    url = f'{GITHUB_API_BASE_URL}/{PLAYERS_DIR_PATH}'
+    response = requests.get(url, headers=HEADERS)
+
+    if response.status_code == 200:
+        for item in response.json():
+            if item['type'] == 'file' and item['name'].endswith('.json'):
+                player_file_path = f'{PLAYERS_DIR_PATH}/{item["name"]}'
+                player_content = get_github_file_content(player_file_path)
+                if player_content:
+                    all_players.append(player_content)
+                else:
+                    print(f"DEBUG: Could not load player data from {player_file_path}. Skipping.")
+    elif response.status_code == 404:
+        print(f"DEBUG: Players directory '{PLAYERS_DIR_PATH}' not found on GitHub. Assuming no players yet.")
+    else:
+        print(f"DEBUG: Failed to list players directory {PLAYERS_DIR_PATH}. Status: {response.status_code}, Response: {response.text}")
+    return all_players
+
+def save_single_player_data(player_data):
+    """単一のプレイヤーデータをGitHubに保存する (players/{uuid}.json)"""
+    player_uuid = player_data.get('uuid')
+    if not player_uuid:
+        print("ERROR: Player data has no UUID. Cannot save.")
+        return False, {"message": "Player data missing UUID"}
+
+    path = f'{PLAYERS_DIR_PATH}/{player_uuid}.json'
     current_file_info = get_github_file_info(path)
     sha = current_file_info['sha'] if current_file_info else None
     
-    success, response = put_github_file_content(path, data, 'Update player data', sha)
+    message = f'{"Update" if sha else "Create"} player data for {player_data.get("username", "unknown")}'
+    success, response = put_github_file_content(path, player_data, message, sha)
     if not success:
-        print(f"ERROR: save_player_data failed for {path}. Response: {response}")
-    return success
+        print(f"ERROR: save_single_player_data failed for {path}. Response: {response}")
+    return success, response
+
 
 def load_world_data(player_uuid):
     worlds = []
@@ -173,19 +223,44 @@ def load_world_data(player_uuid):
 
     if response.status_code == 200:
         for item in response.json():
-            if item['type'] == 'file' and item['name'].endswith('-block-.json'):
-                parts = item['name'].split('-')
-                if len(parts) >= 5:
-                    world_name = '-'.join(parts[:-4])
-                    world_uuid = parts[-2]
+            if item['type'] == 'file' and item['name'].endswith('.json') and '-metadata-' in item['name']:
+                filename_without_ext = item['name'].rsplit('.json', 1)[0]
+                
+                parts_by_metadata = filename_without_ext.split('-metadata-')
+                
+                if len(parts_by_metadata) == 2:
+                    world_name_from_filename = parts_by_metadata[0]
+                    uuid_part = parts_by_metadata[1]
                     
-                    worlds.append({
-                        'world_name': world_name,
-                        'world_uuid': world_uuid,
-                        'player_uuid': player_uuid
-                    })
+                    if '-' in uuid_part:
+                        # player_uuidとworld_uuidを正確に抽出
+                        # uuid_partは 'player_uuid-world_uuid' 形式
+                        player_uuid_in_filename, world_uuid_from_filename = uuid_part.rsplit('-', 1)
+                        
+                        # ファイル名中のplayer_uuidが現在のプレイヤーと一致するか確認
+                        if player_uuid_in_filename != player_uuid:
+                            print(f"DEBUG: Skipping world '{item['name']}' as player UUID in filename does not match current user.")
+                            continue
+
+                        metadata_content = get_github_file_content(f'{world_dir_path}/{item["name"]}')
+                        if metadata_content:
+                            worlds.append({
+                                'world_name': metadata_content.get('world_name', world_name_from_filename),
+                                'world_uuid': metadata_content.get('world_uuid', world_uuid_from_filename),
+                                'player_uuid': metadata_content.get('player_uuid', player_uuid),
+                                'seed': metadata_content.get('seed', 'N/A'),
+                                'game_mode': metadata_content.get('game_mode', 'survival'),
+                                'cheats_enabled': metadata_content.get('cheats_enabled', False)
+                            })
+                        else:
+                            print(f"DEBUG: Could not load metadata content for {item['name']}. Skipping.")
+                    else:
+                        print(f"DEBUG: Invalid UUID format in filename: {item['name']}. Skipping.")
+                        continue
+                else:
+                    print(f"DEBUG: Filename format mismatch (no -metadata- separator): {item['name']}. Skipping.")
     else:
-        print(f"DEBUG: Failed to load world data for {player_uuid}. Status: {response.status_code}, Response: {response.text}")
+        print(f"DEBUG: Failed to load world directory {world_dir_path}. Status: {response.status_code}, Response: {response.text}")
     return worlds
 
 def save_world_data(player_uuid, world_name, data):
@@ -235,12 +310,15 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
-        players = load_player_data()
+        # 全てのプレイヤーデータをロード
+        players = load_all_player_data()
         
         for player in players:
             if player['username'] == username and player['password_hash'] == hashlib.sha256(password.encode()).hexdigest():
                 session['username'] = username
                 session['player_uuid'] = player['uuid']
+                # オフラインプレイヤーフラグをクリア (念のため)
+                session.pop('is_offline_player', None) 
                 flash(f"ようこそ、{username}さん！", "success")
                 print(f"DEBUG: ユーザー '{username}' がログインしました。")
                 return redirect(url_for('menu'))
@@ -257,6 +335,7 @@ def login():
 def logout():
     session.pop('username', None)
     session.pop('player_uuid', None)
+    session.pop('is_offline_player', None) # オフラインプレイヤーフラグもクリア
     flash("ログアウトしました。", "info")
     print("DEBUG: ユーザーがログアウトしました。")
     return redirect(url_for('home'))
@@ -267,7 +346,8 @@ def register():
         username = request.form['username']
         password = request.form['password']
         
-        players = load_player_data()
+        # 全てのプレイヤーデータをロードして既存ユーザーをチェック
+        players = load_all_player_data()
         
         if any(p['username'] == username for p in players):
             flash('このユーザー名はすでに使用されています。', "error")
@@ -283,9 +363,10 @@ def register():
             'uuid': new_uuid
         }
         
-        players.append(new_player)
         print(f"DEBUG: 新規プレイヤーデータ: {new_player}")
-        if save_player_data(players):
+        # 個別ファイルとして保存
+        success, response = save_single_player_data(new_player)
+        if success:
             flash('アカウントが正常に作成されました！ログインしてください。', "success")
             print(f"DEBUG: ユーザー '{username}' のアカウントが正常に作成されました。")
             return redirect(url_for('login'))
@@ -296,6 +377,39 @@ def register():
     print("アカウント生成ページを表示しました")
     return render_template('register.html')
     
+@app.route('/offline')
+def offline_play():
+    # 既にオフラインプレイヤーとしてログインしている場合はそのままメニューへ
+    if 'player_uuid' in session and session.get('is_offline_player'):
+        flash("オフラインプレイヤーとしてログイン済みです。", "info")
+        return redirect(url_for('menu'))
+
+    # 一時的なプレイヤー名を生成 (player + 5桁の数字)
+    random_digits = ''.join(random.choices(string.digits, k=5))
+    temp_username = f"player{random_digits}"
+    temp_uuid = str(uuid.uuid4())
+
+    # 一時プレイヤーデータを生成 (パスワードは不要)
+    temp_player = {
+        'username': temp_username,
+        'password_hash': '', # パスワードなし
+        'uuid': temp_uuid,
+        'is_offline_player': True # オフラインプレイヤーであることを示すフラグ
+    }
+
+    # GitHubに一時プレイヤーデータを保存
+    success, response = save_single_player_data(temp_player)
+    if success:
+        session['username'] = temp_username
+        session['player_uuid'] = temp_uuid
+        session['is_offline_player'] = True # セッションにオフラインプレイヤーフラグを設定
+        flash(f"オフラインプレイヤー '{temp_username}' としてログインしました！", "success")
+        print(f"DEBUG: オフラインプレイヤー '{temp_username}' のアカウントがGitHubに作成されました。")
+        return redirect(url_for('menu'))
+    else:
+        flash('オフラインプレイの準備に失敗しました。GitHubの設定を確認してください。', "error")
+        print(f"ERROR: オフラインプレイヤーの作成がGitHubへの保存失敗により失敗しました。Response: {response}")
+        return redirect(url_for('home'))
 
 @app.route('/menu')
 def menu():
@@ -460,17 +574,16 @@ read -n 1 -s
     print(f"DEBUG: ランチャースクリプト '{filename}' を生成しました。")
     return response
 
+@app.route('/server') # 新しい /server エンドポイント
+def server_page():
+    print("サーバーページを表示しました")
+    return render_template('server.html')
+
 
 if __name__ == '__main__':
     # アプリケーション起動時にGitHub設定をチェック
     if not check_github_config():
         print("致命的なエラー: GitHub設定が正しくありません。アプリケーションを終了します。")
-        exit(1) # 設定が正しくない場合はアプリケーションを終了
-
-    if not GITHUB_TOKEN or not GITHUB_OWNER or not GITHUB_REPO:
-        print("エラー: .env ファイルに GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO が設定されていません。")
-        print(".env ファイルを作成し、必要な情報を記述してください。")
         exit(1)
-    
-    app.run(debug=True)
 
+    app.run(debug=True)
