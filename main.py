@@ -154,15 +154,24 @@ def save_world_data(player_uuid, world_name, data):
 @app.route('/')
 def home():
     message = request.args.get('message')
+    return render_template('index.html', message=message)
+    print("indexページを表示しました")
+
+@app.route('/home')
+def home():
+    message = request.args.get('message')
     return render_template('home.html', message=message)
+    print("ホームページを表示しました")
 
 @app.route('/setting')
 def setting():
     return render_template('setting.html')
+    print("設定ページを表示しました")
 
 @app.route('/store')
 def store():
     return render_template('store.html')
+    print("ストアページを表示しました")
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -183,6 +192,7 @@ def login():
         return render_template('login.html')
 
     return render_template('login.html')
+    print("ログインページを表示しました")
 
 @app.route('/logout')
 def logout():
@@ -221,6 +231,7 @@ def register():
             flash('アカウント作成に失敗しました。GitHubのトークン権限、リポジトリ名、オーナー名を確認してください。', "error")
             return render_template('register.html')
     return render_template('register.html')
+    print("アカウント生成ページを表示しました")
 
 @app.route('/menu')
 def menu():
@@ -230,6 +241,7 @@ def menu():
         player_worlds = load_world_data(player_uuid)
     
     return render_template('menu.html', worlds=player_worlds)
+    print("メニューページを表示しました")
 
 
 @app.route('/New-World', methods=['GET', 'POST'])
@@ -270,6 +282,7 @@ def new_world():
             return render_template('new_world.html')
 
     return render_template('new_world.html')
+    print("ワールド生成ページを表示しました")
 
 @app.route('/World-setting', methods=['GET', 'POST'])
 def world_setting():
@@ -289,6 +302,7 @@ def world_setting():
         return redirect(url_for('menu'))
 
     return render_template('world_setting.html', worlds=available_worlds)
+    print("ワールド設定ページを表示しました")
 
 @app.route('/import', methods=['GET', 'POST'])
 def import_pack():
@@ -332,8 +346,10 @@ def import_pack():
             return render_template('import.html')
     
     return render_template('import.html')
+    print("インポートページを表示しました")
 
 @app.route('/play/<world_name>/<world_uuid>')
+print("プレイページを表示しました")
 def play_game(world_name, world_uuid):
     if 'player_uuid' not in session:
         flash("ゲームをプレイするにはログインしてください。", "warning")
