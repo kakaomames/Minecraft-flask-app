@@ -8,5 +8,10 @@
         "username": "kakaomame",
         "password_hash": "e33e94db237f07b26aeb16598e1a9bd2c0980c6b02edb0b811aa7487a24ac2d2",
         "uuid": "ceae3b77-42a4-4a8a-a4e8-52fe237b31c2"
+    },
+    {
+        "username": "k",
+        "password_hash": "8254c329a92850f6d539dd376f4816ee2764517da5e0235514af433164480d7a",
+        "uuid": "047fd794-911d-4f1e-9474-8d81a606ae25"
     }
 ]
