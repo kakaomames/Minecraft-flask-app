@@ -20,6 +20,17 @@
         </nav>
     </header>
     <main>
+        {# Flashメッセージ表示ブロック #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
         <h2>ワールド一覧</h2>
         {% if session.username %}
             <p>ようこそ、{{ session.username }}さん！</p>
@@ -31,7 +42,7 @@
                         <li>
                             ワールド名: {{ world.world_name }} (UUID: {{ world.world_uuid }})
                             <a href="{{ url_for('play_game', world_name=world.world_name, world_uuid=world.world_uuid) }}">プレイ</a> |
-                            <a href="#">設定 (未実装)</a> <!-- World-settingは一時的に無効化 -->
+                            <a href="#">設定 (未実装)</a>
                         </li>
                     {% endfor %}
                 </ul>
