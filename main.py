@@ -6,6 +6,7 @@ import uuid
 import requests
 import base64
 from dotenv import load_dotenv
+from werkzeug.utils import secure_filename # 忘れずにインポート
 
 # .envファイルをロード
 load_dotenv()
@@ -46,20 +47,17 @@ def get_github_file_content(path):
         content_b64 = response.json()['content']
         decoded_content = base64.b64decode(content_b64).decode('utf-8')
         return json.loads(decoded_content)
-    # ファイルが存在しない場合（404）なども含め、エラーはコンソールに出力
     print(f"DEBUG: Failed to get content for {path}. Status: {response.status_code}, Response: {response.text}")
     return None
 
 def put_github_file_content(path, content, message, sha=None):
     url = f'{GITHUB_API_BASE_URL}/{path}'
     
-    # contentが既にBase64エンコードされているか、生のバイトデータであるか、JSONデータであるかを判別
-    if isinstance(content, bytes): # バイナリデータの場合 (例: mcpack/mcaddon)
+    if isinstance(content, bytes):
         encoded_content = base64.b64encode(content).decode('utf-8')
-    elif isinstance(content, str) and content.startswith(('ey', 'PD94bWwgdmVyc2lvbj', 'UEs')): # Base64エンコード済み文字列の可能性 (簡易チェック)
-        # 既にBase64エンコードされていると仮定
+    elif isinstance(content, str) and content.startswith(('ey', 'PD94bWwgdmVyc2lvbj', 'UEs')):
         encoded_content = content
-    else: # JSONデータの場合 (例: player_data.json, world_metadata)
+    else:
         encoded_content = base64.b64encode(json.dumps(content, indent=4).encode('utf-8')).decode('utf-8')
 
     data = {
@@ -71,15 +69,13 @@ def put_github_file_content(path, content, message, sha=None):
 
     response = requests.put(url, headers=HEADERS, json=data)
     
-    # ★ここを修正: GitHub APIからの詳細なエラーメッセージを必ず出力
     if not response.status_code in [200, 201]:
         print(f"ERROR: GitHub PUT failed for {path}. Status: {response.status_code}, Response: {response.text}")
-        # エラーレスポンスのJSONがあればそれも出力
         try:
             error_json = response.json()
             print(f"GitHub API Error Details: {json.dumps(error_json, indent=2)}")
         except json.JSONDecodeError:
-            pass # JSONでない場合は何もしない
+            pass
 
     return response.status_code in [200, 201], response.json()
 
@@ -88,8 +84,6 @@ def get_github_file_info(path):
     response = requests.get(url, headers=HEADERS)
     if response.status_code == 200:
         return response.json()
-    # ファイルが存在しない場合（404）は正常なケースなので、エラーログは出さない
-    # それ以外のエラー（401, 403, 500など）は出力
     if response.status_code not in [404]:
         print(f"DEBUG: Failed to get file info for {path}. Status: {response.status_code}, Response: {response.text}")
     return None
@@ -105,7 +99,6 @@ def save_player_data(data):
     sha = current_file_info['sha'] if current_file_info else None
     
     success, response = put_github_file_content(path, data, 'Update player data', sha)
-    # ★ここを修正: save_player_dataが失敗した場合も詳細な情報を出力
     if not success:
         print(f"ERROR: save_player_data failed for {path}. Response: {response}")
     return success
@@ -134,10 +127,7 @@ def load_world_data(player_uuid):
     return worlds
 
 def save_world_data(player_uuid, world_name, data):
-    # ワールドのメタデータファイルを保存するパス
-    # 既存のワールドUUIDを再利用するか、新規に生成するかは、この関数の呼び出し元で制御
-    # ここでは、呼び出し元から渡されたdata['world_uuid']を使用
-    world_uuid_for_path = data.get('world_uuid', str(uuid.uuid4())) # 念のためデフォルトも設定
+    world_uuid_for_path = data.get('world_uuid', str(uuid.uuid4()))
     path = f'worlds/{player_uuid}/{world_name}-metadata-{player_uuid}-{world_uuid_for_path}.json'
     
     current_file_info = get_github_file_info(path)
@@ -152,26 +142,30 @@ def save_world_data(player_uuid, world_name, data):
 # --- Flask ルーティング ---
 
 @app.route('/')
-def home():
+def index(): # ★関数名を'index'に変更 (home関数と重複するため)
+    print("indexページを表示しました") # ★print文を移動
     message = request.args.get('message')
     return render_template('index.html', message=message)
-    print("indexページを表示しました")
+    
 
 @app.route('/home')
 def home():
+    print("ホームページを表示しました") # ★print文を移動
     message = request.args.get('message')
     return render_template('home.html', message=message)
-    print("ホームページを表示しました")
+    
 
 @app.route('/setting')
 def setting():
+    print("設定ページを表示しました") # ★print文を移動
     return render_template('setting.html')
-    print("設定ページを表示しました")
+    
 
 @app.route('/store')
 def store():
+    print("ストアページを表示しました") # ★print文を移動
     return render_template('store.html')
-    print("ストアページを表示しました")
+    
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -186,19 +180,23 @@ def login():
                 session['username'] = username
                 session['player_uuid'] = player['uuid']
                 flash(f"ようこそ、{username}さん！", "success")
+                print(f"DEBUG: ユーザー '{username}' がログインしました。") # 追加
                 return redirect(url_for('menu'))
         
         flash('ユーザー名またはパスワードが違います。', "error")
+        print(f"DEBUG: ログイン失敗 - ユーザー名: {username}") # 追加
         return render_template('login.html')
 
+    print("ログインページを表示しました") # ★print文を移動
     return render_template('login.html')
-    print("ログインページを表示しました")
+    
 
 @app.route('/logout')
 def logout():
     session.pop('username', None)
     session.pop('player_uuid', None)
     flash("ログアウトしました。", "info")
+    print("DEBUG: ユーザーがログアウトしました。") # 追加
     return redirect(url_for('home'))
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -211,6 +209,7 @@ def register():
         
         if any(p['username'] == username for p in players):
             flash('このユーザー名はすでに使用されています。', "error")
+            print(f"DEBUG: 登録失敗 - ユーザー名 '{username}' は既に存在します。") # 追加
             return render_template('register.html')
         
         new_uuid = str(uuid.uuid4())
@@ -223,31 +222,35 @@ def register():
         }
         
         players.append(new_player)
+        print(f"DEBUG: 新規プレイヤーデータ: {new_player}") # 追加
         if save_player_data(players):
             flash('アカウントが正常に作成されました！ログインしてください。', "success")
+            print(f"DEBUG: ユーザー '{username}' のアカウントが正常に作成されました。") # 追加
             return redirect(url_for('login'))
         else:
-            # save_player_dataがFalseを返した場合、詳細なエラーメッセージをFlash
             flash('アカウント作成に失敗しました。GitHubのトークン権限、リポジトリ名、オーナー名を確認してください。', "error")
+            print(f"DEBUG: ユーザー '{username}' のアカウント作成がGitHubへの保存失敗により失敗しました。") # 追加
             return render_template('register.html')
+    print("アカウント生成ページを表示しました") # ★print文を移動
     return render_template('register.html')
-    print("アカウント生成ページを表示しました")
+    
 
 @app.route('/menu')
 def menu():
+    print("メニューページを表示しました") # ★print文を移動
     player_worlds = []
     if 'player_uuid' in session:
         player_uuid = session['player_uuid']
         player_worlds = load_world_data(player_uuid)
     
     return render_template('menu.html', worlds=player_worlds)
-    print("メニューページを表示しました")
-
+    
 
 @app.route('/New-World', methods=['GET', 'POST'])
 def new_world():
     if 'player_uuid' not in session:
         flash("ワールドを作成するにはログインしてください。", "warning")
+        print("DEBUG: ワールド作成試行 - 未ログインユーザー。") # 追加
         return redirect(url_for('login'))
     
     if request.method == 'POST':
@@ -270,24 +273,27 @@ def new_world():
             'behavior_packs': []
         }
         
-        # save_world_data関数を呼び出し
+        print(f"DEBUG: 新規ワールドメタデータ: {world_metadata}") # 追加
         success = save_world_data(player_uuid, world_name, world_metadata)
 
         if success:
             flash(f'ワールド "{world_name}" が正常に作成されました！', "success")
+            print(f"DEBUG: ワールド '{world_name}' が正常に作成されました。") # 追加
             return redirect(url_for('menu'))
         else:
-            # save_world_dataでエラーログが出ているはずなので、ユーザーには一般的なメッセージ
             flash('ワールド作成に失敗しました。GitHubのトークン権限、リポジトリ名、オーナー名を確認してください。', "error")
+            print(f"DEBUG: ワールド '{world_name}' の作成がGitHubへの保存失敗により失敗しました。") # 追加
             return render_template('new_world.html')
 
+    print("ワールド生成ページを表示しました") # ★print文を移動
     return render_template('new_world.html')
-    print("ワールド生成ページを表示しました")
+    
 
 @app.route('/World-setting', methods=['GET', 'POST'])
 def world_setting():
     if 'player_uuid' not in session:
         flash("ワールド設定を変更するにはログインしてください。", "warning")
+        print("DEBUG: ワールド設定試行 - 未ログインユーザー。") # 追加
         return redirect(url_for('login'))
     
     player_uuid = session['player_uuid']
@@ -299,21 +305,25 @@ def world_setting():
         cheats_enabled = 'cheats_enabled' in request.form
 
         flash("ワールド設定の更新は現在サポートされていません。", "warning")
+        print("DEBUG: ワールド設定の更新は現在サポートされていません。") # 追加
         return redirect(url_for('menu'))
 
+    print("ワールド設定ページを表示しました") # ★print文を移動
     return render_template('world_setting.html', worlds=available_worlds)
-    print("ワールド設定ページを表示しました")
+    
 
 @app.route('/import', methods=['GET', 'POST'])
 def import_pack():
     if request.method == 'POST':
         if 'file' not in request.files:
             flash('ファイルが選択されていません。', "error")
+            print("DEBUG: パックインポート失敗 - ファイルが選択されていません。") # 追加
             return render_template('import.html')
         file = request.files['file']
         
         if file.filename == '':
             flash('ファイルが選択されていません。', "error")
+            print("DEBUG: パックインポート失敗 - ファイル名が空です。") # 追加
             return render_template('import.html')
         
         if file and allowed_file(file.filename):
@@ -343,16 +353,19 @@ def import_pack():
                 return render_template('import.html')
         else:
             flash('許可されていないファイル形式です。(.mcpackまたは.mcaddonのみ)', "error")
+            print("DEBUG: パックインポート失敗 - 許可されていないファイル形式です。") # 追加
             return render_template('import.html')
     
+    print("インポートページを表示しました") # ★print文を移動
     return render_template('import.html')
-    print("インポートページを表示しました")
+    
 
 @app.route('/play/<world_name>/<world_uuid>')
-print("プレイページを表示しました")
 def play_game(world_name, world_uuid):
+    print(f"プレイページを表示しました: ワールド名={world_name}, ワールドUUID={world_uuid}") # ★print文を移動
     if 'player_uuid' not in session:
         flash("ゲームをプレイするにはログインしてください。", "warning")
+        print("DEBUG: プレイ試行 - 未ログインユーザー。") # 追加
         return redirect(url_for('login'))
 
     player_uuid = session['player_uuid']
@@ -382,6 +395,7 @@ read -n 1 -s
 
     response = Response(script_content, mimetype=mimetype)
     response.headers.set("Content-Disposition", "attachment", filename=filename)
+    print(f"DEBUG: ランチャースクリプト '{filename}' を生成しました。") # 追加
     return response
 
 
