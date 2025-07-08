@@ -19,6 +19,16 @@
         </nav>
     </header>
     <main>
+        {# Flashメッセージ表示ブロック #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
         <h2>マーケットプレイス (擬似)</h2>
         <p>ここでは、mcpackなどのリソースを閲覧・ダウンロードできるような仕組みを想定しています。</p>
         <h3><a href="httpa://kakaomames.github.io/Minecraft-flask-app/packs/MTC2.0.10.mcaddon" download>mtc2.0</a></h3>
