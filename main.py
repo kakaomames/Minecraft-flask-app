@@ -222,10 +222,13 @@ def load_world_data(player_uuid):
     url = f'{GITHUB_API_BASE_URL}/{world_dir_path}'
     response = requests.get(url, headers=HEADERS)
 
+    print(f"DEBUG: Attempting to list world directory: {world_dir_path}. Status: {response.status_code}") # 追加
     if response.status_code == 200:
-        print(f"DEBUG: Listing contents of {world_dir_path}. Items found: {len(response.json())}")
-        for item in response.json():
-            # ★ここを修正: -metadata-.json ファイルを探し、ファイル名からワールド名とUUIDを正確に抽出
+        github_items = response.json()
+        print(f"DEBUG: Found {len(github_items)} items in {world_dir_path} on GitHub.") # 追加
+
+        for item in github_items:
+            print(f"DEBUG: Processing item: {item['name']} (Type: {item['type']})") # 追加
             if item['type'] == 'file' and item['name'].endswith('.json') and '-metadata-' in item['name']:
                 filename_without_ext = item['name'].rsplit('.json', 1)[0]
                 
@@ -235,13 +238,13 @@ def load_world_data(player_uuid):
                     world_name_from_filename = parts_by_metadata[0]
                     uuid_part = parts_by_metadata[1]
                     
-                    # UUID部分を最後のハイフンで分割してplayer_uuidとworld_uuidを取得
                     # UUIDは36文字の固定長なので、厳密にチェック
-                    if len(uuid_part) >= 73 and uuid_part[36] == '-': # player_uuid (36) + '-' (1) + world_uuid (36)
+                    # player_uuid (36) + '-' (1) + world_uuid (36) = 73文字
+                    if len(uuid_part) == 73 and uuid_part[36] == '-':
                         player_uuid_in_filename = uuid_part[:36]
                         world_uuid_from_filename = uuid_part[37:]
                     else:
-                        print(f"DEBUG: Invalid UUID format in filename (length/hyphen check): {item['name']}. Skipping.")
+                        print(f"DEBUG: Invalid UUID format in filename (length/hyphen check): '{item['name']}'. UUID part: '{uuid_part}'. Skipping.")
                         continue # 不正な形式の場合はスキップ
 
                     # ファイル名中のplayer_uuidが現在のプレイヤーと一致するか確認
@@ -260,13 +263,13 @@ def load_world_data(player_uuid):
                             'game_mode': metadata_content.get('game_mode', 'survival'),
                             'cheats_enabled': metadata_content.get('cheats_enabled', False)
                         })
-                        print(f"DEBUG: Successfully added world: {metadata_content.get('world_name', 'N/A')}")
+                        print(f"DEBUG: Successfully added world: {metadata_content.get('world_name', 'N/A')} (UUID: {metadata_content.get('world_uuid', 'N/A')})") # 追加
                     else:
                         print(f"DEBUG: Could not load metadata content for {item['name']}. Skipping.")
                 else:
-                    print(f"DEBUG: Filename format mismatch (no -metadata- separator): {item['name']}. Skipping.")
+                    print(f"DEBUG: Filename format mismatch (no -metadata- separator): '{item['name']}'. Skipping.")
             else:
-                print(f"DEBUG: Skipping non-metadata file or non-json: {item['name']}")
+                print(f"DEBUG: Skipping non-metadata file or non-json: '{item['name']}'.") # 追加
     elif response.status_code == 404:
         print(f"DEBUG: World directory '{world_dir_path}' not found on GitHub. Assuming no worlds for this player.")
     else:
