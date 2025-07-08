@@ -12,6 +12,37 @@ import zipfile
 import shutil
 import tempfile
 from io import BytesIO
+import os
+# 他の必要なインポート (例: pyglet, pyglet.glなど)
+
+# 環境変数を取得
+WORLD_NAME = os.getenv('WORLD_NAME', 'Default World')
+PLAYER_UUID = os.getenv('PLAYER_UUID', 'default-player-uuid')
+WORLD_UUID = os.getenv('WORLD_UUID', 'default-world-uuid')
+RESOURCE_PACKS_STR = os.getenv('RESOURCE_PACKS', '') # 新しく追加
+BEHAVIOR_PACKS_STR = os.getenv('BEHAVIOR_PACKS', '') # 新しく追加
+
+print(f"Game starting with:")
+print(f"  World Name: {WORLD_NAME}")
+print(f"  Player UUID: {PLAYER_UUID}")
+print(f"  World UUID: {WORLD_UUID}")
+
+# パック情報を処理（プレースホルダー）
+if RESOURCE_PACKS_STR:
+    resource_packs = RESOURCE_PACKS_STR.split(',')
+    print(f"  Resource Packs (selected): {resource_packs}")
+    print("  (Note: Resource packs would be loaded here in a full game engine.)")
+else:
+    print("  No Resource Packs selected.")
+
+if BEHAVIOR_PACKS_STR:
+    behavior_packs = BEHAVIOR_PACKS_STR.split(',')
+    print(f"  Behavior Packs (selected): {behavior_packs}")
+    print("  (Note: Behavior packs would be loaded here in a full game engine.)")
+else:
+    print("  No Behavior Packs selected.")
+
+
 
 # .envファイルをロード
 load_dotenv()
@@ -947,3 +978,9 @@ load_player_inventory()
 
 # アプリケーションの実行
 pyglet.app.run()
+
+print("\n--- Game simulation ends ---")
+# 実際にはここでゲームループが実行されます
+# 簡単な例として、ゲームがすぐに終了しないようにユーザー入力を待つ
+input("Press Enter to exit game simulation...")
+
