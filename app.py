@@ -8,7 +8,10 @@ import base64
 from dotenv import load_dotenv
 import random
 import string
-from werkzeug.utils import secure_filename # secure_filenameをインポート
+from werkzeug.utils import secure_filename
+import zipfile # ★追加: zipファイルの操作用
+import tempfile # ★追加: 一時ファイル作成用
+import shutil # ★追加: ディレクトリ削除用
 
 # .envファイルをロード
 load_dotenv()
@@ -46,7 +49,7 @@ def check_github_config():
         'User-Agent': 'Flask-Minecraft-App-Startup-Check'
     }
 
-    test_file_path = 'player_data.json'
+    test_file_path = 'player_data.json' # 以前のplayer_data.jsonのパス
     url = f'{api_base_url}/{test_file_path}'
 
     print(f"DEBUG: GitHub APIアクセスをテスト中: {url}")
@@ -93,7 +96,7 @@ HEADERS = {
 }
 
 # --- ファイルアップロード設定 ---
-UPLOAD_FOLDER = 'packs'
+UPLOAD_FOLDER = 'packs' # このディレクトリはGitHubに直接パックファイルを保存するのではなく、一時的なアップロード先として使用
 ALLOWED_EXTENSIONS = {'mcpack', 'mcaddon'}
 
 def allowed_file(filename):
@@ -216,29 +219,100 @@ def save_single_player_data(player_data):
         print(f"ERROR: save_single_player_data failed for {path}. Response: {response}")
     return success, response
 
-# ★ここから追加: 利用可能なパックをリストアップする関数
-def list_available_packs():
-    """GitHubの'packs/'ディレクトリから利用可能な.mcpackと.mcaddonファイルをリストアップする"""
-    packs = []
-    pack_dir_path = 'packs'
-    url = f'{GITHUB_API_BASE_URL}/{pack_dir_path}'
-    response = requests.get(url, headers=HEADERS)
+# --- パックレジストリ管理 ---
+PACK_REGISTRY_PATH = 'pack_registry.json'
 
-    if response.status_code == 200:
-        print(f"DEBUG: Listing contents of {pack_dir_path}. Items found: {len(response.json())}")
-        for item in response.json():
-            if item['type'] == 'file' and (item['name'].endswith('.mcpack') or item['name'].endswith('.mcaddon')):
-                packs.append(item['name'])
-                print(f"DEBUG: Found pack: {item['name']}")
+def load_pack_registry():
+    """GitHubからパックレジストリをロードする"""
+    registry = get_github_file_content(PACK_REGISTRY_PATH)
+    return registry if registry is not None else []
+
+def save_pack_registry(registry_data):
+    """パックレジストリをGitHubに保存する"""
+    path = PACK_REGISTRY_PATH
+    current_file_info = get_github_file_info(path)
+    sha = current_file_info['sha'] if current_file_info else None
+    
+    message = 'Update pack registry'
+    success, response = put_github_file_content(path, registry_data, message, sha)
+    if not success:
+        print(f"ERROR: save_pack_registry failed for {path}. Response: {response}")
+    return success, response
+
+def parse_mc_pack(pack_file_path):
+    """
+    .mcpack/.mcaddonファイルを解析し、manifest.jsonからパック情報を抽出する。
+    Args:
+        pack_file_path (str): アップロードされたパックファイルの一時パス。
+    Returns:
+        dict or None: パックのメタデータ辞書 (id, name, version, type) またはNone。
+    """
+    pack_info = None
+    temp_dir = None
+    try:
+        # 一時ディレクトリを作成してパックを展開
+        temp_dir = tempfile.mkdtemp()
+        with zipfile.ZipFile(pack_file_path, 'r') as zip_ref:
+            zip_ref.extractall(temp_dir)
+        
+        manifest_path = os.path.join(temp_dir, 'manifest.json')
+        if os.path.exists(manifest_path):
+            with open(manifest_path, 'r', encoding='utf-8') as f:
+                manifest = json.load(f)
+            
+            header = manifest.get('header', {})
+            modules = manifest.get('modules', [])
+
+            pack_id = header.get('uuid')
+            pack_name = header.get('name')
+            pack_version = header.get('version')
+            pack_type = "unknown"
+
+            # モジュールタイプからパックの種類を判定
+            for module in modules:
+                if module.get('type') == 'resources':
+                    pack_type = 'resource'
+                    break
+                elif module.get('type') == 'data':
+                    pack_type = 'behavior'
+                    break
+                elif module.get('type') == 'script':
+                    pack_type = 'behavior' # スクリプトはビヘイビアパックの一部
+                    break
+                elif module.get('type') == 'client_data':
+                    pack_type = 'resource' # クライアントデータはリソースパックの一部
+                    break
+            
+            if pack_id and pack_name and pack_version:
+                pack_info = {
+                    'id': pack_id,
+                    'name': pack_name,
+                    'version': pack_version,
+                    'type': pack_type,
+                    'filename': os.path.basename(pack_file_path) # 元のファイル名も保存
+                }
+                print(f"DEBUG: Parsed pack info: {pack_info}")
             else:
-                print(f"DEBUG: Skipping non-pack file in packs/: {item['name']}")
-    elif response.status_code == 404:
-        print(f"DEBUG: Packs directory '{pack_dir_path}' not found on GitHub. No packs available.")
-    else:
-        print(f"DEBUG: Failed to list packs directory {pack_dir_path}. Status: {response.status_code}, Response: {response.text}")
-    return packs
-# ★ここまで追加
+                print(f"WARNING: manifest.json missing essential header info: {manifest_path}")
+        else:
+            print(f"WARNING: manifest.json not found in pack: {pack_file_path}")
+            
+    except zipfile.BadZipFile:
+        print(f"ERROR: Not a valid zip file (BadZipFile): {pack_file_path}")
+    except json.JSONDecodeError as e:
+        print(f"ERROR: Invalid manifest.json format in {pack_file_path}: {e}")
+    except Exception as e:
+        print(f"ERROR: Error processing pack {pack_file_path}: {e}")
+    finally:
+        if temp_dir and os.path.exists(temp_dir):
+            shutil.rmtree(temp_dir) # 一時ディレクトリをクリーンアップ
+            print(f"DEBUG: Cleaned up temporary directory: {temp_dir}")
+    return pack_info
 
+def list_available_packs():
+    """パックレジストリから利用可能なパックのリストを取得する"""
+    registry = load_pack_registry()
+    return registry
 
 def load_world_data(player_uuid):
     worlds = []
@@ -283,8 +357,8 @@ def load_world_data(player_uuid):
                             'seed': metadata_content.get('seed', 'N/A'),
                             'game_mode': metadata_content.get('game_mode', 'survival'),
                             'cheats_enabled': metadata_content.get('cheats_enabled', False),
-                            'resource_packs': metadata_content.get('resource_packs', []), # ★追加
-                            'behavior_packs': metadata_content.get('behavior_packs', [])  # ★追加
+                            'resource_packs': metadata_content.get('resource_packs', []),
+                            'behavior_packs': metadata_content.get('behavior_packs', [])
                         })
                         print(f"DEBUG: Successfully added world: {metadata_content.get('world_name', 'N/A')} (UUID: {metadata_content.get('world_uuid', 'N/A')})")
                     else:
@@ -413,80 +487,4 @@ def register():
 def offline_play():
     if 'player_uuid' in session and session.get('is_offline_player'):
         flash("オフラインプレイヤーとしてログイン済みです。", "info")
-        return redirect(url_for('menu'))
-
-    random_digits = ''.join(random.choices(string.digits, k=5))
-    temp_username = f"player{random_digits}"
-    temp_uuid = str(uuid.uuid4())
-
-    temp_player = {
-        'username': temp_username,
-        'password_hash': '',
-        'uuid': temp_uuid,
-        'is_offline_player': True
-    }
-
-    success, response = save_single_player_data(temp_player)
-    if success:
-        session['username'] = temp_username
-        session['player_uuid'] = temp_uuid
-        session['is_offline_player'] = True
-        flash(f"オフラインプレイヤー '{temp_username}' としてログインしました！", "success")
-        print(f"DEBUG: オフラインプレイヤー '{temp_username}' のアカウントがGitHubに作成されました。")
-        return redirect(url_for('menu'))
-    else:
-        flash('オフラインプレイの準備に失敗しました。GitHubの設定を確認してください。', "error")
-        print(f"ERROR: オフラインプレイヤーの作成がGitHubへの保存失敗により失敗しました。Response: {response}")
-        return redirect(url_for('home'))
-
-@app.route('/menu')
-def menu():
-    print("メニューページを表示しました")
-    player_worlds = []
-    if 'player_uuid' in session:
-        player_uuid = session['player_uuid']
-        player_worlds = load_world_data(player_uuid)
-    
-    return render_template('menu.html', worlds=player_worlds)
-    
-
-@app.route('/New-World', methods=['GET', 'POST'])
-def new_world():
-    if 'player_uuid' not in session:
-        flash("ワールドを作成するにはログインしてください。", "warning")
-        print("DEBUG: ワールド作成試行 - 未ログインユーザー。")
-        return redirect(url_for('login'))
-    
-    # ★追加: 利用可能なパックをテンプレートに渡す
-    available_packs = list_available_packs()
-
-    if request.method == 'POST':
-        world_name = request.form['world_name']
-        seed = request.form['seed']
-        game_mode = request.form['game_mode']
-        cheats_enabled = 'cheats_enabled' in request.form
-        # ★追加: フォームから選択されたパックを取得
-        resource_packs = request.form.getlist('resource_packs')
-        behavior_packs = request.form.getlist('behavior_packs')
-
-
-        player_uuid = session['player_uuid']
-        new_world_uuid = str(uuid.uuid4())
-
-        world_metadata = {
-            'player_uuid': player_uuid,
-            'world_name': world_name,
-            'world_uuid': new_world_uuid,
-            'seed': seed,
-            'game_mode': game_mode,
-            'cheats_enabled': cheats_enabled,
-            'resource_packs': resource_packs, # ★追加
-            'behavior_packs': behavior_packs  # ★追加
-        }
-        
-        print(f"DEBUG: 新規ワールドメタデータ: {world_metadata}")
-        success = save_world_data(player_uuid, world_name, world_metadata)
-
-        if success:
-            flash(f'ワールド "{world_name}" が正常に作成されました！', "success")
-            print(f"DEBUG: ワールド '{world_name
+   
