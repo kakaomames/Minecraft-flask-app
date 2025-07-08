@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 import hashlib
 import json
 import os
+import base64
 import uuid
 import requests
 from dotenv import load_dotenv
