@@ -4,9 +4,8 @@ import json
 import os
 import uuid
 import requests
-import base64
 from dotenv import load_dotenv
-from werkzeug.utils import secure_filename # 忘れずにインポート
+from werkzeug.utils import secure_filename
 
 # .envファイルをロード
 load_dotenv()
@@ -19,10 +18,72 @@ GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
 GITHUB_OWNER = os.getenv('GITHUB_OWNER')
 GITHUB_REPO = os.getenv('GITHUB_REPO')
 
-if not GITHUB_TOKEN or not GITHUB_OWNER or not GITHUB_REPO:
-    print("エラー: .env ファイルに GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO が設定されていません。")
-    print(".env ファイルを作成し、必要な情報を記述してください。")
-    exit(1)
+# ★ここから追加: GitHub設定を起動時にチェックする関数
+def check_github_config():
+    """
+    GitHubトークン、オーナー、リポジトリの設定をチェックし、
+    APIへのアクセスが可能か検証する。
+    問題があればエラーメッセージを出力し、Falseを返す。
+    """
+    print("\n--- GitHub設定の初期チェックを開始します ---")
+
+    if not GITHUB_TOKEN:
+        print("エラー: GITHUB_TOKEN が .env ファイルに設定されていません。")
+        print("GitHub Personal Access Tokenを生成し、.envファイルに 'GITHUB_TOKEN=\"YOUR_TOKEN_HERE\"' の形式で設定してください。")
+        return False
+    if not GITHUB_OWNER or not GITHUB_REPO:
+        print("エラー: GITHUB_OWNER または GITHUB_REPO が .env ファイルに設定されていません。")
+        print(".envファイルに 'GITHUB_OWNER=\"あなたのGitHubユーザー名\"' と 'GITHUB_REPO=\"あなたのリポジトリ名\"' を設定してください。")
+        return False
+
+    api_base_url = f'https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/contents'
+    headers = {
+        'Authorization': f'token {GITHUB_TOKEN}',
+        'Accept': 'application/vnd.github.com.v3+json',
+        'User-Agent': 'Flask-Minecraft-App-Startup-Check'
+    }
+
+    # player_data.jsonの情報を取得して、トークンの有効性を確認
+    # ファイルが存在しない場合でも、404は成功とみなす
+    test_file_path = 'player_data.json'
+    url = f'{api_base_url}/{test_file_path}'
+
+    print(f"DEBUG: GitHub APIアクセスをテスト中: {url}")
+    print(f"DEBUG: GITHUB_OWNER: {GITHUB_OWNER}")
+    print(f"DEBUG: GITHUB_REPO: {GITHUB_REPO}")
+    print(f"DEBUG: GITHUB_TOKEN (最初の5文字): {GITHUB_TOKEN[:5]}*****")
+
+    try:
+        response = requests.get(url, headers=headers)
+
+        print(f"DEBUG: レスポンスステータスコード: {response.status_code}")
+        print(f"DEBUG: レスポンスボディ: {response.text}")
+
+        if response.status_code == 200 or response.status_code == 404:
+            print("成功: GitHub APIへのアクセスが確認できました。トークンとリポジトリ設定は有効です。")
+            print("--- GitHub設定の初期チェックを完了しました ---\n")
+            return True
+        elif response.status_code == 401:
+            print("\nエラー: 401 Unauthorized - 認証情報が無効です（Bad credentials）。")
+            print("GitHubトークンが間違っているか、期限切れか、権限が不足しています。")
+            print("GitHubで新しいトークンを生成し、'repo'スコープ（または'Contents'の'Read and write'）を付与して、.envファイルを更新してください。")
+            return False
+        elif response.status_code == 403:
+            print("\nエラー: 403 Forbidden - アクセスが拒否されました。")
+            print("トークンにリポジトリへのアクセス権限がありません（例: プライベートリポジトリへのアクセス）。")
+            print("GitHubトークンの権限（スコープ）が不足している可能性があります。'repo'スコープが付与されているか確認してください。")
+            return False
+        else:
+            print(f"\n予期せぬエラー: Status {response.status_code}")
+            print(f"GitHub APIからの応答: {response.text}")
+            print("GitHub APIへのアクセス中に問題が発生しました。")
+            return False
+
+    except requests.exceptions.RequestException as e:
+        print(f"\nネットワークエラーが発生しました: {e}")
+        print("GitHub APIに接続できませんでした。インターネット接続を確認するか、GitHubのステータスを確認してください。")
+        return False
+# ★ここまで追加
 
 GITHUB_API_BASE_URL = f'https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/contents'
 HEADERS = {
@@ -142,28 +203,28 @@ def save_world_data(player_uuid, world_name, data):
 # --- Flask ルーティング ---
 
 @app.route('/')
-def index(): # ★関数名を'index'に変更 (home関数と重複するため)
-    print("indexページを表示しました") # ★print文を移動
+def index():
+    print("indexページを表示しました")
     message = request.args.get('message')
     return render_template('index.html', message=message)
     
 
 @app.route('/home')
 def home():
-    print("ホームページを表示しました") # ★print文を移動
+    print("ホームページを表示しました")
     message = request.args.get('message')
     return render_template('home.html', message=message)
     
 
 @app.route('/setting')
 def setting():
-    print("設定ページを表示しました") # ★print文を移動
+    print("設定ページを表示しました")
     return render_template('setting.html')
     
 
 @app.route('/store')
 def store():
-    print("ストアページを表示しました") # ★print文を移動
+    print("ストアページを表示しました")
     return render_template('store.html')
     
 
@@ -180,14 +241,14 @@ def login():
                 session['username'] = username
                 session['player_uuid'] = player['uuid']
                 flash(f"ようこそ、{username}さん！", "success")
-                print(f"DEBUG: ユーザー '{username}' がログインしました。") # 追加
+                print(f"DEBUG: ユーザー '{username}' がログインしました。")
                 return redirect(url_for('menu'))
         
         flash('ユーザー名またはパスワードが違います。', "error")
-        print(f"DEBUG: ログイン失敗 - ユーザー名: {username}") # 追加
+        print(f"DEBUG: ログイン失敗 - ユーザー名: {username}")
         return render_template('login.html')
 
-    print("ログインページを表示しました") # ★print文を移動
+    print("ログインページを表示しました")
     return render_template('login.html')
     
 
@@ -196,7 +257,7 @@ def logout():
     session.pop('username', None)
     session.pop('player_uuid', None)
     flash("ログアウトしました。", "info")
-    print("DEBUG: ユーザーがログアウトしました。") # 追加
+    print("DEBUG: ユーザーがログアウトしました。")
     return redirect(url_for('home'))
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -209,7 +270,7 @@ def register():
         
         if any(p['username'] == username for p in players):
             flash('このユーザー名はすでに使用されています。', "error")
-            print(f"DEBUG: 登録失敗 - ユーザー名 '{username}' は既に存在します。") # 追加
+            print(f"DEBUG: 登録失敗 - ユーザー名 '{username}' は既に存在します。")
             return render_template('register.html')
         
         new_uuid = str(uuid.uuid4())
@@ -222,22 +283,22 @@ def register():
         }
         
         players.append(new_player)
-        print(f"DEBUG: 新規プレイヤーデータ: {new_player}") # 追加
+        print(f"DEBUG: 新規プレイヤーデータ: {new_player}")
         if save_player_data(players):
             flash('アカウントが正常に作成されました！ログインしてください。', "success")
-            print(f"DEBUG: ユーザー '{username}' のアカウントが正常に作成されました。") # 追加
+            print(f"DEBUG: ユーザー '{username}' のアカウントが正常に作成されました。")
             return redirect(url_for('login'))
         else:
             flash('アカウント作成に失敗しました。GitHubのトークン権限、リポジトリ名、オーナー名を確認してください。', "error")
-            print(f"DEBUG: ユーザー '{username}' のアカウント作成がGitHubへの保存失敗により失敗しました。") # 追加
+            print(f"DEBUG: ユーザー '{username}' のアカウント作成がGitHubへの保存失敗により失敗しました。")
             return render_template('register.html')
-    print("アカウント生成ページを表示しました") # ★print文を移動
+    print("アカウント生成ページを表示しました")
     return render_template('register.html')
     
 
 @app.route('/menu')
 def menu():
-    print("メニューページを表示しました") # ★print文を移動
+    print("メニューページを表示しました")
     player_worlds = []
     if 'player_uuid' in session:
         player_uuid = session['player_uuid']
@@ -250,7 +311,7 @@ def menu():
 def new_world():
     if 'player_uuid' not in session:
         flash("ワールドを作成するにはログインしてください。", "warning")
-        print("DEBUG: ワールド作成試行 - 未ログインユーザー。") # 追加
+        print("DEBUG: ワールド作成試行 - 未ログインユーザー。")
         return redirect(url_for('login'))
     
     if request.method == 'POST':
@@ -273,19 +334,19 @@ def new_world():
             'behavior_packs': []
         }
         
-        print(f"DEBUG: 新規ワールドメタデータ: {world_metadata}") # 追加
+        print(f"DEBUG: 新規ワールドメタデータ: {world_metadata}")
         success = save_world_data(player_uuid, world_name, world_metadata)
 
         if success:
             flash(f'ワールド "{world_name}" が正常に作成されました！', "success")
-            print(f"DEBUG: ワールド '{world_name}' が正常に作成されました。") # 追加
+            print(f"DEBUG: ワールド '{world_name}' が正常に作成されました。")
             return redirect(url_for('menu'))
         else:
             flash('ワールド作成に失敗しました。GitHubのトークン権限、リポジトリ名、オーナー名を確認してください。', "error")
-            print(f"DEBUG: ワールド '{world_name}' の作成がGitHubへの保存失敗により失敗しました。") # 追加
+            print(f"DEBUG: ワールド '{world_name}' の作成がGitHubへの保存失敗により失敗しました。")
             return render_template('new_world.html')
 
-    print("ワールド生成ページを表示しました") # ★print文を移動
+    print("ワールド生成ページを表示しました")
     return render_template('new_world.html')
     
 
@@ -293,7 +354,7 @@ def new_world():
 def world_setting():
     if 'player_uuid' not in session:
         flash("ワールド設定を変更するにはログインしてください。", "warning")
-        print("DEBUG: ワールド設定試行 - 未ログインユーザー。") # 追加
+        print("DEBUG: ワールド設定試行 - 未ログインユーザー。")
         return redirect(url_for('login'))
     
     player_uuid = session['player_uuid']
@@ -305,10 +366,10 @@ def world_setting():
         cheats_enabled = 'cheats_enabled' in request.form
 
         flash("ワールド設定の更新は現在サポートされていません。", "warning")
-        print("DEBUG: ワールド設定の更新は現在サポートされていません。") # 追加
+        print("DEBUG: ワールド設定の更新は現在サポートされていません。")
         return redirect(url_for('menu'))
 
-    print("ワールド設定ページを表示しました") # ★print文を移動
+    print("ワールド設定ページを表示しました")
     return render_template('world_setting.html', worlds=available_worlds)
     
 
@@ -317,13 +378,13 @@ def import_pack():
     if request.method == 'POST':
         if 'file' not in request.files:
             flash('ファイルが選択されていません。', "error")
-            print("DEBUG: パックインポート失敗 - ファイルが選択されていません。") # 追加
+            print("DEBUG: パックインポート失敗 - ファイルが選択されていません。")
             return render_template('import.html')
         file = request.files['file']
         
         if file.filename == '':
             flash('ファイルが選択されていません。', "error")
-            print("DEBUG: パックインポート失敗 - ファイル名が空です。") # 追加
+            print("DEBUG: パックインポート失敗 - ファイル名が空です。")
             return render_template('import.html')
         
         if file and allowed_file(file.filename):
@@ -353,19 +414,19 @@ def import_pack():
                 return render_template('import.html')
         else:
             flash('許可されていないファイル形式です。(.mcpackまたは.mcaddonのみ)', "error")
-            print("DEBUG: パックインポート失敗 - 許可されていないファイル形式です。") # 追加
+            print("DEBUG: パックインポート失敗 - 許可されていないファイル形式です。")
             return render_template('import.html')
     
-    print("インポートページを表示しました") # ★print文を移動
+    print("インポートページを表示しました")
     return render_template('import.html')
     
 
 @app.route('/play/<world_name>/<world_uuid>')
 def play_game(world_name, world_uuid):
-    print(f"プレイページを表示しました: ワールド名={world_name}, ワールドUUID={world_uuid}") # ★print文を移動
+    print(f"プレイページを表示しました: ワールド名={world_name}, ワールドUUID={world_uuid}")
     if 'player_uuid' not in session:
         flash("ゲームをプレイするにはログインしてください。", "warning")
-        print("DEBUG: プレイ試行 - 未ログインユーザー。") # 追加
+        print("DEBUG: プレイ試行 - 未ログインユーザー。")
         return redirect(url_for('login'))
 
     player_uuid = session['player_uuid']
@@ -395,11 +456,16 @@ read -n 1 -s
 
     response = Response(script_content, mimetype=mimetype)
     response.headers.set("Content-Disposition", "attachment", filename=filename)
-    print(f"DEBUG: ランチャースクリプト '{filename}' を生成しました。") # 追加
+    print(f"DEBUG: ランチャースクリプト '{filename}' を生成しました。")
     return response
 
 
 if __name__ == '__main__':
+    # アプリケーション起動時にGitHub設定をチェック
+    if not check_github_config():
+        print("致命的なエラー: GitHub設定が正しくありません。アプリケーションを終了します。")
+        exit(1) # 設定が正しくない場合はアプリケーションを終了
+
     if not GITHUB_TOKEN or not GITHUB_OWNER or not GITHUB_REPO:
         print("エラー: .env ファイルに GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO が設定されていません。")
         print(".env ファイルを作成し、必要な情報を記述してください。")
