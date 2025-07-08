@@ -9,9 +9,9 @@ from dotenv import load_dotenv
 import random
 import string
 from werkzeug.utils import secure_filename
-import zipfile # ★追加: zipファイルの操作用
-import tempfile # ★追加: 一時ファイル作成用
-import shutil # ★追加: ディレクトリ削除用
+import zipfile
+import tempfile
+import shutil
 
 # .envファイルをロード
 load_dotenv()
@@ -49,7 +49,7 @@ def check_github_config():
         'User-Agent': 'Flask-Minecraft-App-Startup-Check'
     }
 
-    test_file_path = 'player_data.json' # 以前のplayer_data.jsonのパス
+    test_file_path = 'player_data.json'
     url = f'{api_base_url}/{test_file_path}'
 
     print(f"DEBUG: GitHub APIアクセスをテスト中: {url}")
@@ -96,7 +96,7 @@ HEADERS = {
 }
 
 # --- ファイルアップロード設定 ---
-UPLOAD_FOLDER = 'packs' # このディレクトリはGitHubに直接パックファイルを保存するのではなく、一時的なアップロード先として使用
+UPLOAD_FOLDER = 'packs'
 ALLOWED_EXTENSIONS = {'mcpack', 'mcaddon'}
 
 def allowed_file(filename):
@@ -176,10 +176,9 @@ def get_github_file_info(path):
     return None
 
 # --- プレイヤーデータ管理のリファクタリング ---
-PLAYERS_DIR_PATH = 'players' # プレイヤーデータを格納するGitHub上のディレクトリ
+PLAYERS_DIR_PATH = 'players'
 
 def load_all_player_data():
-    """GitHubの'players/'ディレクトリからすべてのプレイヤーデータをロードする"""
     all_players = []
     url = f'{GITHUB_API_BASE_URL}/{PLAYERS_DIR_PATH}'
     response = requests.get(url, headers=HEADERS)
@@ -203,7 +202,6 @@ def load_all_player_data():
     return all_players
 
 def save_single_player_data(player_data):
-    """単一のプレイヤーデータをGitHubに保存する (players/{uuid}.json)"""
     player_uuid = player_data.get('uuid')
     if not player_uuid:
         print("ERROR: Player data has no UUID. Cannot save.")
@@ -223,12 +221,10 @@ def save_single_player_data(player_data):
 PACK_REGISTRY_PATH = 'pack_registry.json'
 
 def load_pack_registry():
-    """GitHubからパックレジストリをロードする"""
     registry = get_github_file_content(PACK_REGISTRY_PATH)
     return registry if registry is not None else []
 
 def save_pack_registry(registry_data):
-    """パックレジストリをGitHubに保存する"""
     path = PACK_REGISTRY_PATH
     current_file_info = get_github_file_info(path)
     sha = current_file_info['sha'] if current_file_info else None
@@ -240,17 +236,9 @@ def save_pack_registry(registry_data):
     return success, response
 
 def parse_mc_pack(pack_file_path):
-    """
-    .mcpack/.mcaddonファイルを解析し、manifest.jsonからパック情報を抽出する。
-    Args:
-        pack_file_path (str): アップロードされたパックファイルの一時パス。
-    Returns:
-        dict or None: パックのメタデータ辞書 (id, name, version, type) またはNone。
-    """
     pack_info = None
     temp_dir = None
     try:
-        # 一時ディレクトリを作成してパックを展開
         temp_dir = tempfile.mkdtemp()
         with zipfile.ZipFile(pack_file_path, 'r') as zip_ref:
             zip_ref.extractall(temp_dir)
@@ -268,7 +256,6 @@ def parse_mc_pack(pack_file_path):
             pack_version = header.get('version')
             pack_type = "unknown"
 
-            # モジュールタイプからパックの種類を判定
             for module in modules:
                 if module.get('type') == 'resources':
                     pack_type = 'resource'
@@ -277,10 +264,10 @@ def parse_mc_pack(pack_file_path):
                     pack_type = 'behavior'
                     break
                 elif module.get('type') == 'script':
-                    pack_type = 'behavior' # スクリプトはビヘイビアパックの一部
+                    pack_type = 'behavior'
                     break
                 elif module.get('type') == 'client_data':
-                    pack_type = 'resource' # クライアントデータはリソースパックの一部
+                    pack_type = 'resource'
                     break
             
             if pack_id and pack_name and pack_version:
@@ -289,7 +276,7 @@ def parse_mc_pack(pack_file_path):
                     'name': pack_name,
                     'version': pack_version,
                     'type': pack_type,
-                    'filename': os.path.basename(pack_file_path) # 元のファイル名も保存
+                    'filename': os.path.basename(pack_file_path)
                 }
                 print(f"DEBUG: Parsed pack info: {pack_info}")
             else:
@@ -305,12 +292,11 @@ def parse_mc_pack(pack_file_path):
         print(f"ERROR: Error processing pack {pack_file_path}: {e}")
     finally:
         if temp_dir and os.path.exists(temp_dir):
-            shutil.rmtree(temp_dir) # 一時ディレクトリをクリーンアップ
+            shutil.rmtree(temp_dir)
             print(f"DEBUG: Cleaned up temporary directory: {temp_dir}")
     return pack_info
 
 def list_available_packs():
-    """パックレジストリから利用可能なパックのリストを取得する"""
     registry = load_pack_registry()
     return registry
 
@@ -487,4 +473,24 @@ def register():
 def offline_play():
     if 'player_uuid' in session and session.get('is_offline_player'):
         flash("オフラインプレイヤーとしてログイン済みです。", "info")
-   
+        return redirect(url_for('menu'))
+
+    random_digits = ''.join(random.choices(string.digits, k=5))
+    temp_username = f"player{random_digits}"
+    temp_uuid = str(uuid.uuid4())
+
+    temp_player = {
+        'username': temp_username,
+        'password_hash': '',
+        'uuid': temp_uuid,
+        'is_offline_player': True
+    }
+
+    try: # ★追加: エラーハンドリング
+        success, response = save_single_player_data(temp_player)
+        if success:
+            session['username'] = temp_username
+            session['player_uuid'] = temp_uuid
+            session['is_offline_player'] = True
+            flash(f"オフラインプレイヤー '{temp_username}' としてログインしました！", "success")
+            print(f"DEBUG: オフラインプレイヤー '{temp_username}' のアカウントがGitH
