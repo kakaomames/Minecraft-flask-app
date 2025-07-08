@@ -6,8 +6,8 @@ import uuid
 import requests
 import base64
 from dotenv import load_dotenv
-import random # オフラインプレイヤー名生成用
-import string # オフラインプレイヤー名生成用
+import random
+import string
 
 # .envファイルをロード
 load_dotenv()
@@ -57,7 +57,7 @@ def check_github_config():
         response = requests.get(url, headers=headers)
 
         print(f"DEBUG: レスポンスステータスコード: {response.status_code}")
-        # print(f"DEBUG: レスポンスボディ: {response.text}") # 長いのでコメントアウト
+        # print(f"DEBUG: レスポンスボディ: {response.text}")
 
         if response.status_code == 200 or response.status_code == 404:
             print("成功: GitHub APIへのアクセスが確認できました。トークンとリポジトリ設定は有効です。")
@@ -222,13 +222,13 @@ def load_world_data(player_uuid):
     url = f'{GITHUB_API_BASE_URL}/{world_dir_path}'
     response = requests.get(url, headers=HEADERS)
 
-    print(f"DEBUG: Attempting to list world directory: {world_dir_path}. Status: {response.status_code}") # 追加
+    print(f"DEBUG: Attempting to list world directory: {world_dir_path}. Status: {response.status_code}")
     if response.status_code == 200:
         github_items = response.json()
-        print(f"DEBUG: Found {len(github_items)} items in {world_dir_path} on GitHub.") # 追加
+        print(f"DEBUG: Found {len(github_items)} items in {world_dir_path} on GitHub.")
 
         for item in github_items:
-            print(f"DEBUG: Processing item: {item['name']} (Type: {item['type']})") # 追加
+            print(f"DEBUG: Processing item: {item['name']} (Type: {item['type']})")
             if item['type'] == 'file' and item['name'].endswith('.json') and '-metadata-' in item['name']:
                 filename_without_ext = item['name'].rsplit('.json', 1)[0]
                 
@@ -245,7 +245,7 @@ def load_world_data(player_uuid):
                         world_uuid_from_filename = uuid_part[37:]
                     else:
                         print(f"DEBUG: Invalid UUID format in filename (length/hyphen check): '{item['name']}'. UUID part: '{uuid_part}'. Skipping.")
-                        continue # 不正な形式の場合はスキップ
+                        continue
 
                     # ファイル名中のplayer_uuidが現在のプレイヤーと一致するか確認
                     if player_uuid_in_filename != player_uuid:
@@ -263,13 +263,13 @@ def load_world_data(player_uuid):
                             'game_mode': metadata_content.get('game_mode', 'survival'),
                             'cheats_enabled': metadata_content.get('cheats_enabled', False)
                         })
-                        print(f"DEBUG: Successfully added world: {metadata_content.get('world_name', 'N/A')} (UUID: {metadata_content.get('world_uuid', 'N/A')})") # 追加
+                        print(f"DEBUG: Successfully added world: {metadata_content.get('world_name', 'N/A')} (UUID: {metadata_content.get('world_uuid', 'N/A')})")
                     else:
                         print(f"DEBUG: Could not load metadata content for {item['name']}. Skipping.")
                 else:
                     print(f"DEBUG: Filename format mismatch (no -metadata- separator): '{item['name']}'. Skipping.")
             else:
-                print(f"DEBUG: Skipping non-metadata file or non-json: '{item['name']}'.") # 追加
+                print(f"DEBUG: Skipping non-metadata file or non-json: '{item['name']}'.")
     elif response.status_code == 404:
         print(f"DEBUG: World directory '{world_dir_path}' not found on GitHub. Assuming no worlds for this player.")
     else:
@@ -277,7 +277,13 @@ def load_world_data(player_uuid):
     return worlds
 
 def save_world_data(player_uuid, world_name, data):
+    # ワールドのメタデータファイルパスを生成
+    # 既存のワールドUUIDを再利用するか、新規に生成するかは、この関数の呼び出し元で制御
+    # ここでは、呼び出し元から渡されたdata['world_uuid']を使用
     world_uuid_for_path = data.get('world_uuid', str(uuid.uuid4()))
+    
+    # ファイル名が 'ワールド名-metadata-プレイヤーUUID-ワールドUUID.json' の形式であることを確認
+    # 既存のファイル名を特定するために、正確なパスを構築
     path = f'worlds/{player_uuid}/{world_name}-metadata-{player_uuid}-{world_uuid_for_path}.json'
     
     current_file_info = get_github_file_info(path)
@@ -470,27 +476,48 @@ def new_world():
     return render_template('new_world.html')
     
 
-@app.route('/World-setting', methods=['GET', 'POST'])
-def world_setting():
+@app.route('/World-setting/<world_name>/<world_uuid>', methods=['GET', 'POST'])
+def world_setting(world_name, world_uuid):
     if 'player_uuid' not in session:
         flash("ワールド設定を変更するにはログインしてください。", "warning")
-        print("DEBUG: ワールド設定試行 - 未ログインユーザー。")
         return redirect(url_for('login'))
     
     player_uuid = session['player_uuid']
-    available_worlds = load_world_data(player_uuid)
+    
+    # 該当ワールドのメタデータファイルパスを構築
+    world_metadata_filename = f'{world_name}-metadata-{player_uuid}-{world_uuid}.json'
+    world_metadata_path = f'worlds/{player_uuid}/{world_metadata_filename}'
+    
+    world_data = get_github_file_content(world_metadata_path)
 
-    if request.method == 'POST':
-        selected_world_name = request.form['selected_world']
-        game_mode = request.form['game_mode']
-        cheats_enabled = 'cheats_enabled' in request.form
-
-        flash("ワールド設定の更新は現在サポートされていません。", "warning")
-        print("DEBUG: ワールド設定の更新は現在サポートされていません。")
+    if not world_data:
+        flash(f"ワールド '{world_name}' ({world_uuid}) の設定が見つかりませんでした。", "error")
+        print(f"ERROR: World metadata not found for {world_metadata_path}")
         return redirect(url_for('menu'))
 
-    print("ワールド設定ページを表示しました")
-    return render_template('world_setting.html', worlds=available_worlds)
+    if request.method == 'POST':
+        # フォームから新しい設定を取得
+        updated_game_mode = request.form['game_mode']
+        updated_cheats_enabled = 'cheats_enabled' in request.form
+
+        # 既存のワールドデータを更新
+        world_data['game_mode'] = updated_game_mode
+        world_data['cheats_enabled'] = updated_cheats_enabled
+        
+        # GitHubに更新されたメタデータを保存
+        success = save_world_data(player_uuid, world_name, world_data) # save_world_dataは既存のshaを内部で処理
+
+        if success:
+            flash(f'ワールド "{world_name}" の設定が更新されました！', "success")
+            print(f"DEBUG: ワールド '{world_name}' ({world_uuid}) の設定が正常に更新されました。")
+            return redirect(url_for('menu'))
+        else:
+            flash('ワールド設定の更新に失敗しました。GitHubの設定を確認してください。', "error")
+            print(f"ERROR: ワールド '{world_name}' ({world_uuid}) の設定更新がGitHubへの保存失敗により失敗しました。")
+            return render_template('world_setting.html', world=world_data) # 失敗時は現在のデータを再表示
+
+    print(f"ワールド設定ページを表示しました: ワールド名={world_name}, ワールドUUID={world_uuid}")
+    return render_template('world_setting.html', world=world_data)
     
 
 @app.route('/import', methods=['GET', 'POST'])
@@ -579,14 +606,13 @@ read -n 1 -s
     print(f"DEBUG: ランチャースクリプト '{filename}' を生成しました。")
     return response
 
-@app.route('/server') # 新しい /server エンドポイント
+@app.route('/server')
 def server_page():
     print("サーバーページを表示しました")
     return render_template('server.html')
 
 
 if __name__ == '__main__':
-    # アプリケーション起動時にGitHub設定をチェック
     if not check_github_config():
         print("致命的なエラー: GitHub設定が正しくありません。アプリケーションを終了します。")
         exit(1)
