@@ -36,7 +36,7 @@
         <h2>パックのインポート</h2>
         <p>Minecraft統合版のリソースパック (.mcpack) またはビヘイビアパック (.mcaddon) をアップロードしてください。</p>
         
-        {# ★ここを修正: method="POST" と enctype="multipart/form-data" を追加 #}
+        {# ★ここが重要です！この行が正確に記述されているか確認してください。 #}
         <form method="POST" enctype="multipart/form-data">
             <label for="file">パックファイルを選択:</label><br>
             <input type="file" id="file" name="file" accept=".mcpack,.mcaddon" required><br><br>
