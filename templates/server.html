@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>サーバー情報 - マイクラプロジェクト</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>サーバー情報</h1>
+        <nav>
+            <ul>
+                <li><a href="/">ホーム</a></li>
+                <li><a href="/setting">設定</a></li>
+                <li><a href="/store">マーケットプレイス</a></li>
+                <li><a href="/menu">ゲームメニュー</a></li>
+                <li><a href="/import">パックをインポート</a></li>
+                <li><a href="/server">サーバー</a></li>
+                <li><a href="/offline">オフラインプレイ</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>サーバー情報</h2>
+        <p>このページは、将来的なマルチプレイヤー機能やサーバー管理のためのプレースホルダーです。</p>
+        <p>現在、ゲームはローカルで実行されており、マルチプレイヤー機能は実装されていません。</p>
+        <p>今後のアップデートにご期待ください！</p>
+        <p><a href="{{ url_for('home') }}">ホームに戻る</a></p>
+    </main>
+    <footer>
+        <p>&copy; 2025 マイクラプロジェクト</p>
+    </footer>
+</body>
+</html>
