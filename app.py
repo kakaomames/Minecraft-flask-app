@@ -96,7 +96,6 @@ HEADERS = {
 }
 
 # --- ファイルアップロード設定 ---
-# UPLOAD_FOLDER は一時的なアップロード先として使用し、GitHubへの直接パスではない
 ALLOWED_EXTENSIONS = {'mcpack', 'mcaddon'}
 
 def allowed_file(filename):
@@ -175,31 +174,25 @@ def get_github_file_info(path):
         print(f"DEBUG: Failed to get file info for {path}. Status: {response.status_code}, Response: {response.text}")
     return None
 
-# ★追加: ディレクトリをGitHubにアップロードする関数
 def upload_directory_to_github(local_dir_path, github_base_path, commit_message):
-    """
-    ローカルディレクトリの内容をGitHubリポジトリに再帰的にアップロードする。
-    既存のファイルは更新し、新しいファイルは作成する。
-    """
     success_count = 0
     fail_count = 0
     
+    print(f"DEBUG: Starting directory upload from '{local_dir_path}' to GitHub path '{github_base_path}'") # 追加
     for root, _, files in os.walk(local_dir_path):
         for file_name in files:
             local_file_path = os.path.join(root, file_name)
-            # GitHub上の相対パスを計算
             relative_path = os.path.relpath(local_file_path, local_dir_path)
-            github_path = os.path.join(github_base_path, relative_path).replace(os.sep, '/') # GitHubパスはスラッシュ区切り
+            github_path = os.path.join(github_base_path, relative_path).replace(os.sep, '/')
 
+            print(f"DEBUG: Processing local file: {local_file_path} -> GitHub path: {github_path}") # 追加
             try:
                 with open(local_file_path, 'rb') as f:
                     file_content_bytes = f.read()
                 
-                # GitHub上の既存ファイルのSHAを取得して更新を試みる
                 existing_file_info = get_github_file_info(github_path)
                 sha = existing_file_info['sha'] if existing_file_info else None
                 
-                # put_github_file_contentはbytesを受け取れるように修正済み
                 file_success, file_response = put_github_file_content(
                     github_path,
                     file_content_bytes,
@@ -208,7 +201,7 @@ def upload_directory_to_github(local_dir_path, github_base_path, commit_message)
                 )
                 if file_success:
                     success_count += 1
-                    print(f"DEBUG: Uploaded/Updated: {github_path}")
+                    # print(f"DEBUG: Uploaded/Updated: {github_path}") # 大量ログ防止のためコメントアウト
                 else:
                     fail_count += 1
                     print(f"ERROR: Failed to upload/update {github_path}. Response: {file_response}")
@@ -218,7 +211,7 @@ def upload_directory_to_github(local_dir_path, github_base_path, commit_message)
                 print(f"ERROR: Error processing local file {local_file_path} for upload: {e}")
     
     print(f"INFO: Directory upload finished. Success: {success_count}, Failed: {fail_count}")
-    return fail_count == 0 # 全て成功した場合のみTrue
+    return fail_count == 0
 
 # --- プレイヤーデータ管理のリファクタリング ---
 PLAYERS_DIR_PATH = 'players'
@@ -264,7 +257,7 @@ def save_single_player_data(player_data):
 
 # --- パックレジストリ管理 ---
 PACK_REGISTRY_PATH = 'pack_registry.json'
-PACKS_EXTRACTED_BASE_PATH = 'packs_extracted' # 展開されたパックを保存するGitHub上のベースパス
+PACKS_EXTRACTED_BASE_PATH = 'packs_extracted'
 
 def load_pack_registry():
     registry = get_github_file_content(PACK_REGISTRY_PATH)
@@ -284,15 +277,20 @@ def save_pack_registry(registry_data):
 def parse_mc_pack(pack_file_path):
     pack_info = None
     temp_dir = None
+    print(f"DEBUG: Starting parse_mc_pack for: {pack_file_path}") # 追加
     try:
         temp_dir = tempfile.mkdtemp()
+        print(f"DEBUG: Created temporary extraction directory: {temp_dir}") # 追加
         with zipfile.ZipFile(pack_file_path, 'r') as zip_ref:
             zip_ref.extractall(temp_dir)
+        print(f"DEBUG: Pack extracted to: {temp_dir}") # 追加
         
         manifest_path = os.path.join(temp_dir, 'manifest.json')
+        print(f"DEBUG: Looking for manifest.json at: {manifest_path}") # 追加
         if os.path.exists(manifest_path):
             with open(manifest_path, 'r', encoding='utf-8') as f:
                 manifest = json.load(f)
+            print(f"DEBUG: manifest.json found and loaded. Content: {json.dumps(manifest, indent=2)}") # 追加
             
             header = manifest.get('header', {})
             modules = manifest.get('modules', [])
@@ -323,11 +321,11 @@ def parse_mc_pack(pack_file_path):
                     'version': pack_version,
                     'type': pack_type,
                     'filename': os.path.basename(pack_file_path),
-                    'extracted_path': f'{PACKS_EXTRACTED_BASE_PATH}/{pack_id}' # ★追加: 展開後のGitHubパス
+                    'extracted_path': f'{PACKS_EXTRACTED_BASE_PATH}/{pack_id}'
                 }
-                print(f"DEBUG: Parsed pack info: {pack_info}")
+                print(f"DEBUG: Parsed pack info successfully: {pack_info}")
             else:
-                print(f"WARNING: manifest.json missing essential header info: {manifest_path}")
+                print(f"WARNING: manifest.json missing essential header info (uuid, name, or version): {manifest_path}")
         else:
             print(f"WARNING: manifest.json not found in pack: {pack_file_path}")
             
@@ -338,13 +336,13 @@ def parse_mc_pack(pack_file_path):
     except Exception as e:
         print(f"ERROR: Error processing pack {pack_file_path}: {e}")
     finally:
-        # ここではtemp_dirを削除しない。後でupload_directory_to_githubが使うため。
-        # 呼び出し元でtemp_dirとtemp_file_pathを削除する。
+        # temp_dirは呼び出し元でクリーンアップされる
         pass 
-    return pack_info, temp_dir # ★変更: temp_dirも返す
+    return pack_info, temp_dir
 
 def list_available_packs():
     registry = load_pack_registry()
+    print(f"DEBUG: Loaded pack registry: {registry}") # 追加
     return registry
 
 def load_world_data(player_uuid):
@@ -659,6 +657,7 @@ def world_setting(world_name, world_uuid):
 @app.route('/import', methods=['GET', 'POST'])
 def import_pack():
     if request.method == 'POST':
+        print("DEBUG: Pack import POST request received.") # 追加
         if 'file' not in request.files:
             flash('ファイルが選択されていません。', "error")
             print("DEBUG: パックインポート失敗 - ファイルが選択されていません。")
@@ -676,24 +675,22 @@ def import_pack():
             return render_template('import.html')
         
         temp_file_path = None
-        temp_extract_dir = None # ★追加: 展開ディレクトリを保持
+        temp_extract_dir = None
 
         try:
-            # 一時ファイルとして保存
-            temp_dir_for_file = tempfile.mkdtemp() # ファイル保存用の一時ディレクトリ
+            temp_dir_for_file = tempfile.mkdtemp()
             temp_file_path = os.path.join(temp_dir_for_file, secure_filename(file.filename))
             file.save(temp_file_path)
             print(f"DEBUG: Uploaded pack saved temporarily to: {temp_file_path}")
 
-            # パックを解析 (temp_extract_dirも返される)
             pack_metadata, temp_extract_dir = parse_mc_pack(temp_file_path)
-
-            if pack_metadata and temp_extract_dir: # temp_extract_dirも有効か確認
+            
+            if pack_metadata and temp_extract_dir:
                 pack_id = pack_metadata['id']
                 github_extracted_pack_path = f'{PACKS_EXTRACTED_BASE_PATH}/{pack_id}'
+                print(f"DEBUG: Pack metadata parsed. ID: {pack_id}, Extracted Dir: {temp_extract_dir}") # 追加
 
-                # 展開されたパックコンテンツをGitHubにアップロード
-                print(f"DEBUG: Uploading extracted pack contents from {temp_extract_dir} to GitHub path {github_extracted_pack_path}...")
+                print(f"DEBUG: Attempting to upload extracted pack contents from {temp_extract_dir} to GitHub path {github_extracted_pack_path}...")
                 upload_success = upload_directory_to_github(
                     temp_extract_dir,
                     github_extracted_pack_path,
@@ -704,11 +701,10 @@ def import_pack():
                     flash(f'パック "{pack_metadata["name"]}" のコンテンツのGitHubへのアップロードに失敗しました。', "error")
                     print(f"ERROR: Failed to upload extracted pack contents for {pack_metadata['name']}.")
                     return render_template('import.html')
+                print(f"DEBUG: Extracted pack contents uploaded to GitHub successfully.") # 追加
 
-                # 既存のパックレジストリをロード
                 pack_registry = load_pack_registry()
                 
-                # 同じIDのパックが既に存在するかチェックし、存在すれば更新、なければ追加
                 existing_pack_index = next((i for i, p in enumerate(pack_registry) if p.get('id') == pack_metadata['id']), -1)
                 
                 if existing_pack_index != -1:
@@ -718,7 +714,7 @@ def import_pack():
                     pack_registry.append(pack_metadata)
                     print(f"DEBUG: Added new pack to registry: {pack_metadata['name']}")
                 
-                # パックレジストリをGitHubに保存
+                print(f"DEBUG: Attempting to save pack registry to GitHub.") # 追加
                 success, response = save_pack_registry(pack_registry)
 
                 if success:
@@ -732,22 +728,24 @@ def import_pack():
                     return render_template('import.html')
             else:
                 flash('パックの解析に失敗しました。有効なMinecraftパックファイルか確認してください。', "error")
-                print(f"ERROR: Failed to parse pack file: {file.filename}")
+                print(f"ERROR: Failed to parse pack file: {file.filename}. pack_metadata: {pack_metadata}, temp_extract_dir: {temp_extract_dir}") # 追加
                 return render_template('import.html')
 
         except Exception as e:
             flash(f'ファイルの処理中にエラーが発生しました: {e}', "error")
             print(f"ERROR: Error during pack import process: {e}")
+            import traceback
+            traceback.print_exc() # 完全なトレースバックを出力
             return render_template('import.html')
         finally:
             if temp_file_path and os.path.exists(temp_file_path):
-                os.remove(temp_file_path) # 一時ファイルを削除
+                os.remove(temp_file_path)
                 print(f"DEBUG: Cleaned up temporary pack file: {temp_file_path}")
             if temp_extract_dir and os.path.exists(temp_extract_dir):
-                shutil.rmtree(temp_extract_dir) # パック展開用の一時ディレクトリを削除
+                shutil.rmtree(temp_extract_dir)
                 print(f"DEBUG: Cleaned up temporary extraction directory: {temp_extract_dir}")
             if temp_dir_for_file and os.path.exists(temp_dir_for_file):
-                shutil.rmtree(temp_dir_for_file) # ファイル保存用の一時ディレクトリを削除
+                shutil.rmtree(temp_dir_for_file)
                 print(f"DEBUG: Cleaned up temporary file directory: {temp_dir_for_file}")
     
     print("インポートページを表示しました")
@@ -775,11 +773,11 @@ def play_game(world_name, world_uuid):
         selected_resource_pack_filenames = world_data.get('resource_packs', [])
         selected_behavior_pack_filenames = world_data.get('behavior_packs', [])
         
-        # 選択されたパックのファイル名から、pack_registryを使って展開パスを取得
         all_available_packs = load_pack_registry()
         
         resource_pack_paths = []
         for filename in selected_resource_pack_filenames:
+            # pack_infoをIDではなくfilenameで検索
             pack_info = next((p for p in all_available_packs if p.get('filename') == filename), None)
             if pack_info and pack_info.get('extracted_path'):
                 resource_pack_paths.append(pack_info['extracted_path'])
@@ -788,6 +786,7 @@ def play_game(world_name, world_uuid):
         
         behavior_pack_paths = []
         for filename in selected_behavior_pack_filenames:
+            # pack_infoをIDではなくfilenameで検索
             pack_info = next((p for p in all_available_packs if p.get('filename') == filename), None)
             if pack_info and pack_info.get('extracted_path'):
                 behavior_pack_paths.append(pack_info['extracted_path'])
