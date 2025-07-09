@@ -19,8 +19,8 @@ import os
 WORLD_NAME = os.getenv('WORLD_NAME', 'Default World')
 PLAYER_UUID = os.getenv('PLAYER_UUID', 'default-player-uuid')
 WORLD_UUID = os.getenv('WORLD_UUID', 'default-world-uuid')
-RESOURCE_PACKS_STR = os.getenv('RESOURCE_PACKS', '') # 新しく追加
-BEHAVIOR_PACKS_STR = os.getenv('BEHAVIOR_PACKS', '') # 新しく追加
+RESOURCE_PACK_PATHS_STR = os.getenv('RESOURCE_PACK_PATHS', '') # 新しく追加
+BEHAVIOR_PACK_PATHS_STR = os.getenv('BEHAVIOR_PACK_PATHS', '') # 新しく追加
 
 print(f"Game starting with:")
 print(f"  World Name: {WORLD_NAME}")
@@ -28,19 +28,33 @@ print(f"  Player UUID: {PLAYER_UUID}")
 print(f"  World UUID: {WORLD_UUID}")
 
 # パック情報を処理（プレースホルダー）
-if RESOURCE_PACKS_STR:
-    resource_packs = RESOURCE_PACKS_STR.split(',')
-    print(f"  Resource Packs (selected): {resource_packs}")
-    print("  (Note: Resource packs would be loaded here in a full game engine.)")
+if RESOURCE_PACK_PATHS_STR:
+    resource_pack_paths = RESOURCE_PACK_PATHS_STR.split(',')
+    print(f"  Resource Pack Extracted Paths (selected): {resource_pack_paths}")
+    print("  (Note: Resource pack contents would be loaded from these GitHub paths.)")
 else:
     print("  No Resource Packs selected.")
 
-if BEHAVIOR_PACKS_STR:
-    behavior_packs = BEHAVIOR_PACKS_STR.split(',')
-    print(f"  Behavior Packs (selected): {behavior_packs}")
-    print("  (Note: Behavior packs would be loaded here in a full game engine.)")
+if BEHAVIOR_PACK_PATHS_STR:
+    behavior_pack_paths = BEHAVIOR_PACK_PATHS_STR.split(',')
+    print(f"  Behavior Pack Extracted Paths (selected): {behavior_pack_paths}")
+    print("  (Note: Behavior pack contents would be loaded from these GitHub paths.)")
 else:
     print("  No Behavior Packs selected.")
+
+# ここにゲームの初期化ロジック（Three.jsなど）が続く
+# 例:
+# from pyglet.gl import *
+# window = pyglet.window.Window(width=800, height=600, caption=f"Minecraft-like Game - {WORLD_NAME}")
+# @window.event
+# def on_draw():
+#     glClear(GL_COLOR_BUFFER_BIT)
+#     # ゲーム描画ロジック
+# pyglet.app.run()
+
+print("\n--- Game simulation ends ---")
+input("Press Enter to exit game simulation...")
+
 
 
 
