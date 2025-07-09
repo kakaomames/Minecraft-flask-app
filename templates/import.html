@@ -11,11 +11,13 @@
         <h1>パックをインポート</h1>
         <nav>
             <ul>
-                <li><a href="/home">ホーム</a></li>
+                <li><a href="/">ホーム</a></li>
                 <li><a href="/setting">設定</a></li>
                 <li><a href="/store">マーケットプレイス</a></li>
                 <li><a href="/menu">ゲームメニュー</a></li>
                 <li><a href="/import">パックをインポート</a></li>
+                <li><a href="/server">サーバー</a></li>
+                <li><a href="/offline">オフラインプレイ</a></li>
             </ul>
         </nav>
     </header>
@@ -30,16 +32,18 @@
                 </ul>
             {% endif %}
         {% endwith %}
-        <h2>mcpack / mcaddon ファイルをアップロード</h2>
-        {% if error %}
-            <p style="color: red;">{{ error }}</p>
-        {% endif %}
-        <form method="POST" enctype="multipart/form-data" action="/import">
-            <label for="file">ファイルを選択してください (.mcpack または .mcaddon):</label><br>
+
+        <h2>パックのインポート</h2>
+        <p>Minecraft統合版のリソースパック (.mcpack) またはビヘイビアパック (.mcaddon) をアップロードしてください。</p>
+        
+        {# ★ここを修正: method="POST" と enctype="multipart/form-data" を追加 #}
+        <form method="POST" enctype="multipart/form-data">
+            <label for="file">パックファイルを選択:</label><br>
             <input type="file" id="file" name="file" accept=".mcpack,.mcaddon" required><br><br>
-            <button type="submit">アップロード</button>
+            <input type="submit" value="アップロード">
         </form>
-        <p>アップロードされたパックは、次回ゲーム起動時に自動的に読み込まれます。</p>
+
+        <p><a href="{{ url_for('home') }}">ホームに戻る</a></p>
     </main>
     <footer>
         <p>&copy; 2025 マイクラプロジェクト</p>
