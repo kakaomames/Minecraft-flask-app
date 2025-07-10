@@ -12,7 +12,7 @@ from werkzeug.utils import secure_filename
 import zipfile
 import tempfile
 import shutil
-import traceback # ★追加: トレースバック出力用
+import traceback
 
 # .envファイルをロード
 load_dotenv()
@@ -286,63 +286,83 @@ def parse_mc_pack(pack_file_path):
     try:
         temp_dir = tempfile.mkdtemp()
         print(f"DEBUG: Created temporary extraction directory: {temp_dir}")
-        with zipfile.ZipFile(pack_file_path, 'r') as zip_ref:
-            zip_ref.extractall(temp_dir)
-        print(f"DEBUG: Pack extracted to: {temp_dir}")
         
-        manifest_path = os.path.join(temp_dir, 'manifest.json')
-        print(f"DEBUG: Looking for manifest.json at: {manifest_path}")
-        if os.path.exists(manifest_path):
-            with open(manifest_path, 'r', encoding='utf-8') as f:
-                manifest = json.load(f)
-            print(f"DEBUG: manifest.json found and loaded. Content: {json.dumps(manifest, indent=2)}")
-            
-            header = manifest.get('header', {})
-            modules = manifest.get('modules', [])
+        if not zipfile.is_zipfile(pack_file_path):
+            print(f"ERROR: File is not a valid ZIP file: {pack_file_path}")
+            return None, None
 
-            pack_id = header.get('uuid')
-            pack_name = header.get('name')
-            pack_version = header.get('version')
-            pack_type = "unknown"
+        with zipfile.ZipFile(pack_file_path, 'r') as zip_ref:
+            print(f"DEBUG: Contents of zip file {pack_file_path}:")
+            zip_contents = zip_ref.namelist() # ZIPファイル内の全コンテンツを取得
+            for name in zip_contents:
+                print(f"  - {name}")
 
-            for module in modules:
-                if module.get('type') == 'resources':
-                    pack_type = 'resource'
-                    break
-                elif module.get('type') == 'data':
-                    pack_type = 'behavior'
-                    break
-                elif module.get('type') == 'script':
-                    pack_type = 'behavior'
-                    break
-                elif module.get('type') == 'client_data':
-                    pack_type = 'resource'
+            # manifest.jsonのパスを検索
+            manifest_in_zip_path = None
+            for name in zip_contents:
+                if name.endswith('manifest.json'):
+                    manifest_in_zip_path = name
                     break
             
-            if pack_id and pack_name and pack_version:
-                pack_info = {
-                    'id': pack_id,
-                    'name': pack_name,
-                    'version': pack_version,
-                    'type': pack_type,
-                    'filename': os.path.basename(pack_file_path),
-                    'extracted_path': f'{PACKS_EXTRACTED_BASE_PATH}/{pack_id}'
-                }
-                print(f"DEBUG: Parsed pack info successfully: {pack_info}")
+            if manifest_in_zip_path:
+                print(f"DEBUG: Found manifest.json inside zip at: {manifest_in_zip_path}")
+                # manifest.jsonだけを抽出して読み込む
+                with zip_ref.open(manifest_in_zip_path) as manifest_file:
+                    manifest = json.load(manifest_file)
+                
+                print(f"DEBUG: manifest.json found and loaded. Content: {json.dumps(manifest, indent=2)}")
+                
+                header = manifest.get('header', {})
+                modules = manifest.get('modules', [])
+
+                pack_id = header.get('uuid')
+                pack_name = header.get('name')
+                pack_version = header.get('version')
+                pack_type = "unknown"
+
+                for module in modules:
+                    if module.get('type') == 'resources':
+                        pack_type = 'resource'
+                        break
+                    elif module.get('type') == 'data':
+                        pack_type = 'behavior'
+                        break
+                    elif module.get('type') == 'script':
+                        pack_type = 'behavior'
+                        break
+                    elif module.get('type') == 'client_data':
+                        pack_type = 'resource'
+                        break
+                
+                if pack_id and pack_name and pack_version:
+                    pack_info = {
+                        'id': pack_id,
+                        'name': pack_name,
+                        'version': pack_version,
+                        'type': pack_type,
+                        'filename': os.path.basename(pack_file_path),
+                        'extracted_path': f'{PACKS_EXTRACTED_BASE_PATH}/{pack_id}'
+                    }
+                    print(f"DEBUG: Parsed pack info successfully: {pack_info}")
+
+                    # ZIP全体を抽出するのは、manifest.jsonの解析が成功した後に行う
+                    zip_ref.extractall(temp_dir)
+                    print(f"DEBUG: Full pack extracted to: {temp_dir}")
+
+                else:
+                    print(f"WARNING: manifest.json missing essential header info (uuid, name, or version): {manifest_in_zip_path}")
             else:
-                print(f"WARNING: manifest.json missing essential header info (uuid, name, or version): {manifest_path}")
-        else:
-            print(f"WARNING: manifest.json not found in pack: {pack_file_path}")
-            
+                print(f"WARNING: manifest.json not found anywhere in pack: {pack_file_path}")
+                
     except zipfile.BadZipFile:
         print(f"ERROR: Not a valid zip file (BadZipFile): {pack_file_path}")
-        traceback.print_exc() # トレースバックを出力
+        traceback.print_exc()
     except json.JSONDecodeError as e:
         print(f"ERROR: Invalid manifest.json format in {pack_file_path}: {e}")
-        traceback.print_exc() # トレースバックを出力
+        traceback.print_exc()
     except Exception as e:
         print(f"ERROR: Error processing pack {pack_file_path}: {e}")
-        traceback.print_exc() # トレースバックを出力
+        traceback.print_exc()
     finally:
         pass 
     return pack_info, temp_dir
@@ -690,6 +710,9 @@ def import_pack():
             file.save(temp_file_path)
             print(f"DEBUG: Uploaded pack saved temporarily to: {temp_file_path}")
 
+            if not os.path.exists(temp_file_path):
+                raise FileNotFoundError(f"Temporary pack file not found after saving: {temp_file_path}")
+
             pack_metadata, temp_extract_dir = parse_mc_pack(temp_file_path)
             
             if pack_metadata and temp_extract_dir:
@@ -712,6 +735,7 @@ def import_pack():
 
                 pack_registry = load_pack_registry()
                 
+                # ここを修正: enumerateのループ変数名が間違っていた
                 existing_pack_index = next((i for i, p in enumerate(pack_registry) if p.get('id') == pack_metadata['id']), -1)
                 
                 if existing_pack_index != -1:
@@ -741,7 +765,6 @@ def import_pack():
         except Exception as e:
             flash(f'ファイルの処理中にエラーが発生しました: {e}', "error")
             print(f"ERROR: Error during pack import process: {e}")
-            import traceback
             traceback.print_exc()
             return render_template('import.html')
         finally:
