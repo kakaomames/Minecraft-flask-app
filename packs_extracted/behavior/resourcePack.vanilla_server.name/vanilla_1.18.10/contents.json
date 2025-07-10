@@ -1,0 +1,187 @@
+{
+    "content": [
+        {
+            "path": "manifest.json"
+        },
+        {
+            "path": "entities/axolotl.json"
+        },
+        {
+            "path": "entities/bee.json"
+        },
+        {
+            "path": "entities/boat.json"
+        },
+        {
+            "path": "entities/cat.json"
+        },
+        {
+            "path": "entities/dolphin.json"
+        },
+        {
+            "path": "entities/enderman.json"
+        },
+        {
+            "path": "entities/glow_squid.json"
+        },
+        {
+            "path": "entities/goat.json"
+        },
+        {
+            "path": "entities/hoglin.json"
+        },
+        {
+            "path": "entities/iron_golem.json"
+        },
+        {
+            "path": "entities/magma_cube.json"
+        },
+        {
+            "path": "entities/ocelot.json"
+        },
+        {
+            "path": "entities/panda.json"
+        },
+        {
+            "path": "entities/parrot.json"
+        },
+        {
+            "path": "entities/pig.json"
+        },
+        {
+            "path": "entities/player.json"
+        },
+        {
+            "path": "entities/polar_bear.json"
+        },
+        {
+            "path": "entities/slime.json"
+        },
+        {
+            "path": "entities/squid.json"
+        },
+        {
+            "path": "entities/strider.json"
+        },
+        {
+            "path": "entities/villager.json"
+        },
+        {
+            "path": "entities/villager_v2.json"
+        },
+        {
+            "path": "entities/wolf.json"
+        },
+        {
+            "path": "entities/zoglin.json"
+        },
+        {
+            "path": "features/deepslate_diamond_fossil_feature.json"
+        },
+        {
+            "path": "features/diamond_ore_feature.json"
+        },
+        {
+            "path": "features/dripstone_caves_copper_ore_feature.json"
+        },
+        {
+            "path": "features/mountain_pine_tree_feature.json"
+        },
+        {
+            "path": "feature_rules/desert_or_swamp_after_surface_fossil_deepslate_feature.json"
+        },
+        {
+            "path": "feature_rules/dripstone_cluster_feature.json"
+        },
+        {
+            "path": "feature_rules/grove_pine_tree_feature.json"
+        },
+        {
+            "path": "feature_rules/grove_spruce_tree_feature.json"
+        },
+        {
+            "path": "feature_rules/large_dripstone_feature.json"
+        },
+        {
+            "path": "feature_rules/lush_caves_after_surface_azalea_root_system_feature.json"
+        },
+        {
+            "path": "feature_rules/lush_caves_after_surface_cave_vines_feature.json"
+        },
+        {
+            "path": "feature_rules/lush_caves_after_surface_leaf_clay_feature.json"
+        },
+        {
+            "path": "feature_rules/lush_caves_after_surface_moss_ceiling_feature.json"
+        },
+        {
+            "path": "feature_rules/lush_caves_after_surface_spore_blossom_feature.json"
+        },
+        {
+            "path": "feature_rules/lush_caves_after_surface_vegetation_feature.json"
+        },
+        {
+            "path": "feature_rules/lush_caves_after_surface_vines_feature.json"
+        },
+        {
+            "path": "feature_rules/lush_caves_underground_clay_ore_feature.json"
+        },
+        {
+            "path": "feature_rules/small_dripstone_feature.json"
+        },
+        {
+            "path": "feature_rules/surface_pass_large_dripstone_feature.json"
+        },
+        {
+            "path": "feature_rules/warm_ocean_after_surface_coral_crust_feature.json"
+        },
+        {
+            "path": "feature_rules/warm_ocean_after_surface_coral_feature.json"
+        },
+        {
+            "path": "feature_rules/warm_ocean_after_surface_coral_hang_feature.json"
+        },
+        {
+            "path": "feature_rules/warm_ocean_after_surface_pickle_feature.json"
+        },
+        {
+            "path": "recipes/smithingtable_diamond_axe_to_netherite_axe.json"
+        },
+        {
+            "path": "recipes/smithingtable_diamond_boots_to_netherite_boots.json"
+        },
+        {
+            "path": "recipes/smithingtable_diamond_chestplate_to_netherite_chestplate.json"
+        },
+        {
+            "path": "recipes/smithingtable_diamond_helmet_to_netherite_helmet.json"
+        },
+        {
+            "path": "recipes/smithingtable_diamond_hoe_to_netherite_hoe.json"
+        },
+        {
+            "path": "recipes/smithingtable_diamond_leggings_to_netherite_leggings.json"
+        },
+        {
+            "path": "recipes/smithingtable_diamond_pickaxe_to_netherite_pickaxe.json"
+        },
+        {
+            "path": "recipes/smithingtable_diamond_shovel_to_netherite_shovel.json"
+        },
+        {
+            "path": "recipes/smithingtable_diamond_sword_to_netherite_sword.json"
+        },
+        {
+            "path": "trading/economy_trades/butcher_trades.json"
+        },
+        {
+            "path": "trading/economy_trades/cartographer_trades.json"
+        },
+        {
+            "path": "trading/economy_trades/librarian_trades.json"
+        },
+        {
+            "path": "trading/economy_trades/wandering_trader_trades.json"
+        }
+    ]
+}
