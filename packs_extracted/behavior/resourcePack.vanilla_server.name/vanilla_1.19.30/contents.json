@@ -1,0 +1,31 @@
+{
+    "content": [
+        {
+            "path": "manifest.json"
+        },
+        {
+            "path": "entities/enderman.json"
+        },
+        {
+            "path": "entities/fireball.json"
+        },
+        {
+            "path": "entities/hoglin.json"
+        },
+        {
+            "path": "entities/npc.json"
+        },
+        {
+            "path": "entities/strider.json"
+        },
+        {
+            "path": "entities/zoglin.json"
+        },
+        {
+            "path": "features/sculk_patch_feature.json"
+        },
+        {
+            "path": "features/sculk_patch_feature_ancient_city.json"
+        }
+    ]
+}

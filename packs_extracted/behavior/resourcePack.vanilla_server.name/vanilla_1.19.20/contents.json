@@ -1,0 +1,142 @@
+{
+    "content": [
+        {
+            "path": "manifest.json"
+        },
+        {
+            "path": "entities/allay.json"
+        },
+        {
+            "path": "entities/bat.json"
+        },
+        {
+            "path": "entities/bee.json"
+        },
+        {
+            "path": "entities/cat.json"
+        },
+        {
+            "path": "entities/chicken.json"
+        },
+        {
+            "path": "entities/drowned.json"
+        },
+        {
+            "path": "entities/ender_dragon.json"
+        },
+        {
+            "path": "entities/fireball.json"
+        },
+        {
+            "path": "entities/husk.json"
+        },
+        {
+            "path": "entities/parrot.json"
+        },
+        {
+            "path": "entities/phantom.json"
+        },
+        {
+            "path": "entities/pig.json"
+        },
+        {
+            "path": "entities/piglin.json"
+        },
+        {
+            "path": "entities/polar_bear.json"
+        },
+        {
+            "path": "entities/ravager.json"
+        },
+        {
+            "path": "entities/vex.json"
+        },
+        {
+            "path": "entities/villager_v2.json"
+        },
+        {
+            "path": "entities/warden.json"
+        },
+        {
+            "path": "entities/wolf.json"
+        },
+        {
+            "path": "entities/zombie.json"
+        },
+        {
+            "path": "entities/zombie_villager.json"
+        },
+        {
+            "path": "entities/zombie_villager_v2.json"
+        },
+        {
+            "path": "features/azalea_tree_feature.json"
+        },
+        {
+            "path": "features/birch_tree_feature.json"
+        },
+        {
+            "path": "features/fancy_oak_tree_feature.json"
+        },
+        {
+            "path": "features/mangrove_tree_feature.json"
+        },
+        {
+            "path": "features/mega_jungle_tree_feature.json"
+        },
+        {
+            "path": "features/mega_spruce_tree_feature.json"
+        },
+        {
+            "path": "features/oak_tree_feature.json"
+        },
+        {
+            "path": "features/oak_tree_with_vines_feature.json"
+        },
+        {
+            "path": "features/roofed_tree_feature.json"
+        },
+        {
+            "path": "features/roofed_tree_with_vines_feature.json"
+        },
+        {
+            "path": "features/savanna_tree_feature.json"
+        },
+        {
+            "path": "features/sculk_patch_feature.json"
+        },
+        {
+            "path": "features/sculk_patch_feature_ancient_city.json"
+        },
+        {
+            "path": "features/sculk_vein_feature.json"
+        },
+        {
+            "path": "features/spruce_tree_feature.json"
+        },
+        {
+            "path": "features/spruce_tree_with_vines_feature.json"
+        },
+        {
+            "path": "features/tall_mangrove_tree_feature.json"
+        },
+        {
+            "path": "features/undecorated_jungle_tree_feature.json"
+        },
+        {
+            "path": "features/undecorated_jungle_tree_with_vines_feature.json"
+        },
+        {
+            "path": "feature_rules/sculk_vein_feature.json"
+        },
+        {
+            "path": "recipes/campfire_from_charcoal_mangrove_log.json"
+        },
+        {
+            "path": "recipes/campfire_from_charcoal_mangrove_wood.json"
+        },
+        {
+            "path": "recipes/campfire_from_charcoal_stripped_mangrove_wood.json"
+        }
+    ]
+}
