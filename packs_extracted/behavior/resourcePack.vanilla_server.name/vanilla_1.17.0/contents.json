@@ -1,0 +1,1003 @@
+{
+    "content": [
+        {
+            "path": "manifest.json"
+        },
+        {
+            "path": "entities/axolotl.json"
+        },
+        {
+            "path": "entities/bat.json"
+        },
+        {
+            "path": "entities/bee.json"
+        },
+        {
+            "path": "entities/blaze.json"
+        },
+        {
+            "path": "entities/cat.json"
+        },
+        {
+            "path": "entities/cave_spider.json"
+        },
+        {
+            "path": "entities/chicken.json"
+        },
+        {
+            "path": "entities/cow.json"
+        },
+        {
+            "path": "entities/creeper.json"
+        },
+        {
+            "path": "entities/dolphin.json"
+        },
+        {
+            "path": "entities/donkey.json"
+        },
+        {
+            "path": "entities/elder_guardian.json"
+        },
+        {
+            "path": "entities/enderman.json"
+        },
+        {
+            "path": "entities/endermite.json"
+        },
+        {
+            "path": "entities/ender_dragon.json"
+        },
+        {
+            "path": "entities/evocation_illager.json"
+        },
+        {
+            "path": "entities/fish.json"
+        },
+        {
+            "path": "entities/fox.json"
+        },
+        {
+            "path": "entities/ghast.json"
+        },
+        {
+            "path": "entities/glow_squid.json"
+        },
+        {
+            "path": "entities/goat.json"
+        },
+        {
+            "path": "entities/guardian.json"
+        },
+        {
+            "path": "entities/hoglin.json"
+        },
+        {
+            "path": "entities/horse.json"
+        },
+        {
+            "path": "entities/husk.json"
+        },
+        {
+            "path": "entities/iron_golem.json"
+        },
+        {
+            "path": "entities/llama.json"
+        },
+        {
+            "path": "entities/magma_cube.json"
+        },
+        {
+            "path": "entities/mooshroom.json"
+        },
+        {
+            "path": "entities/mule.json"
+        },
+        {
+            "path": "entities/ocelot.json"
+        },
+        {
+            "path": "entities/panda.json"
+        },
+        {
+            "path": "entities/parrot.json"
+        },
+        {
+            "path": "entities/phantom.json"
+        },
+        {
+            "path": "entities/pig.json"
+        },
+        {
+            "path": "entities/piglin.json"
+        },
+        {
+            "path": "entities/piglin_brute.json"
+        },
+        {
+            "path": "entities/pillager.json"
+        },
+        {
+            "path": "entities/polar_bear.json"
+        },
+        {
+            "path": "entities/pufferfish.json"
+        },
+        {
+            "path": "entities/rabbit.json"
+        },
+        {
+            "path": "entities/ravager.json"
+        },
+        {
+            "path": "entities/salmon.json"
+        },
+        {
+            "path": "entities/sheep.json"
+        },
+        {
+            "path": "entities/shulker.json"
+        },
+        {
+            "path": "entities/silverfish.json"
+        },
+        {
+            "path": "entities/skeleton.json"
+        },
+        {
+            "path": "entities/skeleton_horse.json"
+        },
+        {
+            "path": "entities/slime.json"
+        },
+        {
+            "path": "entities/snow_golem.json"
+        },
+        {
+            "path": "entities/spider.json"
+        },
+        {
+            "path": "entities/squid.json"
+        },
+        {
+            "path": "entities/stray.json"
+        },
+        {
+            "path": "entities/strider.json"
+        },
+        {
+            "path": "entities/tropicalfish.json"
+        },
+        {
+            "path": "entities/turtle.json"
+        },
+        {
+            "path": "entities/vex.json"
+        },
+        {
+            "path": "entities/villager.json"
+        },
+        {
+            "path": "entities/villager_v2.json"
+        },
+        {
+            "path": "entities/vindicator.json"
+        },
+        {
+            "path": "entities/wandering_trader.json"
+        },
+        {
+            "path": "entities/witch.json"
+        },
+        {
+            "path": "entities/wither.json"
+        },
+        {
+            "path": "entities/wither_skeleton.json"
+        },
+        {
+            "path": "entities/wolf.json"
+        },
+        {
+            "path": "entities/zoglin.json"
+        },
+        {
+            "path": "entities/zombie.json"
+        },
+        {
+            "path": "entities/zombie_horse.json"
+        },
+        {
+            "path": "entities/zombie_pigman.json"
+        },
+        {
+            "path": "entities/zombie_villager.json"
+        },
+        {
+            "path": "entities/zombie_villager_v2.json"
+        },
+        {
+            "path": "features/amethyst_geode_feature.json"
+        },
+        {
+            "path": "features/azalea_root_system_snap_to_ceiling_feature.json"
+        },
+        {
+            "path": "features/azalea_tree_feature.json"
+        },
+        {
+            "path": "features/big_dripleaf_east_feature.json"
+        },
+        {
+            "path": "features/big_dripleaf_north_feature.json"
+        },
+        {
+            "path": "features/big_dripleaf_south_feature.json"
+        },
+        {
+            "path": "features/big_dripleaf_west_feature.json"
+        },
+        {
+            "path": "features/birch_tree_feature.json"
+        },
+        {
+            "path": "features/cave_vine_feature.json"
+        },
+        {
+            "path": "features/cave_vine_in_moss_feature.json"
+        },
+        {
+            "path": "features/cave_vine_snap_to_ceiling_feature.json"
+        },
+        {
+            "path": "features/clay_ore_feature.json"
+        },
+        {
+            "path": "features/clay_pool_with_dripleaves_feature.json"
+        },
+        {
+            "path": "features/clay_with_dripleaves_feature.json"
+        },
+        {
+            "path": "features/coal_ore_feature.json"
+        },
+        {
+            "path": "features/copper_ore_feature.json"
+        },
+        {
+            "path": "features/deepslate_feature.json"
+        },
+        {
+            "path": "features/diamond_ore_feature.json"
+        },
+        {
+            "path": "features/emerald_ore_feature.json"
+        },
+        {
+            "path": "features/fallen_birch_tree_feature.json"
+        },
+        {
+            "path": "features/fallen_jungle_tree_feature.json"
+        },
+        {
+            "path": "features/fallen_oak_tree_feature.json"
+        },
+        {
+            "path": "features/fallen_spruce_tree_feature.json"
+        },
+        {
+            "path": "features/fallen_super_birch_tree_feature.json"
+        },
+        {
+            "path": "features/glow_lichen_feature.json"
+        },
+        {
+            "path": "features/gold_ore_feature.json"
+        },
+        {
+            "path": "features/iron_ore_feature.json"
+        },
+        {
+            "path": "features/jungle_tree_feature.json"
+        },
+        {
+            "path": "features/lapis_ore_feature.json"
+        },
+        {
+            "path": "features/mega_jungle_tree_feature.json"
+        },
+        {
+            "path": "features/mega_pine_tree_feature.json"
+        },
+        {
+            "path": "features/mega_spruce_tree_feature.json"
+        },
+        {
+            "path": "features/moss_ceiling_feature.json"
+        },
+        {
+            "path": "features/moss_ceiling_snap_to_ceiling_feature.json"
+        },
+        {
+            "path": "features/moss_patch_bonemeal_feature.json"
+        },
+        {
+            "path": "features/moss_patch_feature.json"
+        },
+        {
+            "path": "features/moss_patch_snap_to_floor_feature.json"
+        },
+        {
+            "path": "features/mountain_spruce_tree_feature.json"
+        },
+        {
+            "path": "features/oak_tree_feature.json"
+        },
+        {
+            "path": "features/oak_tree_with_vines_feature.json"
+        },
+        {
+            "path": "features/random_clay_with_dripleaves_feature.json"
+        },
+        {
+            "path": "features/random_clay_with_dripleaves_snap_to_floor_feature.json"
+        },
+        {
+            "path": "features/redstone_ore_feature.json"
+        },
+        {
+            "path": "features/roofed_tree_feature.json"
+        },
+        {
+            "path": "features/roofed_tree_with_vines_feature.json"
+        },
+        {
+            "path": "features/savanna_tree_feature.json"
+        },
+        {
+            "path": "features/silverfish_feature.json"
+        },
+        {
+            "path": "features/small_dripstone_feature.json"
+        },
+        {
+            "path": "features/small_dripstone_snap_to_surface_feature.json"
+        },
+        {
+            "path": "features/spore_blossom_feature.json"
+        },
+        {
+            "path": "features/spore_blossom_snap_to_ceiling_feature.json"
+        },
+        {
+            "path": "features/spruce_tree_feature.json"
+        },
+        {
+            "path": "features/spruce_tree_with_vines_feature.json"
+        },
+        {
+            "path": "features/super_birch_tree_feature.json"
+        },
+        {
+            "path": "features/swamp_tree_feature.json"
+        },
+        {
+            "path": "features/tuff_feature.json"
+        },
+        {
+            "path": "features/undecorated_jungle_tree_feature.json"
+        },
+        {
+            "path": "features/undecorated_jungle_tree_with_vines_feature.json"
+        },
+        {
+            "path": "feature_rules/dripstone_cluster_feature.json"
+        },
+        {
+            "path": "feature_rules/lush_caves_after_surface_azalea_root_system_feature.json"
+        },
+        {
+            "path": "feature_rules/lush_caves_after_surface_cave_vines_feature.json"
+        },
+        {
+            "path": "feature_rules/lush_caves_after_surface_leaf_clay_feature.json"
+        },
+        {
+            "path": "feature_rules/lush_caves_after_surface_moss_ceiling_feature.json"
+        },
+        {
+            "path": "feature_rules/lush_caves_after_surface_spore_blossom_feature.json"
+        },
+        {
+            "path": "feature_rules/lush_caves_after_surface_vegetation_feature.json"
+        },
+        {
+            "path": "feature_rules/lush_caves_after_surface_vines_feature.json"
+        },
+        {
+            "path": "feature_rules/lush_caves_underground_clay_ore_feature.json"
+        },
+        {
+            "path": "feature_rules/overworld_amethyst_geode_feature.json"
+        },
+        {
+            "path": "feature_rules/overworld_underground_copper_ore_feature.json"
+        },
+        {
+            "path": "feature_rules/overworld_underground_deepslate_feature.json"
+        },
+        {
+            "path": "feature_rules/overworld_underground_glow_lichen_feature.json"
+        },
+        {
+            "path": "feature_rules/overworld_underground_tuff_feature.json"
+        },
+        {
+            "path": "feature_rules/small_dripstone_feature.json"
+        },
+        {
+            "path": "items/glow_berries.json"
+        },
+        {
+            "path": "items/sweet_berries.json"
+        },
+        {
+            "path": "loot_tables/chests/abandoned_mineshaft.json"
+        },
+        {
+            "path": "loot_tables/chests/shipwrecksupply.json"
+        },
+        {
+            "path": "loot_tables/entities/drowned.json"
+        },
+        {
+            "path": "loot_tables/entities/glow_squid.json"
+        },
+        {
+            "path": "loot_tables/entities/goat.json"
+        },
+        {
+            "path": "recipes/amethyst_block.json"
+        },
+        {
+            "path": "recipes/brewing_stand_from_cobbled_deepslate.json"
+        },
+        {
+            "path": "recipes/chiseled_deepslate.json"
+        },
+        {
+            "path": "recipes/chiseled_deepslate_from_cobbled_deepslate_stonecutting.json"
+        },
+        {
+            "path": "recipes/cobbled_deepslate_slab.json"
+        },
+        {
+            "path": "recipes/cobbled_deepslate_slab_from_cobbled_deepslate_stonecutting.json"
+        },
+        {
+            "path": "recipes/cobbled_deepslate_stairs.json"
+        },
+        {
+            "path": "recipes/cobbled_deepslate_stairs_from_cobbled_deepslate_cutting.json"
+        },
+        {
+            "path": "recipes/cobbled_deepslate_wall.json"
+        },
+        {
+            "path": "recipes/cobbled_deepslate_wall_from_cobbled_deepslate_stonecutting.json"
+        },
+        {
+            "path": "recipes/copper_block_from_ingots.json"
+        },
+        {
+            "path": "recipes/cracked_deepslate_bricks_furnace.json"
+        },
+        {
+            "path": "recipes/cracked_deepslate_tiles_furnace.json"
+        },
+        {
+            "path": "recipes/crafting_table_cut_copper.json"
+        },
+        {
+            "path": "recipes/crafting_table_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/crafting_table_cut_copper_stairs.json"
+        },
+        {
+            "path": "recipes/crafting_table_exposed_cut_copper.json"
+        },
+        {
+            "path": "recipes/crafting_table_exposed_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/crafting_table_exposed_cut_copper_stairs.json"
+        },
+        {
+            "path": "recipes/crafting_table_oxidized_cut_copper.json"
+        },
+        {
+            "path": "recipes/crafting_table_oxidized_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/crafting_table_oxidized_cut_copper_stairs.json"
+        },
+        {
+            "path": "recipes/crafting_table_waxed_cut_copper.json"
+        },
+        {
+            "path": "recipes/crafting_table_waxed_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/crafting_table_waxed_cut_copper_stairs.json"
+        },
+        {
+            "path": "recipes/crafting_table_waxed_exposed_cut_copper.json"
+        },
+        {
+            "path": "recipes/crafting_table_waxed_exposed_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/crafting_table_waxed_exposed_cut_copper_stairs.json"
+        },
+        {
+            "path": "recipes/crafting_table_waxed_oxidized_cut_copper.json"
+        },
+        {
+            "path": "recipes/crafting_table_waxed_oxidized_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/crafting_table_waxed_oxidized_cut_copper_stairs.json"
+        },
+        {
+            "path": "recipes/crafting_table_waxed_weathered_cut_copper.json"
+        },
+        {
+            "path": "recipes/crafting_table_waxed_weathered_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/crafting_table_waxed_weathered_cut_copper_stairs.json"
+        },
+        {
+            "path": "recipes/crafting_table_weathered_cut_copper.json"
+        },
+        {
+            "path": "recipes/crafting_table_weathered_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/crafting_table_weathered_cut_copper_stairs.json"
+        },
+        {
+            "path": "recipes/deepslate_bricks.json"
+        },
+        {
+            "path": "recipes/deepslate_bricks_from_cobbled_deepslate_stonecutting.json"
+        },
+        {
+            "path": "recipes/deepslate_bricks_from_polished_deepslate_stonecutting.json"
+        },
+        {
+            "path": "recipes/deepslate_brick_slab.json"
+        },
+        {
+            "path": "recipes/deepslate_brick_slab_from_cobbled_deepslate_stonecutting.json"
+        },
+        {
+            "path": "recipes/deepslate_brick_slab_from_deepslate_bricks_stonecutting.json"
+        },
+        {
+            "path": "recipes/deepslate_brick_slab_from_polished_deepslate_stonecutting.json"
+        },
+        {
+            "path": "recipes/deepslate_brick_stairs.json"
+        },
+        {
+            "path": "recipes/deepslate_brick_stairs_from_cobbled_deepslate_stonecutting.json"
+        },
+        {
+            "path": "recipes/deepslate_brick_stairs_from_deepslate_bricks_stonecutting.json"
+        },
+        {
+            "path": "recipes/deepslate_brick_stairs_from_polished_deepslate_stonecut.json"
+        },
+        {
+            "path": "recipes/deepslate_brick_wall.json"
+        },
+        {
+            "path": "recipes/deepslate_brick_wall_from_cobbled_deepslate_stonecutting.json"
+        },
+        {
+            "path": "recipes/deepslate_brick_wall_from_deepslate_bricks_stonecutting.json"
+        },
+        {
+            "path": "recipes/deepslate_brick_wall_from_polished_deepslate_stonecutting.json"
+        },
+        {
+            "path": "recipes/deepslate_furnace.json"
+        },
+        {
+            "path": "recipes/deepslate_tiles.json"
+        },
+        {
+            "path": "recipes/deepslate_tiles_from_cobbled_deepslate_stonecutting.json"
+        },
+        {
+            "path": "recipes/deepslate_tiles_from_deepslate_bricks_stonecutting.json"
+        },
+        {
+            "path": "recipes/deepslate_tiles_from_polished_deepslate_stonecutting.json"
+        },
+        {
+            "path": "recipes/deepslate_tile_slab.json"
+        },
+        {
+            "path": "recipes/deepslate_tile_slab_from_cobbled_deepslate_stonecutting.json"
+        },
+        {
+            "path": "recipes/deepslate_tile_slab_from_deepslate_bricks_stonecutting.json"
+        },
+        {
+            "path": "recipes/deepslate_tile_slab_from_deepslate_tiles_stonecutting.json"
+        },
+        {
+            "path": "recipes/deepslate_tile_slab_from_polished_deepslate_stonecutting.json"
+        },
+        {
+            "path": "recipes/deepslate_tile_stairs.json"
+        },
+        {
+            "path": "recipes/deepslate_tile_stairs_from_cobbled_deepslate_stonecutting.json"
+        },
+        {
+            "path": "recipes/deepslate_tile_stairs_from_deepslate_bricks_stonecutting.json"
+        },
+        {
+            "path": "recipes/deepslate_tile_stairs_from_deepslate_tiles_stonecutting.json"
+        },
+        {
+            "path": "recipes/deepslate_tile_stairs_from_polished_deepslate_stonecutting.json"
+        },
+        {
+            "path": "recipes/deepslate_tile_wall.json"
+        },
+        {
+            "path": "recipes/deepslate_tile_wall_from_cobbled_deepslate_stonecutting.json"
+        },
+        {
+            "path": "recipes/deepslate_tile_wall_from_deepslate_bricks_stonecutting.json"
+        },
+        {
+            "path": "recipes/deepslate_tile_wall_from_deepslate_tiles_stonecutting.json"
+        },
+        {
+            "path": "recipes/deepslate_tile_wall_from_polished_deepslate_stonecutting.json"
+        },
+        {
+            "path": "recipes/dripstone_block.json"
+        },
+        {
+            "path": "recipes/dripstone_block_from_pointed_dripstone.json"
+        },
+        {
+            "path": "recipes/furnace_copper.json"
+        },
+        {
+            "path": "recipes/furnace_copper_ore.json"
+        },
+        {
+            "path": "recipes/furnace_deepslate_coal_ore.json"
+        },
+        {
+            "path": "recipes/furnace_deepslate_copper_ore.json"
+        },
+        {
+            "path": "recipes/furnace_deepslate_diamond_ore.json"
+        },
+        {
+            "path": "recipes/furnace_deepslate_emerald_ore.json"
+        },
+        {
+            "path": "recipes/furnace_deepslate_gold_ore.json"
+        },
+        {
+            "path": "recipes/furnace_deepslate_iron_ore.json"
+        },
+        {
+            "path": "recipes/furnace_deepslate_lapis_ore.json"
+        },
+        {
+            "path": "recipes/furnace_deepslate_redstone_ore.json"
+        },
+        {
+            "path": "recipes/furnace_from_cobbled_deepslate.json"
+        },
+        {
+            "path": "recipes/furnace_gold.json"
+        },
+        {
+            "path": "recipes/furnace_iron.json"
+        },
+        {
+            "path": "recipes/furnace_smooth_basalt.json"
+        },
+        {
+            "path": "recipes/glow_item_frame.json"
+        },
+        {
+            "path": "recipes/ingots_from_copper.json"
+        },
+        {
+            "path": "recipes/ingots_from_waxed_copper.json"
+        },
+        {
+            "path": "recipes/lightning_rod.json"
+        },
+        {
+            "path": "recipes/mossy_cobblestone_from_moss.json"
+        },
+        {
+            "path": "recipes/mossy_stonebrick_from_moss.json"
+        },
+        {
+            "path": "recipes/moss_carpet.json"
+        },
+        {
+            "path": "recipes/polished_deepslate.json"
+        },
+        {
+            "path": "recipes/polished_deepslate_from_cobbled_deepslate_stonecutting.json"
+        },
+        {
+            "path": "recipes/polished_deepslate_slab.json"
+        },
+        {
+            "path": "recipes/polished_deepslate_slab_from_cobbled_deepslate_stonecut.json"
+        },
+        {
+            "path": "recipes/polished_deepslate_slab_from_polished_deepslate_cutting.json"
+        },
+        {
+            "path": "recipes/polished_deepslate_stairs.json"
+        },
+        {
+            "path": "recipes/polished_deepslate_stairs_from_cobbled_deepslate_cutting.json"
+        },
+        {
+            "path": "recipes/polished_deepslate_stairs_from_polished_deepslate_cutting.json"
+        },
+        {
+            "path": "recipes/polished_deepslate_wall.json"
+        },
+        {
+            "path": "recipes/polished_deepslate_wall_from_cobbled_deepslate_stonecut.json"
+        },
+        {
+            "path": "recipes/polished_deepslate_wall_from_polished_deepslate_stonecut.json"
+        },
+        {
+            "path": "recipes/raw_copper.json"
+        },
+        {
+            "path": "recipes/raw_copper_block.json"
+        },
+        {
+            "path": "recipes/raw_gold.json"
+        },
+        {
+            "path": "recipes/raw_gold_block.json"
+        },
+        {
+            "path": "recipes/raw_iron.json"
+        },
+        {
+            "path": "recipes/raw_iron_block.json"
+        },
+        {
+            "path": "recipes/spyglass.json"
+        },
+        {
+            "path": "recipes/stonecutter_copper_block_to_cut_copper.json"
+        },
+        {
+            "path": "recipes/stonecutter_copper_block_to_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_copper_block_to_cut_copper_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_cut_copper_to_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_cut_copper_to_cut_copper_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_exposed_copper_block_to_cut_copper.json"
+        },
+        {
+            "path": "recipes/stonecutter_exposed_copper_block_to_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_exposed_copper_block_to_cut_copper_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_exposed_cut_copper_to_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_exposed_cut_copper_to_cut_copper_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_oxidized_copper_block_to_cut_copper.json"
+        },
+        {
+            "path": "recipes/stonecutter_oxidized_copper_block_to_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_oxidized_copper_block_to_cut_copper_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_oxidized_cut_copper_to_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_oxidized_cut_copper_to_cut_copper_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_weathered_copper_block_to_cut_copper.json"
+        },
+        {
+            "path": "recipes/stonecutter_weathered_copper_block_to_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_weathered_copper_block_to_cut_copper_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_weathered_cut_copper_to_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_weathered_cut_copper_to_cut_copper_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_copper_block_to_cut_copper.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_copper_block_to_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_copper_block_to_cut_copper_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_cut_copper_to_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_cut_copper_to_cut_copper_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_exposed_copper_block_to_cut_copper.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_exposed_copper_block_to_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_exposed_copper_block_to_cut_copper_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_exposed_cut_copper_to_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_exposed_cut_copper_to_cut_copper_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_oxidized_copper_block_to_cut_copper.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_oxidized_copper_block_to_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_oxidized_copper_block_to_cut_copper_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_oxidized_cut_copper_to_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_oxidized_cut_copper_to_cut_copper_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_weathered_copper_block_to_cut_copper.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_weathered_copper_block_to_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_weathered_copper_block_to_cut_copper_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_weathered_cut_copper_to_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_weathered_cut_copper_to_cut_copper_stairs.json"
+        },
+        {
+            "path": "recipes/stone_axe_from_cobbled_deepslate.json"
+        },
+        {
+            "path": "recipes/stone_hoe_from_cobbled_deepslate.json"
+        },
+        {
+            "path": "recipes/stone_pickaxe_from_cobbled_deepslate.json"
+        },
+        {
+            "path": "recipes/stone_shovel_from_cobbled_deepslate.json"
+        },
+        {
+            "path": "recipes/stone_sword_from_cobbled_deepslate.json"
+        },
+        {
+            "path": "recipes/tinted_glass.json"
+        },
+        {
+            "path": "recipes/waxing_copper_block.json"
+        },
+        {
+            "path": "recipes/waxing_cut_copper_block.json"
+        },
+        {
+            "path": "recipes/waxing_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/waxing_cut_copper_stairs.json"
+        },
+        {
+            "path": "recipes/waxing_exposed_copper_block.json"
+        },
+        {
+            "path": "recipes/waxing_exposed_cut_copper_block.json"
+        },
+        {
+            "path": "recipes/waxing_exposed_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/waxing_exposed_cut_copper_stairs.json"
+        },
+        {
+            "path": "recipes/waxing_oxidized_copper_block.json"
+        },
+        {
+            "path": "recipes/waxing_oxidized_cut_copper_block.json"
+        },
+        {
+            "path": "recipes/waxing_oxidized_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/waxing_oxidized_cut_copper_stairs.json"
+        },
+        {
+            "path": "recipes/waxing_weathered_copper_block.json"
+        },
+        {
+            "path": "recipes/waxing_weathered_cut_copper_block.json"
+        },
+        {
+            "path": "recipes/waxing_weathered_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/waxing_weathered_cut_copper_stairs.json"
+        },
+        {
+            "path": "spawn_rules/axolotl.json"
+        },
+        {
+            "path": "spawn_rules/bat.json"
+        },
+        {
+            "path": "spawn_rules/glow_squid.json"
+        },
+        {
+            "path": "spawn_rules/goat.json"
+        },
+        {
+            "path": "trading/economy_trades/stone_mason_trades.json"
+        },
+        {
+            "path": "trading/economy_trades/wandering_trader_trades.json"
+        }
+    ]
+}
