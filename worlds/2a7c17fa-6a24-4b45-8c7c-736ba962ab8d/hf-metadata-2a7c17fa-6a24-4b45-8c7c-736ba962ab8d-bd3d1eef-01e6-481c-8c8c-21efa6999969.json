@@ -1,0 +1,12 @@
+{
+    "player_uuid": "2a7c17fa-6a24-4b45-8c7c-736ba962ab8d",
+    "world_name": "hf",
+    "world_uuid": "bd3d1eef-01e6-481c-8c8c-21efa6999969",
+    "seed": "h",
+    "game_mode": "creative",
+    "cheats_enabled": true,
+    "resource_packs": [],
+    "behavior_packs": [
+        "vanilla_1.19.50.mcpack"
+    ]
+}
