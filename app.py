@@ -12,6 +12,7 @@ from werkzeug.utils import secure_filename
 import zipfile
 import tempfile
 import shutil
+import traceback # ★追加: トレースバック出力用
 
 # .envファイルをロード
 load_dotenv()
@@ -178,14 +179,19 @@ def upload_directory_to_github(local_dir_path, github_base_path, commit_message)
     success_count = 0
     fail_count = 0
     
-    print(f"DEBUG: Starting directory upload from '{local_dir_path}' to GitHub path '{github_base_path}'") # 追加
+    print(f"DEBUG: Starting directory upload from '{local_dir_path}' to GitHub path '{github_base_path}'")
     for root, _, files in os.walk(local_dir_path):
         for file_name in files:
             local_file_path = os.path.join(root, file_name)
             relative_path = os.path.relpath(local_file_path, local_dir_path)
             github_path = os.path.join(github_base_path, relative_path).replace(os.sep, '/')
 
-            print(f"DEBUG: Processing local file: {local_file_path} -> GitHub path: {github_path}") # 追加
+            # GitHubのファイルサイズ制限（1MB）を考慮して、大きすぎるファイルはスキップ
+            if os.path.getsize(local_file_path) > 1024 * 1024: # 1MB
+                print(f"WARNING: Skipping large file (>{1}MB): {local_file_path}. GitHub API has a 1MB file size limit for direct content uploads.")
+                continue
+
+            print(f"DEBUG: Processing local file: {local_file_path} -> GitHub path: {github_path}")
             try:
                 with open(local_file_path, 'rb') as f:
                     file_content_bytes = f.read()
@@ -201,7 +207,6 @@ def upload_directory_to_github(local_dir_path, github_base_path, commit_message)
                 )
                 if file_success:
                     success_count += 1
-                    # print(f"DEBUG: Uploaded/Updated: {github_path}") # 大量ログ防止のためコメントアウト
                 else:
                     fail_count += 1
                     print(f"ERROR: Failed to upload/update {github_path}. Response: {file_response}")
@@ -277,20 +282,20 @@ def save_pack_registry(registry_data):
 def parse_mc_pack(pack_file_path):
     pack_info = None
     temp_dir = None
-    print(f"DEBUG: Starting parse_mc_pack for: {pack_file_path}") # 追加
+    print(f"DEBUG: Starting parse_mc_pack for: {pack_file_path}")
     try:
         temp_dir = tempfile.mkdtemp()
-        print(f"DEBUG: Created temporary extraction directory: {temp_dir}") # 追加
+        print(f"DEBUG: Created temporary extraction directory: {temp_dir}")
         with zipfile.ZipFile(pack_file_path, 'r') as zip_ref:
             zip_ref.extractall(temp_dir)
-        print(f"DEBUG: Pack extracted to: {temp_dir}") # 追加
+        print(f"DEBUG: Pack extracted to: {temp_dir}")
         
         manifest_path = os.path.join(temp_dir, 'manifest.json')
-        print(f"DEBUG: Looking for manifest.json at: {manifest_path}") # 追加
+        print(f"DEBUG: Looking for manifest.json at: {manifest_path}")
         if os.path.exists(manifest_path):
             with open(manifest_path, 'r', encoding='utf-8') as f:
                 manifest = json.load(f)
-            print(f"DEBUG: manifest.json found and loaded. Content: {json.dumps(manifest, indent=2)}") # 追加
+            print(f"DEBUG: manifest.json found and loaded. Content: {json.dumps(manifest, indent=2)}")
             
             header = manifest.get('header', {})
             modules = manifest.get('modules', [])
@@ -331,18 +336,20 @@ def parse_mc_pack(pack_file_path):
             
     except zipfile.BadZipFile:
         print(f"ERROR: Not a valid zip file (BadZipFile): {pack_file_path}")
+        traceback.print_exc() # トレースバックを出力
     except json.JSONDecodeError as e:
         print(f"ERROR: Invalid manifest.json format in {pack_file_path}: {e}")
+        traceback.print_exc() # トレースバックを出力
     except Exception as e:
         print(f"ERROR: Error processing pack {pack_file_path}: {e}")
+        traceback.print_exc() # トレースバックを出力
     finally:
-        # temp_dirは呼び出し元でクリーンアップされる
         pass 
     return pack_info, temp_dir
 
 def list_available_packs():
     registry = load_pack_registry()
-    print(f"DEBUG: Loaded pack registry: {registry}") # 追加
+    print(f"DEBUG: Loaded pack registry: {registry}")
     return registry
 
 def load_world_data(player_uuid):
@@ -657,7 +664,7 @@ def world_setting(world_name, world_uuid):
 @app.route('/import', methods=['GET', 'POST'])
 def import_pack():
     if request.method == 'POST':
-        print("DEBUG: Pack import POST request received.") # 追加
+        print("DEBUG: Pack import POST request received.")
         if 'file' not in request.files:
             flash('ファイルが選択されていません。', "error")
             print("DEBUG: パックインポート失敗 - ファイルが選択されていません。")
@@ -688,7 +695,7 @@ def import_pack():
             if pack_metadata and temp_extract_dir:
                 pack_id = pack_metadata['id']
                 github_extracted_pack_path = f'{PACKS_EXTRACTED_BASE_PATH}/{pack_id}'
-                print(f"DEBUG: Pack metadata parsed. ID: {pack_id}, Extracted Dir: {temp_extract_dir}") # 追加
+                print(f"DEBUG: Pack metadata parsed. ID: {pack_id}, Extracted Dir: {temp_extract_dir}")
 
                 print(f"DEBUG: Attempting to upload extracted pack contents from {temp_extract_dir} to GitHub path {github_extracted_pack_path}...")
                 upload_success = upload_directory_to_github(
@@ -701,7 +708,7 @@ def import_pack():
                     flash(f'パック "{pack_metadata["name"]}" のコンテンツのGitHubへのアップロードに失敗しました。', "error")
                     print(f"ERROR: Failed to upload extracted pack contents for {pack_metadata['name']}.")
                     return render_template('import.html')
-                print(f"DEBUG: Extracted pack contents uploaded to GitHub successfully.") # 追加
+                print(f"DEBUG: Extracted pack contents uploaded to GitHub successfully.")
 
                 pack_registry = load_pack_registry()
                 
@@ -714,7 +721,7 @@ def import_pack():
                     pack_registry.append(pack_metadata)
                     print(f"DEBUG: Added new pack to registry: {pack_metadata['name']}")
                 
-                print(f"DEBUG: Attempting to save pack registry to GitHub.") # 追加
+                print(f"DEBUG: Attempting to save pack registry to GitHub.")
                 success, response = save_pack_registry(pack_registry)
 
                 if success:
@@ -728,14 +735,14 @@ def import_pack():
                     return render_template('import.html')
             else:
                 flash('パックの解析に失敗しました。有効なMinecraftパックファイルか確認してください。', "error")
-                print(f"ERROR: Failed to parse pack file: {file.filename}. pack_metadata: {pack_metadata}, temp_extract_dir: {temp_extract_dir}") # 追加
+                print(f"ERROR: Failed to parse pack file: {file.filename}. pack_metadata: {pack_metadata}, temp_extract_dir: {temp_extract_dir}")
                 return render_template('import.html')
 
         except Exception as e:
             flash(f'ファイルの処理中にエラーが発生しました: {e}', "error")
             print(f"ERROR: Error during pack import process: {e}")
             import traceback
-            traceback.print_exc() # 完全なトレースバックを出力
+            traceback.print_exc()
             return render_template('import.html')
         finally:
             if temp_file_path and os.path.exists(temp_file_path):
@@ -777,7 +784,6 @@ def play_game(world_name, world_uuid):
         
         resource_pack_paths = []
         for filename in selected_resource_pack_filenames:
-            # pack_infoをIDではなくfilenameで検索
             pack_info = next((p for p in all_available_packs if p.get('filename') == filename), None)
             if pack_info and pack_info.get('extracted_path'):
                 resource_pack_paths.append(pack_info['extracted_path'])
@@ -786,7 +792,6 @@ def play_game(world_name, world_uuid):
         
         behavior_pack_paths = []
         for filename in selected_behavior_pack_filenames:
-            # pack_infoをIDではなくfilenameで検索
             pack_info = next((p for p in all_available_packs if p.get('filename') == filename), None)
             if pack_info and pack_info.get('extracted_path'):
                 behavior_pack_paths.append(pack_info['extracted_path'])
