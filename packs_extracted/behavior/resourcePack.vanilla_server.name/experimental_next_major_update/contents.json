@@ -1,0 +1,199 @@
+{
+    "content": [
+        {
+            "path": "manifest.json"
+        },
+        {
+            "path": "entities/boat.json"
+        },
+        {
+            "path": "entities/camel.json"
+        },
+        {
+            "path": "entities/chest_boat.json"
+        },
+        {
+            "path": "recipes/acacia_hanging_sign.json"
+        },
+        {
+            "path": "recipes/bamboo_button.json"
+        },
+        {
+            "path": "recipes/bamboo_chest_raft.json"
+        },
+        {
+            "path": "recipes/bamboo_door.json"
+        },
+        {
+            "path": "recipes/bamboo_fence.json"
+        },
+        {
+            "path": "recipes/bamboo_fence_gate.json"
+        },
+        {
+            "path": "recipes/bamboo_hanging_sign.json"
+        },
+        {
+            "path": "recipes/bamboo_mosaic.json"
+        },
+        {
+            "path": "recipes/bamboo_mosaic_slab.json"
+        },
+        {
+            "path": "recipes/bamboo_mosiac_stairs.json"
+        },
+        {
+            "path": "recipes/bamboo_planks.json"
+        },
+        {
+            "path": "recipes/bamboo_pressure_plate.json"
+        },
+        {
+            "path": "recipes/bamboo_raft.json"
+        },
+        {
+            "path": "recipes/bamboo_sign.json"
+        },
+        {
+            "path": "recipes/bamboo_slab.json"
+        },
+        {
+            "path": "recipes/bamboo_stairs.json"
+        },
+        {
+            "path": "recipes/bamboo_trapdoor.json"
+        },
+        {
+            "path": "recipes/barrel_from_bamboo_mosaic_slab.json"
+        },
+        {
+            "path": "recipes/barrel_from_bamboo_slab.json"
+        },
+        {
+            "path": "recipes/beehive_from_bamboo _planks.json"
+        },
+        {
+            "path": "recipes/birch_hanging_sign.json"
+        },
+        {
+            "path": "recipes/bookshelf_from_bamboo_planks.json"
+        },
+        {
+            "path": "recipes/bowl_from_bamboo_planks.json"
+        },
+        {
+            "path": "recipes/cartography_table_from_bamboo_planks.json"
+        },
+        {
+            "path": "recipes/chest_from_bamboo_planks.json"
+        },
+        {
+            "path": "recipes/chiseled_bookshelf.json"
+        },
+        {
+            "path": "recipes/composter_from_bamboo_mosaic_slab.json"
+        },
+        {
+            "path": "recipes/composter_from_bamboo_slab.json"
+        },
+        {
+            "path": "recipes/crafting_table_from_bamboo_planks.json"
+        },
+        {
+            "path": "recipes/crimson_hanging_sign.json"
+        },
+        {
+            "path": "recipes/dark_oak_hanging_sign.json"
+        },
+        {
+            "path": "recipes/daylight_detector_from_bamboo_mosaic_slab.json"
+        },
+        {
+            "path": "recipes/daylight_detector_from_bamboo_slab.json"
+        },
+        {
+            "path": "recipes/fletching_table_from_bamboo_planks.json"
+        },
+        {
+            "path": "recipes/grindstone_from_bamboo_planks.json"
+        },
+        {
+            "path": "recipes/grindstone_from_bamboo_planks2.json"
+        },
+        {
+            "path": "recipes/grindstone_from_bamboo_planks3.json"
+        },
+        {
+            "path": "recipes/grindstone_from_bamboo_planks4.json"
+        },
+        {
+            "path": "recipes/jukebox_from_bamboo_planks.json"
+        },
+        {
+            "path": "recipes/jungle_hanging_sign.json"
+        },
+        {
+            "path": "recipes/lectern_from_bamboo_mosaic_slab.json"
+        },
+        {
+            "path": "recipes/lectern_from_bamboo_slab.json"
+        },
+        {
+            "path": "recipes/loom_from_bamboo_planks.json"
+        },
+        {
+            "path": "recipes/mangrove_hanging_sign.json"
+        },
+        {
+            "path": "recipes/noteblock_from_bamboo_planks.json"
+        },
+        {
+            "path": "recipes/oak_hanging_sign.json"
+        },
+        {
+            "path": "recipes/piston_from_bamboo_planks.json"
+        },
+        {
+            "path": "recipes/shield_from_bamboo_planks.json"
+        },
+        {
+            "path": "recipes/smithing_table_from_bamboo_planks.json"
+        },
+        {
+            "path": "recipes/spruce_hanging_sign.json"
+        },
+        {
+            "path": "recipes/stick_from_bamboo_planks.json"
+        },
+        {
+            "path": "recipes/tripwire_hook_from_bamboo_planks.json"
+        },
+        {
+            "path": "recipes/warped_hanging_sign.json"
+        },
+        {
+            "path": "recipes/wooden_axe_from_bamboo_planks.json"
+        },
+        {
+            "path": "recipes/wooden_hoe_from_bamboo_planks.json"
+        },
+        {
+            "path": "recipes/wooden_pickaxe_from_bamboo_planks.json"
+        },
+        {
+            "path": "recipes/wooden_shovel_from_bamboo_planks.json"
+        },
+        {
+            "path": "recipes/wooden_sword_from_bamboo_planks.json"
+        },
+        {
+            "path": "structures/village/desert/town_centers/desert_meeting_point_1.nbt"
+        },
+        {
+            "path": "structures/village/desert/town_centers/desert_meeting_point_2.nbt"
+        },
+        {
+            "path": "structures/village/desert/town_centers/desert_meeting_point_3.nbt"
+        }
+    ]
+}
