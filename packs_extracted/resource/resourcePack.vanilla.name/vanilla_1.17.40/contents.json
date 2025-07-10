@@ -1,0 +1,19 @@
+{
+    "content": [
+        {
+            "path": "manifest.json"
+        },
+        {
+            "path": "animation_controllers/persona.animation_controllers.json"
+        },
+        {
+            "path": "entity/pillager.entity.json"
+        },
+        {
+            "path": "entity/vindicator.entity.json"
+        },
+        {
+            "path": "entity/vindicator.v1.0.entity.json"
+        }
+    ]
+}
