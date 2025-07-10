@@ -1,0 +1,13 @@
+{
+    "content": [
+        {
+            "path": "manifest.json"
+        },
+        {
+            "path": "features/select_birch_tree_feature.json"
+        },
+        {
+            "path": "features/select_standing_oak_tree_feature.json"
+        }
+    ]
+}

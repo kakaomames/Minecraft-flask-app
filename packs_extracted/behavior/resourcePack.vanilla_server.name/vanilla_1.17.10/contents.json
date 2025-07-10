@@ -1,0 +1,124 @@
+{
+    "content": [
+        {
+            "path": "manifest.json"
+        },
+        {
+            "path": "entities/axolotl.json"
+        },
+        {
+            "path": "entities/creeper.json"
+        },
+        {
+            "path": "entities/drowned.json"
+        },
+        {
+            "path": "entities/elder_guardian.json"
+        },
+        {
+            "path": "entities/endermite.json"
+        },
+        {
+            "path": "entities/fox.json"
+        },
+        {
+            "path": "entities/goat.json"
+        },
+        {
+            "path": "entities/guardian.json"
+        },
+        {
+            "path": "entities/player.json"
+        },
+        {
+            "path": "entities/rabbit.json"
+        },
+        {
+            "path": "entities/silverfish.json"
+        },
+        {
+            "path": "entities/skeleton.json"
+        },
+        {
+            "path": "features/azalea_tree_feature.json"
+        },
+        {
+            "path": "loot_tables/chests/bastion_bridge.json"
+        },
+        {
+            "path": "loot_tables/chests/bastion_hoglin_stable.json"
+        },
+        {
+            "path": "loot_tables/chests/bastion_other.json"
+        },
+        {
+            "path": "loot_tables/chests/bastion_treasure.json"
+        },
+        {
+            "path": "recipes/black_candle.json"
+        },
+        {
+            "path": "recipes/black_candle_from_ink_sac.json"
+        },
+        {
+            "path": "recipes/blue_candle.json"
+        },
+        {
+            "path": "recipes/blue_candle_from_lapis_lazuli.json"
+        },
+        {
+            "path": "recipes/brown_candle.json"
+        },
+        {
+            "path": "recipes/brown_candle_from_cocoa_beans.json"
+        },
+        {
+            "path": "recipes/candle.json"
+        },
+        {
+            "path": "recipes/cyan_candle.json"
+        },
+        {
+            "path": "recipes/gray_candle.json"
+        },
+        {
+            "path": "recipes/green_candle.json"
+        },
+        {
+            "path": "recipes/light_blue_candle.json"
+        },
+        {
+            "path": "recipes/light_gray_candle.json"
+        },
+        {
+            "path": "recipes/lime_candle.json"
+        },
+        {
+            "path": "recipes/magenta_candle.json"
+        },
+        {
+            "path": "recipes/orange_candle.json"
+        },
+        {
+            "path": "recipes/pink_candle.json"
+        },
+        {
+            "path": "recipes/purple_candle.json"
+        },
+        {
+            "path": "recipes/red_candle.json"
+        },
+        {
+            "path": "recipes/white_candle.json"
+        },
+        {
+            "path": "recipes/whtie_candle_from_bonemeal.json"
+        },
+        {
+            "path": "recipes/yellow_candle.json"
+        },
+        {
+            "path": "spawn_rules/axolotl.json"
+        }
+    ]
+}
