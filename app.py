@@ -974,7 +974,7 @@ def play_game(world_name, world_uuid):
         behavior_packs_paths_str = ",".join(behavior_pack_paths)
         
         print(f"DEBUG: 選択されたリソースパック展開パス: {resource_packs_paths_str}")
-        print(f"DEBUG: 選択されたビヘイビアパック展開パス: {behavior_pack_paths_str}")
+        print(f"DEBUG: 選択されたビヘイビアパック展開パス: {behavior_packs_paths_str}")
     else:
         print(f"WARNING: ワールド '{world_name}' のメタデータが見つかりませんでした。パック情報は渡されません。")
 
