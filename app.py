@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash, Response
+from flask import Flask, render_template, request, redirect, url_for, session, flash, Response, stream_with_context, jsonify
 import hashlib
 import json
 import os
@@ -13,6 +13,11 @@ import zipfile
 import tempfile
 import shutil
 import traceback
+import subprocess
+import threading
+import time
+
+app = Flask(__name__)
 
 # .envファイルをロード
 load_dotenv()
@@ -451,6 +456,49 @@ def save_world_data(player_uuid, world_name, data):
         print(f"ERROR: save_world_data failed for {path}. Response: {response}")
     return success
 
+
+
+# Pygletゲームプロセスの管理
+game_process = None
+game_output_buffer = []
+game_output_lock = threading.Lock()
+
+# Pygletゲームの出力をリアルタイムでキャプチャするスレッド
+def capture_game_output(pipe):
+    global game_output_buffer
+    for line in iter(pipe.readline, b''):
+        with game_output_lock:
+            game_output_buffer.append(line.decode('utf-8'))
+    pipe.close()
+
+# GitHubからmanifest.jsonをダウンロードする関数
+def get_manifest_from_github(repo_path):
+    if not GITHUB_TOKEN or not GITHUB_OWNER or not GITHUB_REPO:
+        print("GitHub認証情報が設定されていません。manifest.jsonをダウンロードできません。")
+        return None
+
+    url = f'https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/contents/{repo_path}/manifest.json'
+    headers = {
+        'Authorization': f'token {GITHUB_TOKEN}',
+        'Accept': 'application/vnd.github.com.v3.raw', # 生のファイルコンテンツを取得
+        'User-Agent': 'Flask-Minecraft-Server'
+    }
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status() # HTTPエラーがあれば例外を発生させる
+        return json.loads(response.text)
+    except requests.exceptions.RequestException as e:
+        print(f"manifest.jsonのダウンロード中にエラーが発生しました: {e}")
+        return None
+    except json.JSONDecodeError as e:
+        print(f"manifest.jsonのデコード中にエラーが発生しました: {e}")
+        return None
+
+
+
+
+
+
 # --- Flask ルーティング ---
 
 @app.route('/')
@@ -458,8 +506,104 @@ def index():
     print("indexページを表示しました")
     message = request.args.get('message')
     return render_template('index.html', message=message)
+@app.route('/a')
+def index():
+    # 利用可能なパックのリストを取得 (例として固定値を返す)
+    # 実際にはGitHub APIを叩いてリポジトリ内のパックを列挙するロジックが必要
+    available_packs = [
+        {'name': 'Vanilla Server Pack', 'path': 'resource_packs/vanilla_server', 'type': 'resource'},
+        {'name': 'My Custom Behavior Pack', 'path': 'behavior_packs/my_custom_pack', 'type': 'behavior'},
+        # ... 他のパック
+    ]
     
+    # 各パックのmanifest.jsonから詳細情報を取得
+    for pack in available_packs:
+        manifest = get_manifest_from_github(pack['path'])
+        if manifest:
+            pack['description'] = manifest['header'].get('description', 'No description')
+            pack['version'] = '.'.join(map(str, manifest['header'].get('version', [0, 0, 0])))
+        else:
+            pack['description'] = 'Failed to load manifest.'
+            pack['version'] = 'N/A'
 
+    return render_template('indexs.html', available_packs=available_packs)
+    
+@app.route('/launch_game', methods=['POST'])
+def launch_game():
+    global game_process
+
+    if game_process and game_process.poll() is None:
+        return jsonify({'status': 'error', 'message': 'ゲームはすでに実行中です。'}), 409
+
+    data = request.get_json()
+    world_name = data.get('worldName', 'Default World')
+    resource_pack_paths = data.get('resourcePacks', [])
+    behavior_pack_paths = data.get('behaviorPacks', [])
+    world_seed = data.get('worldSeed', '') # ★追加: ワールドシードを取得
+
+    # 環境変数を設定
+    env = os.environ.copy()
+    env['WORLD_NAME'] = world_name
+    env['PLAYER_UUID'] = 'player-123' # 仮のUUID
+    env['WORLD_UUID'] = 'world-456' # 仮のUUID
+    env['RESOURCE_PACK_PATHS'] = ','.join(resource_pack_paths)
+    env['BEHAVIOR_PACKS_PATHS'] = ','.join(behavior_pack_paths)
+    env['GITHUB_TOKEN'] = GITHUB_TOKEN # game.pyにGitHubトークンを渡す
+    env['GITHUB_OWNER'] = GITHUB_OWNER
+    env['GITHUB_REPO'] = GITHUB_REPO
+    env['WORLD_SEED'] = world_seed # ★追加: ワールドシードを環境変数として渡す
+
+    command = ['python', 'game.py']
+    
+    try:
+        # Popenでゲームを非同期で起動
+        game_process = subprocess.Popen(
+            command,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT, # エラーもstdoutにリダイレクト
+            env=env
+        )
+        print(f"ゲームプロセスを起動しました: PID {game_process.pid}")
+
+        # ゲームの出力をキャプチャするスレッドを起動
+        global game_output_buffer
+        game_output_buffer = [] # バッファをクリア
+        threading.Thread(target=capture_game_output, args=(game_process.stdout,), daemon=True).start()
+
+        return jsonify({'status': 'success', 'message': 'ゲームを起動しました。'})
+    except Exception as e:
+        print(f"ゲームの起動中にエラーが発生しました: {e}")
+        return jsonify({'status': 'error', 'message': f'ゲームの起動に失敗しました: {e}'}), 500
+@app.route('/game_output')
+def game_output():
+    def generate():
+        last_index = 0
+        while True:
+            with game_output_lock:
+                if len(game_output_buffer) > last_index:
+                    for i in range(last_index, len(game_output_buffer)):
+                        yield game_output_buffer[i]
+                    last_index = len(game_output_buffer)
+            # ゲームプロセスが終了しているかチェック
+            if game_process and game_process.poll() is not None:
+                print("ゲームプロセスが終了しました。出力を停止します。")
+                break
+            time.sleep(0.1) # ポーリング間隔
+
+    return Response(stream_with_context(generate()), mimetype='text/plain')
+
+@app.route('/stop_game', methods=['POST'])
+def stop_game():
+    global game_process
+    if game_process and game_process.poll() is None:
+        print(f"ゲームプロセスを終了します: PID {game_process.pid}")
+        game_process.terminate() # プロセスを終了
+        game_process.wait() # 終了を待つ
+        game_process = None
+        return jsonify({'status': 'success', 'message': 'ゲームを停止しました。'})
+    else:
+        return jsonify({'status': 'info', 'message': 'ゲームは実行されていません。'}), 200
+        
 @app.route('/home')
 def home():
     print("ホームページを表示しました")
@@ -885,8 +1029,6 @@ def server_page():
 
 
 if __name__ == '__main__':
-    if not check_config():
-        print("致命的なエラー: アプリケーション設定が正しくありません。アプリケーションを終了します。")
-        exit(1)
+    # Flaskアプリを起動
+    app.run(host='0.0.0.0', port=5000, debug=True, use_reloader=False) # use_reloader=False でPygletが二重起動するのを防ぐ
 
-    app.run(debug=True)
