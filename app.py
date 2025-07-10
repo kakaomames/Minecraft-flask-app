@@ -18,10 +18,7 @@ import traceback
 load_dotenv()
 
 app = Flask(__name__)
-# app.secret_key = os.urandom(24) # ★変更: この行を削除またはコメントアウト
-
-# ★追加: 環境変数からSECRET_KEYを読み込む
-app.secret_key = os.getenv('SECRET_KEY')
+app.secret_key = os.getenv('SECRET_KEY') # SECRET_KEYを環境変数から読み込む
 
 # --- GitHub API 設定 ---
 GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
@@ -29,12 +26,7 @@ GITHUB_OWNER = os.getenv('GITHUB_OWNER')
 GITHUB_REPO = os.getenv('GITHUB_REPO')
 
 # GitHub設定とシークレットキーを起動時にチェックする関数
-def check_config(): # ★関数名を変更し、シークレットキーのチェックも追加
-    """
-    GitHubトークン、オーナー、リポジトリ、およびSECRET_KEYの設定をチェックし、
-    APIへのアクセスが可能か検証する。
-    問題があればエラーメッセージを出力し、Falseを返す。
-    """
+def check_config():
     print("\n--- アプリケーション設定の初期チェックを開始します ---")
 
     config_ok = True
@@ -48,7 +40,6 @@ def check_config(): # ★関数名を変更し、シークレットキーのチ�
         print(".envファイルに 'GITHUB_OWNER=\"あなたのGitHubユーザー名\"' と 'GITHUB_REPO=\"あなたのリポジトリ名\"' を設定してください。")
         config_ok = False
     
-    # ★追加: SECRET_KEYのチェック
     if not app.secret_key:
         print("エラー: SECRET_KEY が .env ファイルに設定されていません。")
         print("セッションの永続化のために、.envファイルに 'SECRET_KEY=\"あなたの非常に長いランダムな秘密鍵\"' を設定してください。")
@@ -59,7 +50,6 @@ def check_config(): # ★関数名を変更し、シークレットキーのチ�
         print("--- アプリケーション設定の初期チェックを完了しました (エラーあり) ---\n")
         return False
 
-    # GitHub APIアクセス検証
     api_base_url = f'https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/contents'
     headers = {
         'Authorization': f'token {GITHUB_TOKEN}',
@@ -207,7 +197,6 @@ def upload_directory_to_github(local_dir_path, github_base_path, commit_message)
                 print(f"WARNING: Skipping large file (>{1}MB): {local_file_path}. GitHub API has a 1MB file size limit for direct content uploads.")
                 continue
 
-            # print(f"DEBUG: Processing local file: {local_file_path} -> GitHub path: {github_path}")
             try:
                 with open(local_file_path, 'rb') as f:
                     file_content_bytes = f.read()
@@ -841,19 +830,27 @@ def play_game(world_name, world_uuid):
         behavior_packs_paths_str = ",".join(behavior_pack_paths)
         
         print(f"DEBUG: 選択されたリソースパック展開パス: {resource_packs_paths_str}")
-        print(f"DEBUG: 選択されたビヘイビアパック展開パス: {behavior_packs_paths_str}")
+        print(f"DEBUG: 選択されたビヘイビアパック展開パス: {behavior_pack_paths_str}")
     else:
         print(f"WARNING: ワールド '{world_name}' のメタデータが見つかりませんでした。パック情報は渡されません。")
 
 
     user_agent = request.headers.get('User-Agent', '').lower()
+    # ★追加: GitHub認証情報を環境変数として渡す
+    github_token_env = f"GITHUB_TOKEN={GITHUB_TOKEN}"
+    github_owner_env = f"GITHUB_OWNER={GITHUB_OWNER}"
+    github_repo_env = f"GITHUB_REPO={GITHUB_REPO}"
+
     if 'windows' in user_agent:
         script_content = f"""@echo off
 SET WORLD_NAME={world_name}
 SET PLAYER_UUID={player_uuid}
 SET WORLD_UUID={world_uuid}
 SET RESOURCE_PACK_PATHS={resource_packs_paths_str}
-SET BEHAVIOR_PACK_PATHS={behavior_packs_paths_str}
+SET BEHAVIOR_PACK_PATHS={behavior_pack_paths_str}
+SET {github_token_env}
+SET {github_owner_env}
+SET {github_repo_env}
 python game.py
 PAUSE
 """
@@ -865,7 +862,10 @@ export WORLD_NAME="{world_name}"
 export PLAYER_UUID="{player_uuid}"
 export WORLD_UUID="{world_uuid}"
 export RESOURCE_PACK_PATHS="{resource_packs_paths_str}"
-export BEHAVIOR_PACK_PATHS="{behavior_packs_paths_str}"
+export BEHAVIOR_PACK_PATHS="{behavior_pack_paths_str}"
+export {github_token_env}
+export {github_owner_env}
+export {github_repo_env}
 python3 game.py
 echo "Press any key to continue..."
 read -n 1 -s
@@ -885,8 +885,7 @@ def server_page():
 
 
 if __name__ == '__main__':
-    # アプリケーション起動時に設定チェックを実行
-    if not check_config(): # ★変更: check_github_configからcheck_configへ
+    if not check_config():
         print("致命的なエラー: アプリケーション設定が正しくありません。アプリケーションを終了します。")
         exit(1)
 
