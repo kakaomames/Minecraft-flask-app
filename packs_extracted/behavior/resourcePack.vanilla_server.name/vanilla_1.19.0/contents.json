@@ -1,0 +1,487 @@
+{
+    "content": [
+        {
+            "path": "manifest.json"
+        },
+        {
+            "path": "biomes/cold_taiga.biome.json"
+        },
+        {
+            "path": "biomes/cold_taiga_hills.biome.json"
+        },
+        {
+            "path": "biomes/cold_taiga_mutated.biome.json"
+        },
+        {
+            "path": "entities/allay.json"
+        },
+        {
+            "path": "entities/axolotl.json"
+        },
+        {
+            "path": "entities/bee.json"
+        },
+        {
+            "path": "entities/chest_boat.json"
+        },
+        {
+            "path": "entities/evocation_illager.json"
+        },
+        {
+            "path": "entities/frog.json"
+        },
+        {
+            "path": "entities/llama.json"
+        },
+        {
+            "path": "entities/mooshroom.json"
+        },
+        {
+            "path": "entities/parrot.json"
+        },
+        {
+            "path": "entities/pillager.json"
+        },
+        {
+            "path": "entities/ravager.json"
+        },
+        {
+            "path": "entities/sheep.json"
+        },
+        {
+            "path": "entities/shulker.json"
+        },
+        {
+            "path": "entities/snow_golem.json"
+        },
+        {
+            "path": "entities/tadpole.json"
+        },
+        {
+            "path": "entities/villager_v2.json"
+        },
+        {
+            "path": "entities/vindicator.json"
+        },
+        {
+            "path": "entities/wandering_trader.json"
+        },
+        {
+            "path": "entities/warden.json"
+        },
+        {
+            "path": "entities/witch.json"
+        },
+        {
+            "path": "entities/xp_orb.json"
+        },
+        {
+            "path": "features/azalea_tree_feature.json"
+        },
+        {
+            "path": "features/beehive_feature.json"
+        },
+        {
+            "path": "features/beehive_search_feature.json"
+        },
+        {
+            "path": "features/birch_tree_feature.json"
+        },
+        {
+            "path": "features/fancy_oak_tree_feature.json"
+        },
+        {
+            "path": "features/mangrove_beehive_search_feature.json"
+        },
+        {
+            "path": "features/mangrove_tree_feature.json"
+        },
+        {
+            "path": "features/mangrove_tree_with_beenest_feature.json"
+        },
+        {
+            "path": "features/mega_jungle_tree_feature.json"
+        },
+        {
+            "path": "features/mega_spruce_tree_feature.json"
+        },
+        {
+            "path": "features/oak_tree_feature.json"
+        },
+        {
+            "path": "features/oak_tree_with_vines_feature.json"
+        },
+        {
+            "path": "features/roofed_tree_feature.json"
+        },
+        {
+            "path": "features/roofed_tree_with_vines_feature.json"
+        },
+        {
+            "path": "features/savanna_tree_feature.json"
+        },
+        {
+            "path": "features/sculk_patch_feature.json"
+        },
+        {
+            "path": "features/sculk_patch_feature_ancient_city.json"
+        },
+        {
+            "path": "features/sculk_vein_feature.json"
+        },
+        {
+            "path": "features/spruce_tree_feature.json"
+        },
+        {
+            "path": "features/spruce_tree_with_vines_feature.json"
+        },
+        {
+            "path": "features/tall_mangrove_tree_feature.json"
+        },
+        {
+            "path": "features/tall_mangrove_tree_with_beenest_feature.json"
+        },
+        {
+            "path": "features/undecorated_jungle_tree_feature.json"
+        },
+        {
+            "path": "features/undecorated_jungle_tree_with_vines_feature.json"
+        },
+        {
+            "path": "feature_rules/mangrove_swamp_mangrove_tree_feature.json"
+        },
+        {
+            "path": "feature_rules/mangrove_swamp_mangrove_tree_with_beenest_feature.json"
+        },
+        {
+            "path": "feature_rules/mangrove_swamp_surface_dead_bush_feature.json"
+        },
+        {
+            "path": "feature_rules/mangrove_swamp_surface_seagrass_feature.json"
+        },
+        {
+            "path": "feature_rules/mangrove_swamp_surface_tall_grass_feature.json"
+        },
+        {
+            "path": "feature_rules/mangrove_swamp_tall_mangrove_tree_feature.json"
+        },
+        {
+            "path": "feature_rules/mangrove_swamp_tall_mangrove_tree_with_beenest_feature.json"
+        },
+        {
+            "path": "feature_rules/overworld_surface_flowers_feature.json"
+        },
+        {
+            "path": "feature_rules/overworld_surface_gravel_feature.json"
+        },
+        {
+            "path": "feature_rules/overworld_surface_mangrove_grass_feature.json"
+        },
+        {
+            "path": "feature_rules/overworld_surface_sand_feature.json"
+        },
+        {
+            "path": "feature_rules/overworld_surface_tall_grass_feature.json"
+        },
+        {
+            "path": "feature_rules/sculk_patch_feature.json"
+        },
+        {
+            "path": "feature_rules/sculk_vein_feature.json"
+        },
+        {
+            "path": "feature_rules/swamp_surface_waterlily_feature.json"
+        },
+        {
+            "path": "loot_tables/chests/ancient_city.json"
+        },
+        {
+            "path": "loot_tables/chests/ancient_city_ice_box.json"
+        },
+        {
+            "path": "loot_tables/chests/pillager_outpost.json"
+        },
+        {
+            "path": "loot_tables/entities/frog.json"
+        },
+        {
+            "path": "loot_tables/entities/warden.json"
+        },
+        {
+            "path": "recipes/acacia_chest_boat.json"
+        },
+        {
+            "path": "recipes/barrel_from_mangrove_slab.json"
+        },
+        {
+            "path": "recipes/beehive_from_mangrove_planks.json"
+        },
+        {
+            "path": "recipes/birch_chest_boat.json"
+        },
+        {
+            "path": "recipes/bookshelf_from_mangrove_planks.json"
+        },
+        {
+            "path": "recipes/bowl_from_mangrove_planks.json"
+        },
+        {
+            "path": "recipes/campfire_from_charcoal_stripped_mangrove_log.json"
+        },
+        {
+            "path": "recipes/campfire_from_mangrove_log.json"
+        },
+        {
+            "path": "recipes/campfire_from_mangrove_wood.json"
+        },
+        {
+            "path": "recipes/campfire_from_stripped_mangrove_log.json"
+        },
+        {
+            "path": "recipes/campfire_from_stripped_mangrove_wood.json"
+        },
+        {
+            "path": "recipes/cartography_table_from_mangrove_planks.json"
+        },
+        {
+            "path": "recipes/chest_boat.json"
+        },
+        {
+            "path": "recipes/chest_from_mangrove_planks.json"
+        },
+        {
+            "path": "recipes/chest_minecart.json"
+        },
+        {
+            "path": "recipes/composter_from_mangrove_slab.json"
+        },
+        {
+            "path": "recipes/crafting_table_from_mangrove_planks.json"
+        },
+        {
+            "path": "recipes/dark_oak_chest_boat.json"
+        },
+        {
+            "path": "recipes/daylight_detector_from_mangrove_slab.json"
+        },
+        {
+            "path": "recipes/fletching_table_from_mangrove_planks.json"
+        },
+        {
+            "path": "recipes/furnace_log_mangrove.json"
+        },
+        {
+            "path": "recipes/furnace_mangrove_wood.json"
+        },
+        {
+            "path": "recipes/furnace_stripped_mangrove_log.json"
+        },
+        {
+            "path": "recipes/furnace_stripped_mangrove_wood.json"
+        },
+        {
+            "path": "recipes/grindstone_from_mangrove_planks.json"
+        },
+        {
+            "path": "recipes/grindstone_from_mangrove_planks2.json"
+        },
+        {
+            "path": "recipes/grindstone_from_mangrove_planks3.json"
+        },
+        {
+            "path": "recipes/grindstone_from_mangrove_planks4.json"
+        },
+        {
+            "path": "recipes/hopper_minecart.json"
+        },
+        {
+            "path": "recipes/jukebox_from_mangrove_planks.json"
+        },
+        {
+            "path": "recipes/jungle_chest_boat.json"
+        },
+        {
+            "path": "recipes/lectern_from_mangrove_slab.json"
+        },
+        {
+            "path": "recipes/loom_from_mangrove_planks.json"
+        },
+        {
+            "path": "recipes/mangrove_boat.json"
+        },
+        {
+            "path": "recipes/mangrove_button.json"
+        },
+        {
+            "path": "recipes/mangrove_chest_boat.json"
+        },
+        {
+            "path": "recipes/mangrove_door.json"
+        },
+        {
+            "path": "recipes/mangrove_fence.json"
+        },
+        {
+            "path": "recipes/mangrove_fence_gate.json"
+        },
+        {
+            "path": "recipes/mangrove_planks.json"
+        },
+        {
+            "path": "recipes/mangrove_planks_from_stripped_log.json"
+        },
+        {
+            "path": "recipes/mangrove_planks_from_stripped_wood.json"
+        },
+        {
+            "path": "recipes/mangrove_planks_from_wood.json"
+        },
+        {
+            "path": "recipes/mangrove_pressure_plate.json"
+        },
+        {
+            "path": "recipes/mangrove_sign.json"
+        },
+        {
+            "path": "recipes/mangrove_slab.json"
+        },
+        {
+            "path": "recipes/mangrove_stairs.json"
+        },
+        {
+            "path": "recipes/mangrove_trapdoor.json"
+        },
+        {
+            "path": "recipes/mangrove_wood.json"
+        },
+        {
+            "path": "recipes/mangrove_wood_stripped.json"
+        },
+        {
+            "path": "recipes/muddy_mangrove_roots.json"
+        },
+        {
+            "path": "recipes/mud_bricks.json"
+        },
+        {
+            "path": "recipes/mud_brick_slab.json"
+        },
+        {
+            "path": "recipes/mud_brick_stairs.json"
+        },
+        {
+            "path": "recipes/mud_brick_wall.json"
+        },
+        {
+            "path": "recipes/noteblock_from_mangrove_planks.json"
+        },
+        {
+            "path": "recipes/packed_mud.json"
+        },
+        {
+            "path": "recipes/piston_from_mangrove_planks.json"
+        },
+        {
+            "path": "recipes/record_5.json"
+        },
+        {
+            "path": "recipes/recovery_compass.json"
+        },
+        {
+            "path": "recipes/recovery_compass_from_lodestone_compass.json"
+        },
+        {
+            "path": "recipes/shield_from_mangrove_planks.json"
+        },
+        {
+            "path": "recipes/smithing_table_from_mangrove_planks.json"
+        },
+        {
+            "path": "recipes/smoker_from_mangrove_log.json"
+        },
+        {
+            "path": "recipes/smoker_from_mangrove_wood.json"
+        },
+        {
+            "path": "recipes/smoker_from_stripped_mangrove_log.json"
+        },
+        {
+            "path": "recipes/smoker_from_stripped_mangrove_wood.json"
+        },
+        {
+            "path": "recipes/soul_campfire_from_mangrove_log.json"
+        },
+        {
+            "path": "recipes/soul_campfire_from_mangrove_log2.json"
+        },
+        {
+            "path": "recipes/soul_campfire_from_mangrove_wood.json"
+        },
+        {
+            "path": "recipes/soul_campfire_from_mangrove_wood2.json"
+        },
+        {
+            "path": "recipes/soul_campfire_from_stripped_mangrove_log.json"
+        },
+        {
+            "path": "recipes/soul_campfire_from_stripped_mangrove_log2.json"
+        },
+        {
+            "path": "recipes/soul_campfire_from_stripped_mangrove_wood.json"
+        },
+        {
+            "path": "recipes/soul_campfire_from_stripped_mangrove_wood2.json"
+        },
+        {
+            "path": "recipes/spruce_chest_boat.json"
+        },
+        {
+            "path": "recipes/stick_from_mangrove_planks.json"
+        },
+        {
+            "path": "recipes/stonecutter_mud_brick_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_mud_brick_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_mud_brick_wall.json"
+        },
+        {
+            "path": "recipes/stripped_mangrove_wood.json"
+        },
+        {
+            "path": "recipes/tnt_minecart.json"
+        },
+        {
+            "path": "recipes/tripwire_hook_from_mangrove_planks.json"
+        },
+        {
+            "path": "recipes/wooden_axe_from_mangrove_planks.json"
+        },
+        {
+            "path": "recipes/wooden_hoe_from_mangrove_planks.json"
+        },
+        {
+            "path": "recipes/wooden_pickaxe_from_mangrove_planks.json"
+        },
+        {
+            "path": "recipes/wooden_shovel_from_mangrove_planks.json"
+        },
+        {
+            "path": "recipes/wooden_sword_from_mangrove_planks.json"
+        },
+        {
+            "path": "spawn_rules/frog.json"
+        },
+        {
+            "path": "spawn_rules/slime.json"
+        },
+        {
+            "path": "spawn_rules/tropicalfish.json"
+        },
+        {
+            "path": "trading/economy_trades/wandering_trader_trades.json"
+        }
+    ]
+}
