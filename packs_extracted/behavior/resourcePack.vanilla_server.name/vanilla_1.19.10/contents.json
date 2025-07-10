@@ -1,0 +1,85 @@
+{
+    "content": [
+        {
+            "path": "manifest.json"
+        },
+        {
+            "path": "entities/allay.json"
+        },
+        {
+            "path": "entities/fish.json"
+        },
+        {
+            "path": "entities/frog.json"
+        },
+        {
+            "path": "entities/llama.json"
+        },
+        {
+            "path": "entities/pillager.json"
+        },
+        {
+            "path": "entities/pufferfish.json"
+        },
+        {
+            "path": "entities/salmon.json"
+        },
+        {
+            "path": "entities/shulker_bullet.json"
+        },
+        {
+            "path": "entities/trader_llama.json"
+        },
+        {
+            "path": "entities/tropicalfish.json"
+        },
+        {
+            "path": "entities/villager_v2.json"
+        },
+        {
+            "path": "entities/vindicator.json"
+        },
+        {
+            "path": "entities/wandering_trader.json"
+        },
+        {
+            "path": "entities/warden.json"
+        },
+        {
+            "path": "features/azalea_tree_feature.json"
+        },
+        {
+            "path": "features/mangrove_tree_feature.json"
+        },
+        {
+            "path": "feature_rules/mangrove_swamp_mangrove_tree_feature.json"
+        },
+        {
+            "path": "feature_rules/mangrove_swamp_mangrove_tree_with_beenest_feature.json"
+        },
+        {
+            "path": "feature_rules/mangrove_swamp_tall_mangrove_tree_feature.json"
+        },
+        {
+            "path": "feature_rules/mangrove_swamp_tall_mangrove_tree_with_beenest_feature.json"
+        },
+        {
+            "path": "feature_rules/sculk_patch_feature.json"
+        },
+        {
+            "path": "feature_rules/sculk_vein_feature.json"
+        },
+        {
+            "path": "items/pufferfish.json"
+        },
+        {
+            "path": "items/sweet_berries.json"
+        },
+        {
+            "path": "loot_tables/chests/spawn_bonus_chest.json"
+        },
+        {
+            "path": "recipes/mangrove_wood_stripped.json"
+        }
+    ]
+}
