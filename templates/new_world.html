@@ -52,19 +52,21 @@
 
             <h3>パック設定</h3>
             <label for="resource_packs">リソースパック (複数選択可):</label><br>
-            <select id="resource_packs" name="resource_packs" multiple size="5"> {# size属性で表示行数を調整 #}
+            <select id="resource_packs" name="resource_packs" multiple size="5">
                 {% for pack in available_packs %}
-                    {% if pack.endswith('.mcpack') %}
-                        <option value="{{ pack }}">{{ pack }}</option>
+                    {# ★ここを修正: pack.type でフィルタリングし、pack.name を表示 #}
+                    {% if pack.type == 'resource' %}
+                        <option value="{{ pack.filename }}">{{ pack.name }} ({{ pack.filename }})</option>
                     {% endif %}
                 {% endfor %}
             </select><br><br>
 
             <label for="behavior_packs">ビヘイビアパック (複数選択可):</label><br>
-            <select id="behavior_packs" name="behavior_packs" multiple size="5"> {# size属性で表示行数を調整 #}
+            <select id="behavior_packs" name="behavior_packs" multiple size="5">
                 {% for pack in available_packs %}
-                    {% if pack.endswith('.mcaddon') %}
-                        <option value="{{ pack }}">{{ pack }}</option>
+                    {# ★ここを修正: pack.type でフィルタリングし、pack.name を表示 #}
+                    {% if pack.type == 'behavior' %}
+                        <option value="{{ pack.filename }}">{{ pack.name }} ({{ pack.filename }})</option>
                     {% endif %}
                 {% endfor %}
             </select><br><br>
