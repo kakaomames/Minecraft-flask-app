@@ -1,14 +1,15 @@
 [
     {
         "id": "fe9f8597-5454-481a-8730-8d070a8e2e58",
-        "name": "resourcePack.vanilla_server.初期",
+        "name": "resourcePack.vanilla_server.name",
         "version": [
             1,
             19,
-            50
+            40
         ],
         "type": "behavior",
-        "filename": "vanilla_1.19.50.mcpack",
-        "extracted_path": "packs_extracted/fe9f8597-5454-481a-8730-8d070a8e2e58"
+        "filename": "vanilla_1.19.40.mcpack",
+        "sanitized_name": "resourcePack.vanilla_server.name",
+        "extracted_path": "packs_extracted/behavior/resourcePack.vanilla_server.name"
     }
 ]
