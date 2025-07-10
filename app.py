@@ -18,31 +18,48 @@ import traceback
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)
+# app.secret_key = os.urandom(24) # ★変更: この行を削除またはコメントアウト
+
+# ★追加: 環境変数からSECRET_KEYを読み込む
+app.secret_key = os.getenv('SECRET_KEY')
 
 # --- GitHub API 設定 ---
 GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
 GITHUB_OWNER = os.getenv('GITHUB_OWNER')
 GITHUB_REPO = os.getenv('GITHUB_REPO')
 
-# GitHub設定を起動時にチェックする関数
-def check_github_config():
+# GitHub設定とシークレットキーを起動時にチェックする関数
+def check_config(): # ★関数名を変更し、シークレットキーのチェックも追加
     """
-    GitHubトークン、オーナー、リポジトリの設定をチェックし、
+    GitHubトークン、オーナー、リポジトリ、およびSECRET_KEYの設定をチェックし、
     APIへのアクセスが可能か検証する。
     問題があればエラーメッセージを出力し、Falseを返す。
     """
-    print("\n--- GitHub設定の初期チェックを開始します ---")
+    print("\n--- アプリケーション設定の初期チェックを開始します ---")
+
+    config_ok = True
 
     if not GITHUB_TOKEN:
         print("エラー: GITHUB_TOKEN が .env ファイルに設定されていません。")
         print("GitHub Personal Access Tokenを生成し、.envファイルに 'GITHUB_TOKEN=\"YOUR_TOKEN_HERE\"' の形式で設定してください。")
-        return False
+        config_ok = False
     if not GITHUB_OWNER or not GITHUB_REPO:
         print("エラー: GITHUB_OWNER または GITHUB_REPO が .env ファイルに設定されていません。")
         print(".envファイルに 'GITHUB_OWNER=\"あなたのGitHubユーザー名\"' と 'GITHUB_REPO=\"あなたのリポジトリ名\"' を設定してください。")
+        config_ok = False
+    
+    # ★追加: SECRET_KEYのチェック
+    if not app.secret_key:
+        print("エラー: SECRET_KEY が .env ファイルに設定されていません。")
+        print("セッションの永続化のために、.envファイルに 'SECRET_KEY=\"あなたの非常に長いランダムな秘密鍵\"' を設定してください。")
+        print("例: SECRET_KEY=\"supersecretkeythatisverylongandrandomandhardtoguessthisisforproductionuse\"")
+        config_ok = False
+
+    if not config_ok:
+        print("--- アプリケーション設定の初期チェックを完了しました (エラーあり) ---\n")
         return False
 
+    # GitHub APIアクセス検証
     api_base_url = f'https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/contents'
     headers = {
         'Authorization': f'token {GITHUB_TOKEN}',
@@ -62,11 +79,10 @@ def check_github_config():
         response = requests.get(url, headers=headers)
 
         print(f"DEBUG: レスポンスステータスコード: {response.status_code}")
-        # print(f"DEBUG: レスポンスボディ: {response.text}")
 
         if response.status_code == 200 or response.status_code == 404:
             print("成功: GitHub APIへのアクセスが確認できました。トークンとリポジトリ設定は有効です。")
-            print("--- GitHub設定の初期チェックを完了しました ---\n")
+            print("--- アプリケーション設定の初期チェックを完了しました ---\n")
             return True
         elif response.status_code == 401:
             print("\nエラー: 401 Unauthorized - 認証情報が無効です（Bad credentials）。")
@@ -191,7 +207,7 @@ def upload_directory_to_github(local_dir_path, github_base_path, commit_message)
                 print(f"WARNING: Skipping large file (>{1}MB): {local_file_path}. GitHub API has a 1MB file size limit for direct content uploads.")
                 continue
 
-            print(f"DEBUG: Processing local file: {local_file_path} -> GitHub path: {github_path}")
+            # print(f"DEBUG: Processing local file: {local_file_path} -> GitHub path: {github_path}")
             try:
                 with open(local_file_path, 'rb') as f:
                     file_content_bytes = f.read()
@@ -293,20 +309,18 @@ def parse_mc_pack(pack_file_path):
 
         with zipfile.ZipFile(pack_file_path, 'r') as zip_ref:
             print(f"DEBUG: Contents of zip file {pack_file_path}:")
-            zip_contents = zip_ref.namelist() # ZIPファイル内の全コンテンツを取得
+            zip_contents = zip_ref.namelist()
             for name in zip_contents:
                 print(f"  - {name}")
 
-            # manifest.jsonのパスを検索
             manifest_in_zip_path = None
             for name in zip_contents:
-                if name.endswith('manifest.json'):
+                if name.endswith('manifest.json') and 'manifest.json' in name:
                     manifest_in_zip_path = name
                     break
             
             if manifest_in_zip_path:
                 print(f"DEBUG: Found manifest.json inside zip at: {manifest_in_zip_path}")
-                # manifest.jsonだけを抽出して読み込む
                 with zip_ref.open(manifest_in_zip_path) as manifest_file:
                     manifest = json.load(manifest_file)
                 
@@ -333,19 +347,23 @@ def parse_mc_pack(pack_file_path):
                     elif module.get('type') == 'client_data':
                         pack_type = 'resource'
                         break
+                    elif module.get('type') == 'skin_pack':
+                        pack_type = 'skin'
+                        break
                 
                 if pack_id and pack_name and pack_version:
+                    sanitized_pack_name = secure_filename(pack_name)
                     pack_info = {
                         'id': pack_id,
                         'name': pack_name,
                         'version': pack_version,
                         'type': pack_type,
                         'filename': os.path.basename(pack_file_path),
-                        'extracted_path': f'{PACKS_EXTRACTED_BASE_PATH}/{pack_id}'
+                        'sanitized_name': sanitized_pack_name,
+                        'extracted_path': f'{PACKS_EXTRACTED_BASE_PATH}/{pack_type}/{sanitized_pack_name}'
                     }
                     print(f"DEBUG: Parsed pack info successfully: {pack_info}")
 
-                    # ZIP全体を抽出するのは、manifest.jsonの解析が成功した後に行う
                     zip_ref.extractall(temp_dir)
                     print(f"DEBUG: Full pack extracted to: {temp_dir}")
 
@@ -716,15 +734,14 @@ def import_pack():
             pack_metadata, temp_extract_dir = parse_mc_pack(temp_file_path)
             
             if pack_metadata and temp_extract_dir:
-                pack_id = pack_metadata['id']
-                github_extracted_pack_path = f'{PACKS_EXTRACTED_BASE_PATH}/{pack_id}'
-                print(f"DEBUG: Pack metadata parsed. ID: {pack_id}, Extracted Dir: {temp_extract_dir}")
+                github_extracted_pack_path = pack_metadata['extracted_path']
+                print(f"DEBUG: Pack metadata parsed. ID: {pack_metadata['id']}, Extracted Dir: {temp_extract_dir}, GitHub Target Path: {github_extracted_pack_path}")
 
                 print(f"DEBUG: Attempting to upload extracted pack contents from {temp_extract_dir} to GitHub path {github_extracted_pack_path}...")
                 upload_success = upload_directory_to_github(
                     temp_extract_dir,
                     github_extracted_pack_path,
-                    f"Upload extracted pack: {pack_metadata['name']} ({pack_id})"
+                    f"Upload extracted pack: {pack_metadata['name']} ({pack_metadata['id']})"
                 )
 
                 if not upload_success:
@@ -735,7 +752,6 @@ def import_pack():
 
                 pack_registry = load_pack_registry()
                 
-                # ここを修正: enumerateのループ変数名が間違っていた
                 existing_pack_index = next((i for i, p in enumerate(pack_registry) if p.get('id') == pack_metadata['id']), -1)
                 
                 if existing_pack_index != -1:
@@ -869,8 +885,9 @@ def server_page():
 
 
 if __name__ == '__main__':
-    if not check_github_config():
-        print("致命的なエラー: GitHub設定が正しくありません。アプリケーションを終了します。")
+    # アプリケーション起動時に設定チェックを実行
+    if not check_config(): # ★変更: check_github_configからcheck_configへ
+        print("致命的なエラー: アプリケーション設定が正しくありません。アプリケーションを終了します。")
         exit(1)
 
     app.run(debug=True)
