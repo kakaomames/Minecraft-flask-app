@@ -1,0 +1,91 @@
+{
+    "content": [
+        {
+            "path": "manifest.json"
+        },
+        {
+            "path": "biomes/mangrove_swamp.biome.json"
+        },
+        {
+            "path": "entities/camel.json"
+        },
+        {
+            "path": "entities/wither_skeleton.json"
+        },
+        {
+            "path": "entities/zombie_pigman.json"
+        },
+        {
+            "path": "items/black_bundle.json"
+        },
+        {
+            "path": "items/blue_bundle.json"
+        },
+        {
+            "path": "items/brown_bundle.json"
+        },
+        {
+            "path": "items/bundle.json"
+        },
+        {
+            "path": "items/cyan_bundle.json"
+        },
+        {
+            "path": "items/gray_bundle.json"
+        },
+        {
+            "path": "items/green_bundle.json"
+        },
+        {
+            "path": "items/light_blue_bundle.json"
+        },
+        {
+            "path": "items/light_gray_bundle.json"
+        },
+        {
+            "path": "items/lime_bundle.json"
+        },
+        {
+            "path": "items/magenta_bundle.json"
+        },
+        {
+            "path": "items/orange_bundle.json"
+        },
+        {
+            "path": "items/pink_bundle.json"
+        },
+        {
+            "path": "items/purple_bundle.json"
+        },
+        {
+            "path": "items/red_bundle.json"
+        },
+        {
+            "path": "items/white_bundle.json"
+        },
+        {
+            "path": "items/yellow_bundle.json"
+        },
+        {
+            "path": "item_catalog/crafting_item_catalog.json"
+        },
+        {
+            "path": "loot_tables/entities/rabbit.json"
+        },
+        {
+            "path": "loot_tables/gameplay/fishing/junk.json"
+        },
+        {
+            "path": "loot_tables/gameplay/fishing/treasure.json"
+        },
+        {
+            "path": "recipes/stonecutter_cut_red_sandstone_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_cut_sandstone_slab.json"
+        },
+        {
+            "path": "worldgen/metadata/jigsawstructure_metadata_registry.dat"
+        }
+    ]
+}
