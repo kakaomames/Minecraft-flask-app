@@ -1,0 +1,250 @@
+{
+    "content": [
+        {
+            "path": "manifest.json"
+        },
+        {
+            "path": "entities/bee.json"
+        },
+        {
+            "path": "entities/breeze.json"
+        },
+        {
+            "path": "entities/dolphin.json"
+        },
+        {
+            "path": "entities/iron_golem.json"
+        },
+        {
+            "path": "entities/mooshroom.json"
+        },
+        {
+            "path": "entities/rabbit.json"
+        },
+        {
+            "path": "entities/ravager.json"
+        },
+        {
+            "path": "entities/sniffer.json"
+        },
+        {
+            "path": "entities/villager_v2.json"
+        },
+        {
+            "path": "entities/wind_charge_projectile.json"
+        },
+        {
+            "path": "entities/zoglin.json"
+        },
+        {
+            "path": "features/azalea_tree_feature.json"
+        },
+        {
+            "path": "features/birch_tree_feature.json"
+        },
+        {
+            "path": "features/cherry_tree_feature.json"
+        },
+        {
+            "path": "features/clay_pool_with_dripleaves_feature.json"
+        },
+        {
+            "path": "features/clay_with_dripleaves_feature.json"
+        },
+        {
+            "path": "features/fallen_birch_tree_feature.json"
+        },
+        {
+            "path": "features/fallen_jungle_tree_feature.json"
+        },
+        {
+            "path": "features/fallen_oak_tree_feature.json"
+        },
+        {
+            "path": "features/fallen_spruce_tree_feature.json"
+        },
+        {
+            "path": "features/fallen_super_birch_tree_feature.json"
+        },
+        {
+            "path": "features/fancy_oak_tree_feature.json"
+        },
+        {
+            "path": "features/jungle_tree_feature.json"
+        },
+        {
+            "path": "features/mangrove_tree_feature.json"
+        },
+        {
+            "path": "features/mega_jungle_tree_feature.json"
+        },
+        {
+            "path": "features/mega_pine_tree_feature.json"
+        },
+        {
+            "path": "features/mega_spruce_tree_feature.json"
+        },
+        {
+            "path": "features/moss_ceiling_feature.json"
+        },
+        {
+            "path": "features/moss_patch_bonemeal_feature.json"
+        },
+        {
+            "path": "features/moss_patch_feature.json"
+        },
+        {
+            "path": "features/mountain_pine_tree_feature.json"
+        },
+        {
+            "path": "features/mountain_spruce_tree_feature.json"
+        },
+        {
+            "path": "features/oak_tree_feature.json"
+        },
+        {
+            "path": "features/oak_tree_with_vines_feature.json"
+        },
+        {
+            "path": "features/roofed_tree_feature.json"
+        },
+        {
+            "path": "features/roofed_tree_with_vines_feature.json"
+        },
+        {
+            "path": "features/savanna_tree_feature.json"
+        },
+        {
+            "path": "features/spruce_tree_feature.json"
+        },
+        {
+            "path": "features/spruce_tree_with_vines_feature.json"
+        },
+        {
+            "path": "features/super_birch_tree_feature.json"
+        },
+        {
+            "path": "features/swamp_tree_feature.json"
+        },
+        {
+            "path": "features/tall_mangrove_tree_feature.json"
+        },
+        {
+            "path": "features/undecorated_jungle_tree_feature.json"
+        },
+        {
+            "path": "features/undecorated_jungle_tree_with_vines_feature.json"
+        },
+        {
+            "path": "items/pufferfish.json"
+        },
+        {
+            "path": "items/sweet_berries.json"
+        },
+        {
+            "path": "loot_tables/chests/village/village_plains_house.json"
+        },
+        {
+            "path": "recipes/coarse_dirt.json"
+        },
+        {
+            "path": "recipes/furnace_quartz_block.json"
+        },
+        {
+            "path": "recipes/furnace_red_sand.json"
+        },
+        {
+            "path": "recipes/furnace_red_sandstone.json"
+        },
+        {
+            "path": "recipes/furnace_sand.json"
+        },
+        {
+            "path": "recipes/furnace_sandstone.json"
+        },
+        {
+            "path": "recipes/quartz_block.json"
+        },
+        {
+            "path": "recipes/quartz_bricks.json"
+        },
+        {
+            "path": "recipes/quartz_pillar.json"
+        },
+        {
+            "path": "recipes/red_sandstone.json"
+        },
+        {
+            "path": "recipes/sandstone.json"
+        },
+        {
+            "path": "recipes/smooth_quartz_stairs.json"
+        },
+        {
+            "path": "recipes/smooth_red_sandstone.json"
+        },
+        {
+            "path": "recipes/smooth_red_sandstone_stairs.json"
+        },
+        {
+            "path": "recipes/smooth_sandstone.json"
+        },
+        {
+            "path": "recipes/smooth_sandstone_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_quartz_chiseled.json"
+        },
+        {
+            "path": "recipes/stonecutter_quartz_pillar.json"
+        },
+        {
+            "path": "recipes/stonecutter_red_sandstone_cut.json"
+        },
+        {
+            "path": "recipes/stonecutter_red_sandstone_heiroglyphs.json"
+        },
+        {
+            "path": "recipes/stonecutter_red_sandstone_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_sandstone_cut.json"
+        },
+        {
+            "path": "recipes/stonecutter_sandstone_heiroglyphs.json"
+        },
+        {
+            "path": "recipes/stonecutter_smooth_quartz_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_smooth_quartz_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_smooth_red_sandstone_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_smooth_red_sandstone_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_oxidized_cut_copper_to_cut_copper_slab.json"
+        },
+        {
+            "path": "recipes/suspicious_stew_from_dandelion.json"
+        },
+        {
+            "path": "recipes/yellow_dye_from_dandelion.json"
+        },
+        {
+            "path": "spawn_rules/armadillo.json"
+        },
+        {
+            "path": "spawn_rules/wolf.json"
+        },
+        {
+            "path": "trading/economy_trades/stone_mason_trades.json"
+        },
+        {
+            "path": "trading/economy_trades/wandering_trader_trades.json"
+        }
+    ]
+}
