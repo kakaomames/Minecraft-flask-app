@@ -5,10 +5,10 @@
         "version": [
             1,
             21,
-            60
+            50
         ],
         "type": "behavior",
-        "filename": "vanilla_1.21.60.mcpack",
+        "filename": "vanilla_1.21.50.mcpack",
         "sanitized_name": "resourcePack.vanilla_server.name",
         "extracted_path": "packs_extracted/behavior/resourcePack.vanilla_server.name"
     },
