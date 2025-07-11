@@ -1,0 +1,14 @@
+{
+    "player_uuid": "2a7c17fa-6a24-4b45-8c7c-736ba962ab8d",
+    "world_name": "w",
+    "world_uuid": "57247ba7-67ca-411d-821b-df504dd2e309",
+    "seed": "j",
+    "game_mode": "survival",
+    "cheats_enabled": false,
+    "resource_packs": [
+        "vanilla_1.17.40.mcpack"
+    ],
+    "behavior_packs": [
+        "vanilla_1.21.0.mcpack"
+    ]
+}
