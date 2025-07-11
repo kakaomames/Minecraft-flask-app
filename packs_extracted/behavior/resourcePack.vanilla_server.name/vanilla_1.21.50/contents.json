@@ -1,0 +1,385 @@
+{
+    "content": [
+        {
+            "path": "manifest.json"
+        },
+        {
+            "path": "biomes/pale_garden.biome.json"
+        },
+        {
+            "path": "entities/bee.json"
+        },
+        {
+            "path": "entities/creaking.json"
+        },
+        {
+            "path": "entities/evocation_illager.json"
+        },
+        {
+            "path": "entities/fox.json"
+        },
+        {
+            "path": "entities/ghast.json"
+        },
+        {
+            "path": "entities/mooshroom.json"
+        },
+        {
+            "path": "entities/pillager.json"
+        },
+        {
+            "path": "entities/ravager.json"
+        },
+        {
+            "path": "entities/silverfish.json"
+        },
+        {
+            "path": "entities/sniffer.json"
+        },
+        {
+            "path": "entities/vex.json"
+        },
+        {
+            "path": "entities/vindicator.json"
+        },
+        {
+            "path": "entities/wolf.json"
+        },
+        {
+            "path": "entities/zombie_pigman.json"
+        },
+        {
+            "path": "features/azalea_tree_feature.json"
+        },
+        {
+            "path": "features/birch_tree_feature.json"
+        },
+        {
+            "path": "features/cherry_tree_feature.json"
+        },
+        {
+            "path": "features/creaking_heart_feature.json"
+        },
+        {
+            "path": "features/creaking_heart_search_feature.json"
+        },
+        {
+            "path": "features/fallen_birch_tree_feature.json"
+        },
+        {
+            "path": "features/fallen_jungle_tree_feature.json"
+        },
+        {
+            "path": "features/fallen_oak_tree_feature.json"
+        },
+        {
+            "path": "features/fallen_spruce_tree_feature.json"
+        },
+        {
+            "path": "features/fallen_super_birch_tree_feature.json"
+        },
+        {
+            "path": "features/fancy_oak_tree_feature.json"
+        },
+        {
+            "path": "features/jungle_tree_feature.json"
+        },
+        {
+            "path": "features/mangrove_tree_feature.json"
+        },
+        {
+            "path": "features/mega_jungle_tree_feature.json"
+        },
+        {
+            "path": "features/mega_pine_tree_feature.json"
+        },
+        {
+            "path": "features/mega_spruce_tree_feature.json"
+        },
+        {
+            "path": "features/moss_patch_bonemeal_feature.json"
+        },
+        {
+            "path": "features/mountain_pine_tree_feature.json"
+        },
+        {
+            "path": "features/mountain_spruce_tree_feature.json"
+        },
+        {
+            "path": "features/oak_tree_feature.json"
+        },
+        {
+            "path": "features/pale_hanging_moss_feature.json"
+        },
+        {
+            "path": "features/pale_hanging_moss_snap_to_ceiling_feature.json"
+        },
+        {
+            "path": "features/pale_moss_patch_bonemeal_feature.json"
+        },
+        {
+            "path": "features/pale_moss_patch_feature.json"
+        },
+        {
+            "path": "features/pale_oak_tree_feature.json"
+        },
+        {
+            "path": "features/pale_oak_tree_with_decorations_and_creaking_heart_feature.json"
+        },
+        {
+            "path": "features/pale_oak_tree_with_decorations_feature.json"
+        },
+        {
+            "path": "features/pine_tree_feature.json"
+        },
+        {
+            "path": "features/random_pale_oak_tree_feature.json"
+        },
+        {
+            "path": "features/roofed_tree_feature.json"
+        },
+        {
+            "path": "features/savanna_tree_feature.json"
+        },
+        {
+            "path": "features/scatter_eyeblossom_feature.json"
+        },
+        {
+            "path": "features/scatter_pale_hanging_moss_feature.json"
+        },
+        {
+            "path": "features/spruce_tree_feature.json"
+        },
+        {
+            "path": "features/super_birch_tree_feature.json"
+        },
+        {
+            "path": "features/swamp_tree_feature.json"
+        },
+        {
+            "path": "features/tall_mangrove_tree_feature.json"
+        },
+        {
+            "path": "features/undecorated_jungle_tree_feature.json"
+        },
+        {
+            "path": "feature_rules/eyeblossom_feature_rules.json"
+        },
+        {
+            "path": "feature_rules/overworld_surface_extra_brown_mushroom_feature.json"
+        },
+        {
+            "path": "feature_rules/overworld_surface_extra_red_mushroom_feature.json"
+        },
+        {
+            "path": "feature_rules/overworld_surface_flowers_feature.json"
+        },
+        {
+            "path": "feature_rules/pale_garden_pale_oak_tree_feature_rules.json"
+        },
+        {
+            "path": "feature_rules/pale_garden_surface_double_plant_feature_rules.json"
+        },
+        {
+            "path": "feature_rules/pale_garden_surface_pale_moss_patch_feature_rules.json"
+        },
+        {
+            "path": "feature_rules/pale_garden_surface_tall_grass_feature_rules.json"
+        },
+        {
+            "path": "item_catalog/crafting_item_catalog.json"
+        },
+        {
+            "path": "loot_tables/chests/woodland_mansion.json"
+        },
+        {
+            "path": "loot_tables/gameplay/entities/mooshroom_milking.json"
+        },
+        {
+            "path": "recipes/chiseled_resin_bricks_from_slabs.json"
+        },
+        {
+            "path": "recipes/creaking_heart.json"
+        },
+        {
+            "path": "recipes/furnace_resin_brick.json"
+        },
+        {
+            "path": "recipes/gray_dye_from_closed_eyeblossom.json"
+        },
+        {
+            "path": "recipes/orange_dye_from_open_eyeblossom.json"
+        },
+        {
+            "path": "recipes/pale_moss_carpet.json"
+        },
+        {
+            "path": "recipes/pale_oak_boat.json"
+        },
+        {
+            "path": "recipes/pale_oak_button.json"
+        },
+        {
+            "path": "recipes/pale_oak_chest_boat.json"
+        },
+        {
+            "path": "recipes/pale_oak_door.json"
+        },
+        {
+            "path": "recipes/pale_oak_fence.json"
+        },
+        {
+            "path": "recipes/pale_oak_fence_gate.json"
+        },
+        {
+            "path": "recipes/pale_oak_hanging_sign.json"
+        },
+        {
+            "path": "recipes/pale_oak_planks_from_log.json"
+        },
+        {
+            "path": "recipes/pale_oak_planks_from_stripped_log.json"
+        },
+        {
+            "path": "recipes/pale_oak_planks_from_stripped_wood.json"
+        },
+        {
+            "path": "recipes/pale_oak_planks_from_wood.json"
+        },
+        {
+            "path": "recipes/pale_oak_pressure_plate.json"
+        },
+        {
+            "path": "recipes/pale_oak_sign.json"
+        },
+        {
+            "path": "recipes/pale_oak_slab.json"
+        },
+        {
+            "path": "recipes/pale_oak_stairs.json"
+        },
+        {
+            "path": "recipes/pale_oak_stripped_wood_from_stripped_log.json"
+        },
+        {
+            "path": "recipes/pale_oak_trapdoor.json"
+        },
+        {
+            "path": "recipes/pale_oak_wood_from_log.json"
+        },
+        {
+            "path": "recipes/purpur_slab.json"
+        },
+        {
+            "path": "recipes/red_sandstone_stairs_from_chiseled.json"
+        },
+        {
+            "path": "recipes/red_sandstone_stairs_from_cut.json"
+        },
+        {
+            "path": "recipes/resin_block.json"
+        },
+        {
+            "path": "recipes/resin_bricks.json"
+        },
+        {
+            "path": "recipes/resin_brick_slab.json"
+        },
+        {
+            "path": "recipes/resin_brick_stairs.json"
+        },
+        {
+            "path": "recipes/resin_brick_wall.json"
+        },
+        {
+            "path": "recipes/resin_clump_from_resin_block.json"
+        },
+        {
+            "path": "recipes/sandstone_stairs_from_chiseled.json"
+        },
+        {
+            "path": "recipes/sandstone_stairs_from_cut.json"
+        },
+        {
+            "path": "recipes/stonecutter_resin_brick_chiseled.json"
+        },
+        {
+            "path": "recipes/stonecutter_resin_brick_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_resin_brick_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_resin_brick_wall.json"
+        },
+        {
+            "path": "recipes/stonecutter_stonebrick_chiseled2.json"
+        },
+        {
+            "path": "recipes/stonecutter_stonebrick_slab2.json"
+        },
+        {
+            "path": "recipes/stonecutter_stonebrick_stairs2.json"
+        },
+        {
+            "path": "recipes/stonecutter_stonebrick_wall2.json"
+        },
+        {
+            "path": "recipes/suspicious_stew_from_closed_eyeblossom.json"
+        },
+        {
+            "path": "recipes/suspicious_stew_from_open_eyeblossom.json"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/end_2.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/breeze/breeze.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/melee/husk.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/melee/spider.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/melee/zombie.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/ranged/poison_skeleton.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/ranged/skeleton.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/ranged/stray.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/slow_ranged/poison_skeleton.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/slow_ranged/skeleton.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/slow_ranged/stray.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/small_melee/baby_zombie.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/small_melee/cave_spider.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/small_melee/silverfish.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/small_melee/slime.nbt"
+        },
+        {
+            "path": "trading/economy_trades/wandering_trader_trades.json"
+        },
+        {
+            "path": "worldgen/metadata/jigsawstructure_metadata_registry.dat"
+        }
+    ]
+}
