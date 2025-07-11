@@ -961,6 +961,7 @@ def play_game(world_name, world_uuid):
                 resource_pack_paths.append(pack_info['extracted_path'])
             else:
                 print(f"WARNING: Resource pack '{filename}' not found in registry or missing extracted_path.")
+
         
         behavior_pack_paths = []
         for filename in selected_behavior_pack_filenames:
