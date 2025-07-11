@@ -4,11 +4,11 @@
         "name": "resourcePack.vanilla_server.name",
         "version": [
             1,
-            19,
-            50
+            21,
+            81
         ],
         "type": "behavior",
-        "filename": "vanilla_1.19.50.mcpack",
+        "filename": "vanilla_1.21.81.mcpack",
         "sanitized_name": "resourcePack.vanilla_server.name",
         "extracted_path": "packs_extracted/behavior/resourcePack.vanilla_server.name"
     },
