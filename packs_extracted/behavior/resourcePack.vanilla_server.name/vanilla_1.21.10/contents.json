@@ -1,0 +1,172 @@
+{
+    "content": [
+        {
+            "path": "manifest.json"
+        },
+        {
+            "path": "entities/bogged.json"
+        },
+        {
+            "path": "entities/breeze_wind_charge_projectile.json"
+        },
+        {
+            "path": "entities/camel.json"
+        },
+        {
+            "path": "entities/donkey.json"
+        },
+        {
+            "path": "entities/horse.json"
+        },
+        {
+            "path": "entities/iron_golem.json"
+        },
+        {
+            "path": "entities/llama.json"
+        },
+        {
+            "path": "entities/mule.json"
+        },
+        {
+            "path": "entities/panda.json"
+        },
+        {
+            "path": "entities/polar_bear.json"
+        },
+        {
+            "path": "entities/trader_llama.json"
+        },
+        {
+            "path": "entities/villager_v2.json"
+        },
+        {
+            "path": "entities/wind_charge_projectile.json"
+        },
+        {
+            "path": "entities/wolf.json"
+        },
+        {
+            "path": "features/silverfish_feature.json"
+        },
+        {
+            "path": "items/breeze_rod.json"
+        },
+        {
+            "path": "loot_tables/chests/village/village_mason.json"
+        },
+        {
+            "path": "loot_tables/entities/witch.json"
+        },
+        {
+            "path": "recipes/furnace_stone_brick.json"
+        },
+        {
+            "path": "recipes/grindstone.json"
+        },
+        {
+            "path": "recipes/grindstone_from_crimson_planks.json"
+        },
+        {
+            "path": "recipes/grindstone_from_mangrove_planks.json"
+        },
+        {
+            "path": "recipes/grindstone_from_warped_planks.json"
+        },
+        {
+            "path": "recipes/lodestone.json"
+        },
+        {
+            "path": "recipes/mossy_stonebrick.json"
+        },
+        {
+            "path": "recipes/mossy_stonebrick_from_moss.json"
+        },
+        {
+            "path": "recipes/mossy_stone_brick_stairs.json"
+        },
+        {
+            "path": "recipes/mossy_stone_brick_wall.json"
+        },
+        {
+            "path": "recipes/stonebrick.json"
+        },
+        {
+            "path": "recipes/stonecutter_andesite_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_diorite_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_endbrick_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_endbrick_slab2.json"
+        },
+        {
+            "path": "recipes/stonecutter_granite_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_mossy_stonebrick_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_mossy_stonebrick_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_mossy_stonebrick_wall.json"
+        },
+        {
+            "path": "recipes/stonecutter_polished_andesite_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_polished_andesite_slab2.json"
+        },
+        {
+            "path": "recipes/stonecutter_polished_diorite_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_polished_diorite_slab2.json"
+        },
+        {
+            "path": "recipes/stonecutter_polished_granite_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_polished_granite_slab2.json"
+        },
+        {
+            "path": "recipes/stonecutter_smooth_quartz_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_smooth_red_sandstone_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_stonebrick.json"
+        },
+        {
+            "path": "recipes/stonecutter_stonebrick_chiseled.json"
+        },
+        {
+            "path": "recipes/stonecutter_stonebrick_slab2.json"
+        },
+        {
+            "path": "recipes/stonecutter_stonebrick_stairs2.json"
+        },
+        {
+            "path": "recipes/stonecutter_stonebrick_wall2.json"
+        },
+        {
+            "path": "recipes/stonecutter_stone_slab.json"
+        },
+        {
+            "path": "recipes/stone_brick_stairs.json"
+        },
+        {
+            "path": "recipes/stone_brick_wall.json"
+        },
+        {
+            "path": "spawn_rules/drowned.json"
+        },
+        {
+            "path": "trading/economy_trades/stone_mason_trades.json"
+        }
+    ]
+}
