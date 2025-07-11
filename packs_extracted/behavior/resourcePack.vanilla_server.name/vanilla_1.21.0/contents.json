@@ -1,0 +1,1243 @@
+{
+    "content": [
+        {
+            "path": "manifest.json"
+        },
+        {
+            "path": "entities/allay.json"
+        },
+        {
+            "path": "entities/armadillo.json"
+        },
+        {
+            "path": "entities/bee.json"
+        },
+        {
+            "path": "entities/bogged.json"
+        },
+        {
+            "path": "entities/breeze.json"
+        },
+        {
+            "path": "entities/breeze_wind_charge_projectile.json"
+        },
+        {
+            "path": "entities/camel.json"
+        },
+        {
+            "path": "entities/cat.json"
+        },
+        {
+            "path": "entities/cave_spider.json"
+        },
+        {
+            "path": "entities/chicken.json"
+        },
+        {
+            "path": "entities/cow.json"
+        },
+        {
+            "path": "entities/dolphin.json"
+        },
+        {
+            "path": "entities/donkey.json"
+        },
+        {
+            "path": "entities/fox.json"
+        },
+        {
+            "path": "entities/frog.json"
+        },
+        {
+            "path": "entities/goat.json"
+        },
+        {
+            "path": "entities/hoglin.json"
+        },
+        {
+            "path": "entities/horse.json"
+        },
+        {
+            "path": "entities/husk.json"
+        },
+        {
+            "path": "entities/iron_golem.json"
+        },
+        {
+            "path": "entities/llama.json"
+        },
+        {
+            "path": "entities/mooshroom.json"
+        },
+        {
+            "path": "entities/mule.json"
+        },
+        {
+            "path": "entities/ocelot.json"
+        },
+        {
+            "path": "entities/ominous_item_spawner.json"
+        },
+        {
+            "path": "entities/panda.json"
+        },
+        {
+            "path": "entities/parrot.json"
+        },
+        {
+            "path": "entities/pig.json"
+        },
+        {
+            "path": "entities/piglin.json"
+        },
+        {
+            "path": "entities/pillager.json"
+        },
+        {
+            "path": "entities/player.json"
+        },
+        {
+            "path": "entities/polar_bear.json"
+        },
+        {
+            "path": "entities/rabbit.json"
+        },
+        {
+            "path": "entities/sheep.json"
+        },
+        {
+            "path": "entities/silverfish.json"
+        },
+        {
+            "path": "entities/skeleton.json"
+        },
+        {
+            "path": "entities/skeleton_horse.json"
+        },
+        {
+            "path": "entities/slime.json"
+        },
+        {
+            "path": "entities/sniffer.json"
+        },
+        {
+            "path": "entities/spider.json"
+        },
+        {
+            "path": "entities/stray.json"
+        },
+        {
+            "path": "entities/strider.json"
+        },
+        {
+            "path": "entities/tadpole.json"
+        },
+        {
+            "path": "entities/trader_llama.json"
+        },
+        {
+            "path": "entities/turtle.json"
+        },
+        {
+            "path": "entities/villager.json"
+        },
+        {
+            "path": "entities/villager_v2.json"
+        },
+        {
+            "path": "entities/vindicator.json"
+        },
+        {
+            "path": "entities/wandering_trader.json"
+        },
+        {
+            "path": "entities/wind_charge_projectile.json"
+        },
+        {
+            "path": "entities/zombie.json"
+        },
+        {
+            "path": "entities/zombie_horse.json"
+        },
+        {
+            "path": "features/azalea_tree_feature.json"
+        },
+        {
+            "path": "items/breeze_rod.json"
+        },
+        {
+            "path": "items/ominous_trial_key.json"
+        },
+        {
+            "path": "items/trial_key.json"
+        },
+        {
+            "path": "items/wind_charge.json"
+        },
+        {
+            "path": "item_catalog/crafting_item_catalog.json"
+        },
+        {
+            "path": "loot_tables/chests/trial_chambers/corridor.json"
+        },
+        {
+            "path": "loot_tables/chests/trial_chambers/entrance.json"
+        },
+        {
+            "path": "loot_tables/chests/trial_chambers/intersection.json"
+        },
+        {
+            "path": "loot_tables/chests/trial_chambers/intersection_barrel.json"
+        },
+        {
+            "path": "loot_tables/chests/trial_chambers/reward.json"
+        },
+        {
+            "path": "loot_tables/chests/trial_chambers/reward_common.json"
+        },
+        {
+            "path": "loot_tables/chests/trial_chambers/reward_ominous.json"
+        },
+        {
+            "path": "loot_tables/chests/trial_chambers/reward_ominous_common.json"
+        },
+        {
+            "path": "loot_tables/chests/trial_chambers/reward_ominous_rare.json"
+        },
+        {
+            "path": "loot_tables/chests/trial_chambers/reward_ominous_unique.json"
+        },
+        {
+            "path": "loot_tables/chests/trial_chambers/reward_rare.json"
+        },
+        {
+            "path": "loot_tables/chests/trial_chambers/reward_unique.json"
+        },
+        {
+            "path": "loot_tables/chests/trial_chambers/supply.json"
+        },
+        {
+            "path": "loot_tables/dispensers/trial_chambers/chamber.json"
+        },
+        {
+            "path": "loot_tables/dispensers/trial_chambers/corridor.json"
+        },
+        {
+            "path": "loot_tables/dispensers/trial_chambers/water.json"
+        },
+        {
+            "path": "loot_tables/entities/bogged.json"
+        },
+        {
+            "path": "loot_tables/entities/bogged_shear.json"
+        },
+        {
+            "path": "loot_tables/entities/breeze.json"
+        },
+        {
+            "path": "loot_tables/entities/pillager_captain.json"
+        },
+        {
+            "path": "loot_tables/equipment/trial_chamber.json"
+        },
+        {
+            "path": "loot_tables/equipment/trial_chamber_chainmail.json"
+        },
+        {
+            "path": "loot_tables/equipment/trial_chamber_diamond.json"
+        },
+        {
+            "path": "loot_tables/equipment/trial_chamber_iron.json"
+        },
+        {
+            "path": "loot_tables/equipment/trial_chamber_melee.json"
+        },
+        {
+            "path": "loot_tables/equipment/trial_chamber_ranged.json"
+        },
+        {
+            "path": "loot_tables/pots/trial_chambers/corridor.json"
+        },
+        {
+            "path": "loot_tables/spawners/ominous/trial_chamber/consumables.json"
+        },
+        {
+            "path": "loot_tables/spawners/ominous/trial_chamber/key.json"
+        },
+        {
+            "path": "loot_tables/spawners/trial_chamber/consumables.json"
+        },
+        {
+            "path": "loot_tables/spawners/trial_chamber/items_to_drop_when_ominous.json"
+        },
+        {
+            "path": "loot_tables/spawners/trial_chamber/key.json"
+        },
+        {
+            "path": "recipes/armor_stand.json"
+        },
+        {
+            "path": "recipes/bolt_armor_trim_smithing_template_duplicate.json"
+        },
+        {
+            "path": "recipes/bolt_armor_trim_smithing_template_duplicate_waxed.json"
+        },
+        {
+            "path": "recipes/brew_awkward_breeze_rod.json"
+        },
+        {
+            "path": "recipes/brew_awkward_slime_block.json"
+        },
+        {
+            "path": "recipes/brew_awkward_stone.json"
+        },
+        {
+            "path": "recipes/brew_awkward_web.json"
+        },
+        {
+            "path": "recipes/brew_water_breeze_rod.json"
+        },
+        {
+            "path": "recipes/brew_water_slime_block.json"
+        },
+        {
+            "path": "recipes/brew_water_stone.json"
+        },
+        {
+            "path": "recipes/brew_water_web.json"
+        },
+        {
+            "path": "recipes/chiseled_nether_bricks.json"
+        },
+        {
+            "path": "recipes/chiseled_tuff.json"
+        },
+        {
+            "path": "recipes/chiseled_tuff_bricks.json"
+        },
+        {
+            "path": "recipes/crafter.json"
+        },
+        {
+            "path": "recipes/crafting_table_chiseled_copper.json"
+        },
+        {
+            "path": "recipes/crafting_table_copper_bulb.json"
+        },
+        {
+            "path": "recipes/crafting_table_copper_door.json"
+        },
+        {
+            "path": "recipes/crafting_table_copper_grate.json"
+        },
+        {
+            "path": "recipes/crafting_table_copper_trapdoor.json"
+        },
+        {
+            "path": "recipes/crafting_table_exposed_chiseled_copper.json"
+        },
+        {
+            "path": "recipes/crafting_table_exposed_copper_bulb.json"
+        },
+        {
+            "path": "recipes/crafting_table_exposed_copper_grate.json"
+        },
+        {
+            "path": "recipes/crafting_table_oxidized_chiseled_copper.json"
+        },
+        {
+            "path": "recipes/crafting_table_oxidized_copper_bulb.json"
+        },
+        {
+            "path": "recipes/crafting_table_oxidized_copper_grate.json"
+        },
+        {
+            "path": "recipes/crafting_table_waxed_chiseled_copper.json"
+        },
+        {
+            "path": "recipes/crafting_table_waxed_copper_bulb.json"
+        },
+        {
+            "path": "recipes/crafting_table_waxed_copper_door.json"
+        },
+        {
+            "path": "recipes/crafting_table_waxed_copper_grate.json"
+        },
+        {
+            "path": "recipes/crafting_table_waxed_exposed_chiseled_copper.json"
+        },
+        {
+            "path": "recipes/crafting_table_waxed_exposed_copper_bulb.json"
+        },
+        {
+            "path": "recipes/crafting_table_waxed_exposed_copper_grate.json"
+        },
+        {
+            "path": "recipes/crafting_table_waxed_oxidized_chiseled_copper.json"
+        },
+        {
+            "path": "recipes/crafting_table_waxed_oxidized_copper_bulb.json"
+        },
+        {
+            "path": "recipes/crafting_table_waxed_oxidized_copper_grate.json"
+        },
+        {
+            "path": "recipes/crafting_table_waxed_weathered_chiseled_copper.json"
+        },
+        {
+            "path": "recipes/crafting_table_waxed_weathered_copper_bulb.json"
+        },
+        {
+            "path": "recipes/crafting_table_waxed_weathered_copper_grate.json"
+        },
+        {
+            "path": "recipes/crafting_table_weathered_chiseled_copper.json"
+        },
+        {
+            "path": "recipes/crafting_table_weathered_copper_bulb.json"
+        },
+        {
+            "path": "recipes/crafting_table_weathered_copper_grate.json"
+        },
+        {
+            "path": "recipes/flow_armor_trim_smithing_template_duplicate.json"
+        },
+        {
+            "path": "recipes/grindstone_from_crimson_planks.json"
+        },
+        {
+            "path": "recipes/grindstone_from_crimson_planks2.json"
+        },
+        {
+            "path": "recipes/grindstone_from_crimson_planks3.json"
+        },
+        {
+            "path": "recipes/grindstone_from_crimson_planks4.json"
+        },
+        {
+            "path": "recipes/grindstone_from_mangrove_planks.json"
+        },
+        {
+            "path": "recipes/grindstone_from_mangrove_planks2.json"
+        },
+        {
+            "path": "recipes/grindstone_from_mangrove_planks3.json"
+        },
+        {
+            "path": "recipes/grindstone_from_mangrove_planks4.json"
+        },
+        {
+            "path": "recipes/grindstone_from_warped_planks.json"
+        },
+        {
+            "path": "recipes/grindstone_from_warped_planks2.json"
+        },
+        {
+            "path": "recipes/grindstone_from_warped_planks3.json"
+        },
+        {
+            "path": "recipes/grindstone_from_warped_planks4.json"
+        },
+        {
+            "path": "recipes/mace.json"
+        },
+        {
+            "path": "recipes/magenta_dye_from_lilac.json"
+        },
+        {
+            "path": "recipes/pink_dye_from_peony.json"
+        },
+        {
+            "path": "recipes/polished_tuff.json"
+        },
+        {
+            "path": "recipes/polished_tuff_slab.json"
+        },
+        {
+            "path": "recipes/polished_tuff_stairs.json"
+        },
+        {
+            "path": "recipes/polished_tuff_wall.json"
+        },
+        {
+            "path": "recipes/red_dye_from_rose_bush.json"
+        },
+        {
+            "path": "recipes/stonecutter_brick_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_cobblestone_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_copper_block_to_chiseled_copper.json"
+        },
+        {
+            "path": "recipes/stonecutter_copper_block_to_copper_grate.json"
+        },
+        {
+            "path": "recipes/stonecutter_cut_copper_to_chiseled_copper.json"
+        },
+        {
+            "path": "recipes/stonecutter_exposed_copper_to_exposed_chiseled_copper.json"
+        },
+        {
+            "path": "recipes/stonecutter_exposed_copper_to_exposed_copper_grate.json"
+        },
+        {
+            "path": "recipes/stonecutter_exp_cut_copper_to_exp_chiseled_copper.json"
+        },
+        {
+            "path": "recipes/stonecutter_nether_brick_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_oxidized_copper_to_oxidized_chiseled_copper.json"
+        },
+        {
+            "path": "recipes/stonecutter_oxidized_copper_to_oxidized_copper_grate.json"
+        },
+        {
+            "path": "recipes/stonecutter_oxi_cut_copper_to_oxi_chiseled_copper.json"
+        },
+        {
+            "path": "recipes/stonecutter_polished_tuff_to_chiseled_tuff_bricks.json"
+        },
+        {
+            "path": "recipes/stonecutter_polished_tuff_to_polished_tuff_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_polished_tuff_to_polished_tuff_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_polished_tuff_to_polished_tuff_wall.json"
+        },
+        {
+            "path": "recipes/stonecutter_polished_tuff_to_tuff_bricks.json"
+        },
+        {
+            "path": "recipes/stonecutter_polished_tuff_to_tuff_brick_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_polished_tuff_to_tuff_brick_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_polished_tuff_to_tuff_brick_wall.json"
+        },
+        {
+            "path": "recipes/stonecutter_quartz_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_sandstone_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_smooth_stone_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_stonebrick_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_stonebrick_slab2.json"
+        },
+        {
+            "path": "recipes/stonecutter_tuff_bricks_to_chiseled_tuff_bricks.json"
+        },
+        {
+            "path": "recipes/stonecutter_tuff_bricks_to_tuff_brick_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_tuff_bricks_to_tuff_brick_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_tuff_bricks_to_tuff_brick_wall.json"
+        },
+        {
+            "path": "recipes/stonecutter_tuff_to_chiseled_tuff.json"
+        },
+        {
+            "path": "recipes/stonecutter_tuff_to_chiseled_tuff_bricks.json"
+        },
+        {
+            "path": "recipes/stonecutter_tuff_to_polished_tuff.json"
+        },
+        {
+            "path": "recipes/stonecutter_tuff_to_polished_tuff_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_tuff_to_polished_tuff_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_tuff_to_polished_tuff_wall.json"
+        },
+        {
+            "path": "recipes/stonecutter_tuff_to_tuff_bricks.json"
+        },
+        {
+            "path": "recipes/stonecutter_tuff_to_tuff_brick_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_tuff_to_tuff_brick_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_tuff_to_tuff_brick_wall.json"
+        },
+        {
+            "path": "recipes/stonecutter_tuff_to_tuff_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_tuff_to_tuff_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_tuff_to_tuff_wall.json"
+        },
+        {
+            "path": "recipes/stonecutter_wax_cut_copper_to_wax_chiseled_copper.json"
+        },
+        {
+            "path": "recipes/stonecutter_wax_exp_cut_copper_to_wax_exp_chiseled_copper.json"
+        },
+        {
+            "path": "recipes/stonecutter_wax_oxi_cut_copper_to_wax_oxi_chiseled_copper.json"
+        },
+        {
+            "path": "recipes/stonecutter_wax_wea_cut_copper_to_wax_wea_chiseled_copper.json"
+        },
+        {
+            "path": "recipes/stonecutter_weathered_copper_to_weathered_chiseled_copper.json"
+        },
+        {
+            "path": "recipes/stonecutter_weathered_copper_to_weathered_copper_grate.json"
+        },
+        {
+            "path": "recipes/stonecutter_wea_cut_copper_to_wea_chiseled_copper.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_copper_to_w_chiseled_copper.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_copper_to_w_copper_grate.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_exposed_copper_to_w_exposed_chiseled_copper.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_exposed_copper_to_w_exposed_copper_grate.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_oxidized_copper_2_w_oxidized_chiseled_copper.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_oxidized_copper_to_w_oxidized_copper_grate.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_weatherd_copper_2_w_weatherd_chiseled_copper.json"
+        },
+        {
+            "path": "recipes/stonecutter_w_weathered_copper_to_w_weathered_copper_grate.json"
+        },
+        {
+            "path": "recipes/tuff_bricks.json"
+        },
+        {
+            "path": "recipes/tuff_brick_slab.json"
+        },
+        {
+            "path": "recipes/tuff_brick_stairs.json"
+        },
+        {
+            "path": "recipes/tuff_brick_wall.json"
+        },
+        {
+            "path": "recipes/tuff_slab.json"
+        },
+        {
+            "path": "recipes/tuff_stairs.json"
+        },
+        {
+            "path": "recipes/tuff_wall.json"
+        },
+        {
+            "path": "recipes/waxing_chiseled_copper.json"
+        },
+        {
+            "path": "recipes/waxing_copper_bulb.json"
+        },
+        {
+            "path": "recipes/waxing_copper_door.json"
+        },
+        {
+            "path": "recipes/waxing_copper_grate.json"
+        },
+        {
+            "path": "recipes/waxing_copper_trapdoor.json"
+        },
+        {
+            "path": "recipes/waxing_exposed_chiseled_copper.json"
+        },
+        {
+            "path": "recipes/waxing_exposed_copper_bulb.json"
+        },
+        {
+            "path": "recipes/waxing_exposed_copper_door.json"
+        },
+        {
+            "path": "recipes/waxing_exposed_copper_grate.json"
+        },
+        {
+            "path": "recipes/waxing_exposed_copper_trapdoor.json"
+        },
+        {
+            "path": "recipes/waxing_oxidized_chiseled_copper.json"
+        },
+        {
+            "path": "recipes/waxing_oxidized_copper_bulb.json"
+        },
+        {
+            "path": "recipes/waxing_oxidized_copper_door.json"
+        },
+        {
+            "path": "recipes/waxing_oxidized_copper_grate.json"
+        },
+        {
+            "path": "recipes/waxing_oxidized_copper_trapdoor.json"
+        },
+        {
+            "path": "recipes/waxing_weathered_chiseled_copper.json"
+        },
+        {
+            "path": "recipes/waxing_weathered_copper_bulb.json"
+        },
+        {
+            "path": "recipes/waxing_weathered_copper_door.json"
+        },
+        {
+            "path": "recipes/waxing_weathered_copper_grate.json"
+        },
+        {
+            "path": "recipes/waxing_weathered_copper_trapdoor.json"
+        },
+        {
+            "path": "recipes/wind_charge.json"
+        },
+        {
+            "path": "recipes/yellow_dye_from_sunflower.json"
+        },
+        {
+            "path": "spawn_rules/bogged.json"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/assembly.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/chamber_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/chamber_2.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/chamber_4.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/chamber_8.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/entrance_cap.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/eruption.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/pedestal.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/slanted.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/addon/c1_breeze.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/addon/full_corner_column.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/addon/full_stacked_walkway.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/addon/full_stacked_walkway_2.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/addon/grate_bridge.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/addon/hanging_platform.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/addon/lower_staircase_down.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/addon/short_grate_platform.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/addon/short_platform.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/addon/walkway_extension.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/addon/walkway_with_bridge_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/assembly/cover_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/assembly/cover_2.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/assembly/cover_3.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/assembly/cover_4.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/assembly/cover_5.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/assembly/cover_6.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/assembly/cover_7.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/assembly/full_column.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/assembly/hanging_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/assembly/hanging_2.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/assembly/hanging_3.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/assembly/hanging_4.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/assembly/hanging_5.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/assembly/left_staircase_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/assembly/left_staircase_2.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/assembly/left_staircase_3.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/assembly/platform_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/assembly/right_staircase_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/assembly/right_staircase_2.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/assembly/right_staircase_3.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/assembly/spawner_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/eruption/breeze_slice_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/eruption/center_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/eruption/quadrant_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/eruption/quadrant_2.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/eruption/quadrant_3.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/eruption/quadrant_4.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/eruption/quadrant_5.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/eruption/slice_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/eruption/slice_2.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/eruption/slice_3.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/pedestal/center_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/pedestal/ominous_slice_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/pedestal/quadrant_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/pedestal/quadrant_2.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/pedestal/quadrant_3.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/pedestal/slice_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/pedestal/slice_2.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/pedestal/slice_3.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/pedestal/slice_4.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/pedestal/slice_5.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/slanted/center.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/slanted/hallway_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/slanted/hallway_2.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/slanted/hallway_3.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/slanted/hallway_4.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/slanted/hallway_5.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/slanted/ominous_upper_arm_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/slanted/quadrant_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/slanted/quadrant_2.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/slanted/quadrant_3.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/slanted/quadrant_4.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/slanted/ramp_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/slanted/ramp_2.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/slanted/ramp_3.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/slanted/ramp_4.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chests/supply.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chests/connectors/supply.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/atrium_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/end_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/end_2.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/entrance_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/entrance_2.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/entrance_3.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/first_plate.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/second_plate.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/straight_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/straight_2.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/straight_3.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/straight_4.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/straight_5.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/straight_6.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/straight_7.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/straight_8.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/addon/arrow_dispenser.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/addon/bridge_lower.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/addon/chandelier_upper.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/addon/decoration_upper.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/addon/display_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/addon/display_2.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/addon/display_3.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/addon/head_upper.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/addon/ladder_to_middle.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/addon/open_walkway.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/addon/open_walkway_upper.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/addon/reward_upper.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/addon/staircase.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/addon/wall.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/addon/walled_walkway.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/atrium/bogged_relief.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/atrium/breeze_relief.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/atrium/grand_staircase_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/atrium/grand_staircase_2.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/atrium/grand_staircase_3.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/atrium/spider_relief.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/corridor/atrium/spiral_relief.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/decor/barrel.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/decor/candle_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/decor/candle_2.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/decor/candle_3.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/decor/candle_4.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/decor/dead_bush_pot.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/decor/empty_pot.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/decor/flow_pot.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/decor/guster_pot.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/decor/scrape_pot.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/decor/undecorated_pot.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/dispensers/chamber.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/dispensers/floor_dispenser.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/dispensers/wall_dispenser.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/hallway/cache_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/hallway/corner_staircase.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/hallway/corner_staircase_down.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/hallway/corridor_connector_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/hallway/left_corner.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/hallway/long_straight_staircase.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/hallway/long_straight_staircase_down.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/hallway/lower_hallway_connector.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/hallway/right_corner.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/hallway/rubble.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/hallway/rubble_chamber.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/hallway/rubble_chamber_thin.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/hallway/rubble_thin.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/hallway/straight.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/hallway/straight_staircase.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/hallway/straight_staircase_down.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/hallway/upper_hallway_connector.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/intersection/intersection_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/intersection/intersection_2.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/intersection/intersection_3.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/reward/ominous_vault.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/reward/vault.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/breeze/breeze.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/connectors/breeze.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/connectors/melee.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/connectors/ranged.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/connectors/slow_ranged.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/connectors/small_melee.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/melee/husk.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/melee/spider.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/melee/zombie.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/ranged/poison_skeleton.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/ranged/skeleton.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/ranged/stray.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/slow_ranged/poison_skeleton.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/slow_ranged/skeleton.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/slow_ranged/stray.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/small_melee/baby_zombie.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/small_melee/cave_spider.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/small_melee/silverfish.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/spawner/small_melee/slime.nbt"
+        },
+        {
+            "path": "trading/economy_trades/cartographer_trades.json"
+        }
+    ]
+}
