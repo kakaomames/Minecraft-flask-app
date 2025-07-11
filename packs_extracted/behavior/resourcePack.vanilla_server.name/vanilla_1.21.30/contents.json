@@ -1,0 +1,232 @@
+{
+    "content": [
+        {
+            "path": "manifest.json"
+        },
+        {
+            "path": "entities/breeze.json"
+        },
+        {
+            "path": "entities/fox.json"
+        },
+        {
+            "path": "entities/snow_golem.json"
+        },
+        {
+            "path": "loot_tables/chests/ancient_city.json"
+        },
+        {
+            "path": "loot_tables/chests/buriedtreasure.json"
+        },
+        {
+            "path": "loot_tables/chests/trial_chambers/reward_common.json"
+        },
+        {
+            "path": "loot_tables/chests/trial_chambers/reward_ominous_common.json"
+        },
+        {
+            "path": "loot_tables/chests/trial_chambers/supply.json"
+        },
+        {
+            "path": "loot_tables/dispensers/trial_chambers/chamber.json"
+        },
+        {
+            "path": "loot_tables/entities/bogged.json"
+        },
+        {
+            "path": "loot_tables/entities/elder_guardian.json"
+        },
+        {
+            "path": "loot_tables/entities/piglin_barter.json"
+        },
+        {
+            "path": "loot_tables/entities/stray.json"
+        },
+        {
+            "path": "loot_tables/spawners/ominous/trial_chamber/consumables.json"
+        },
+        {
+            "path": "loot_tables/spawners/trial_chamber/consumables.json"
+        },
+        {
+            "path": "loot_tables/spawners/trial_chamber/items_to_drop_when_ominous.json"
+        },
+        {
+            "path": "recipes/andesite_wall.json"
+        },
+        {
+            "path": "recipes/brick_wall.json"
+        },
+        {
+            "path": "recipes/cobblestone_wall.json"
+        },
+        {
+            "path": "recipes/cyan_dye_from_pitcher_plant.json"
+        },
+        {
+            "path": "recipes/diorite_wall.json"
+        },
+        {
+            "path": "recipes/end_brick_wall.json"
+        },
+        {
+            "path": "recipes/furnace_acacia_wood.json"
+        },
+        {
+            "path": "recipes/furnace_birch_wood.json"
+        },
+        {
+            "path": "recipes/furnace_dark_oak_wood.json"
+        },
+        {
+            "path": "recipes/furnace_jungle_wood.json"
+        },
+        {
+            "path": "recipes/furnace_log2_acacia.json"
+        },
+        {
+            "path": "recipes/furnace_log2_dark_oak.json"
+        },
+        {
+            "path": "recipes/furnace_log_birch.json"
+        },
+        {
+            "path": "recipes/furnace_log_jungle.json"
+        },
+        {
+            "path": "recipes/furnace_log_oak.json"
+        },
+        {
+            "path": "recipes/furnace_log_spruce.json"
+        },
+        {
+            "path": "recipes/furnace_oak_wood.json"
+        },
+        {
+            "path": "recipes/furnace_sponge.json"
+        },
+        {
+            "path": "recipes/furnace_spruce_wood.json"
+        },
+        {
+            "path": "recipes/furnace_stripped_acacia_wood.json"
+        },
+        {
+            "path": "recipes/furnace_stripped_birch_wood.json"
+        },
+        {
+            "path": "recipes/furnace_stripped_dark_oak_wood.json"
+        },
+        {
+            "path": "recipes/furnace_stripped_jungle_wood.json"
+        },
+        {
+            "path": "recipes/furnace_stripped_oak_wood.json"
+        },
+        {
+            "path": "recipes/furnace_stripped_spruce_wood.json"
+        },
+        {
+            "path": "recipes/granite_wall.json"
+        },
+        {
+            "path": "recipes/mossy_cobblestone_wall.json"
+        },
+        {
+            "path": "recipes/mossy_stone_brick_wall.json"
+        },
+        {
+            "path": "recipes/nether_brick_wall.json"
+        },
+        {
+            "path": "recipes/prismarine_wall.json"
+        },
+        {
+            "path": "recipes/red_nether_brick_wall.json"
+        },
+        {
+            "path": "recipes/red_sandstone_wall.json"
+        },
+        {
+            "path": "recipes/sandstone_wall.json"
+        },
+        {
+            "path": "recipes/stonecutter_andesite_wall.json"
+        },
+        {
+            "path": "recipes/stonecutter_brick_wall.json"
+        },
+        {
+            "path": "recipes/stonecutter_cobblestone_wall.json"
+        },
+        {
+            "path": "recipes/stonecutter_diorite_wall.json"
+        },
+        {
+            "path": "recipes/stonecutter_endbrick_wall.json"
+        },
+        {
+            "path": "recipes/stonecutter_endbrick_wall2.json"
+        },
+        {
+            "path": "recipes/stonecutter_granite_wall.json"
+        },
+        {
+            "path": "recipes/stonecutter_mossy_cobblestone_wall.json"
+        },
+        {
+            "path": "recipes/stonecutter_mossy_stonebrick_wall.json"
+        },
+        {
+            "path": "recipes/stonecutter_nether_brick_wall.json"
+        },
+        {
+            "path": "recipes/stonecutter_prismarine_wall.json"
+        },
+        {
+            "path": "recipes/stonecutter_red_nether_brick_wall.json"
+        },
+        {
+            "path": "recipes/stonecutter_red_sandstone_wall.json"
+        },
+        {
+            "path": "recipes/stonecutter_sandstone_wall.json"
+        },
+        {
+            "path": "recipes/stonecutter_stonebrick_wall.json"
+        },
+        {
+            "path": "recipes/stonecutter_stonebrick_wall2.json"
+        },
+        {
+            "path": "recipes/stone_brick_wall.json"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/assembly.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/chamber_1.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/chamber_2.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/chamber_4.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/chamber_8.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/eruption.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/pedestal.nbt"
+        },
+        {
+            "path": "structures/trial_chambers/chamber/slanted.nbt"
+        },
+        {
+            "path": "trading/economy_trades/fletcher_trades.json"
+        }
+    ]
+}
