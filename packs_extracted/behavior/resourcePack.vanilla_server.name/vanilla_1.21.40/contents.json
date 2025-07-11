@@ -1,0 +1,1048 @@
+{
+    "content": [
+        {
+            "path": "manifest.json"
+        },
+        {
+            "path": "entities/arrow.json"
+        },
+        {
+            "path": "entities/breeze_wind_charge_projectile.json"
+        },
+        {
+            "path": "entities/cat.json"
+        },
+        {
+            "path": "entities/dragon_fireball.json"
+        },
+        {
+            "path": "entities/enderman.json"
+        },
+        {
+            "path": "entities/ender_dragon.json"
+        },
+        {
+            "path": "entities/fireball.json"
+        },
+        {
+            "path": "entities/fishing_hook.json"
+        },
+        {
+            "path": "entities/iron_golem.json"
+        },
+        {
+            "path": "entities/mooshroom.json"
+        },
+        {
+            "path": "entities/ocelot.json"
+        },
+        {
+            "path": "entities/parrot.json"
+        },
+        {
+            "path": "entities/piglin.json"
+        },
+        {
+            "path": "entities/ravager.json"
+        },
+        {
+            "path": "entities/small_fireball.json"
+        },
+        {
+            "path": "entities/sniffer.json"
+        },
+        {
+            "path": "entities/thrown_trident.json"
+        },
+        {
+            "path": "entities/villager_v2.json"
+        },
+        {
+            "path": "entities/wind_charge_projectile.json"
+        },
+        {
+            "path": "entities/wither_skull.json"
+        },
+        {
+            "path": "entities/wither_skull_dangerous.json"
+        },
+        {
+            "path": "entities/wolf.json"
+        },
+        {
+            "path": "features/azalea_tree_feature.json"
+        },
+        {
+            "path": "features/beehive_feature.json"
+        },
+        {
+            "path": "features/birch_tree_feature.json"
+        },
+        {
+            "path": "features/cherry_tree_feature.json"
+        },
+        {
+            "path": "features/cocoa_age_0_feature.json"
+        },
+        {
+            "path": "features/cocoa_age_1_feature.json"
+        },
+        {
+            "path": "features/cocoa_age_2_feature.json"
+        },
+        {
+            "path": "features/fallen_birch_tree_feature.json"
+        },
+        {
+            "path": "features/fallen_jungle_tree_feature.json"
+        },
+        {
+            "path": "features/fallen_oak_tree_feature.json"
+        },
+        {
+            "path": "features/fallen_spruce_tree_feature.json"
+        },
+        {
+            "path": "features/fallen_super_birch_tree_feature.json"
+        },
+        {
+            "path": "features/fancy_oak_tree_feature.json"
+        },
+        {
+            "path": "features/jungle_bush_feature.json"
+        },
+        {
+            "path": "features/jungle_tree_feature.json"
+        },
+        {
+            "path": "features/mangrove_tree_feature.json"
+        },
+        {
+            "path": "features/mega_jungle_tree_feature.json"
+        },
+        {
+            "path": "features/mega_pine_tree_feature.json"
+        },
+        {
+            "path": "features/mega_spruce_tree_feature.json"
+        },
+        {
+            "path": "features/moss_ceiling_feature.json"
+        },
+        {
+            "path": "features/moss_patch_bonemeal_feature.json"
+        },
+        {
+            "path": "features/moss_patch_feature.json"
+        },
+        {
+            "path": "features/mountain_pine_tree_feature.json"
+        },
+        {
+            "path": "features/mountain_spruce_tree_feature.json"
+        },
+        {
+            "path": "features/oak_tree_feature.json"
+        },
+        {
+            "path": "features/oak_tree_with_vines_feature.json"
+        },
+        {
+            "path": "features/pine_tree_feature.json"
+        },
+        {
+            "path": "features/roofed_tree_feature.json"
+        },
+        {
+            "path": "features/roofed_tree_with_vines_feature.json"
+        },
+        {
+            "path": "features/savanna_tree_feature.json"
+        },
+        {
+            "path": "features/spruce_tree_feature.json"
+        },
+        {
+            "path": "features/spruce_tree_with_vines_feature.json"
+        },
+        {
+            "path": "features/super_birch_tree_feature.json"
+        },
+        {
+            "path": "features/swamp_tree_feature.json"
+        },
+        {
+            "path": "features/tall_mangrove_tree_feature.json"
+        },
+        {
+            "path": "features/undecorated_jungle_tree_feature.json"
+        },
+        {
+            "path": "features/undecorated_jungle_tree_with_vines_feature.json"
+        },
+        {
+            "path": "items/appleEnchanted.json"
+        },
+        {
+            "path": "items/black_bundle.json"
+        },
+        {
+            "path": "items/blue_bundle.json"
+        },
+        {
+            "path": "items/brown_bundle.json"
+        },
+        {
+            "path": "items/bundle.json"
+        },
+        {
+            "path": "items/cyan_bundle.json"
+        },
+        {
+            "path": "items/gray_bundle.json"
+        },
+        {
+            "path": "items/green_bundle.json"
+        },
+        {
+            "path": "items/light_blue_bundle.json"
+        },
+        {
+            "path": "items/light_gray_bundle.json"
+        },
+        {
+            "path": "items/lime_bundle.json"
+        },
+        {
+            "path": "items/magenta_bundle.json"
+        },
+        {
+            "path": "items/orange_bundle.json"
+        },
+        {
+            "path": "items/pink_bundle.json"
+        },
+        {
+            "path": "items/purple_bundle.json"
+        },
+        {
+            "path": "items/red_bundle.json"
+        },
+        {
+            "path": "items/white_bundle.json"
+        },
+        {
+            "path": "items/yellow_bundle.json"
+        },
+        {
+            "path": "item_catalog/crafting_item_catalog.json"
+        },
+        {
+            "path": "loot_tables/chests/pillager_outpost.json"
+        },
+        {
+            "path": "loot_tables/chests/spawn_bonus_chest.json"
+        },
+        {
+            "path": "loot_tables/chests/village/village_cartographer.json"
+        },
+        {
+            "path": "loot_tables/chests/village/village_mason.json"
+        },
+        {
+            "path": "loot_tables/chests/village/village_plains_house.json"
+        },
+        {
+            "path": "loot_tables/chests/village/village_savanna_house.json"
+        },
+        {
+            "path": "loot_tables/chests/village/village_shepherd.json"
+        },
+        {
+            "path": "loot_tables/chests/village/village_taiga_house.json"
+        },
+        {
+            "path": "loot_tables/chests/village/village_weaponsmith.json"
+        },
+        {
+            "path": "loot_tables/entities/bogged.json"
+        },
+        {
+            "path": "loot_tables/entities/creeper.json"
+        },
+        {
+            "path": "loot_tables/entities/polar_bear.json"
+        },
+        {
+            "path": "loot_tables/entities/trail_ruins_brushable_block_common.json"
+        },
+        {
+            "path": "recipes/acacia_boat.json"
+        },
+        {
+            "path": "recipes/acacia_door.json"
+        },
+        {
+            "path": "recipes/acacia_fence.json"
+        },
+        {
+            "path": "recipes/acacia_fence_gate.json"
+        },
+        {
+            "path": "recipes/acacia_planks.json"
+        },
+        {
+            "path": "recipes/acacia_planks_from_stripped.json"
+        },
+        {
+            "path": "recipes/acacia_stairs.json"
+        },
+        {
+            "path": "recipes/acacia_wooden_slab.json"
+        },
+        {
+            "path": "recipes/andesite.json"
+        },
+        {
+            "path": "recipes/andesite_stairs.json"
+        },
+        {
+            "path": "recipes/birch_boat.json"
+        },
+        {
+            "path": "recipes/birch_door.json"
+        },
+        {
+            "path": "recipes/birch_fence.json"
+        },
+        {
+            "path": "recipes/birch_fence_gate.json"
+        },
+        {
+            "path": "recipes/birch_planks.json"
+        },
+        {
+            "path": "recipes/birch_planks_from_stripped.json"
+        },
+        {
+            "path": "recipes/birch_stairs.json"
+        },
+        {
+            "path": "recipes/birch_wooden_slab.json"
+        },
+        {
+            "path": "recipes/black_banner.json"
+        },
+        {
+            "path": "recipes/black_carpet.json"
+        },
+        {
+            "path": "recipes/black_carpet_from_white.json"
+        },
+        {
+            "path": "recipes/black_concrete_powder.json"
+        },
+        {
+            "path": "recipes/black_concrete_powder_from_ink_sac.json"
+        },
+        {
+            "path": "recipes/black_stained_glass.json"
+        },
+        {
+            "path": "recipes/black_stained_glass_from_ink_sac.json"
+        },
+        {
+            "path": "recipes/black_stained_glass_pane_from_pane.json"
+        },
+        {
+            "path": "recipes/black_stained_hardened_clay.json"
+        },
+        {
+            "path": "recipes/black_stained_hardened_clay_from_ink_sac.json"
+        },
+        {
+            "path": "recipes/blue_banner.json"
+        },
+        {
+            "path": "recipes/blue_carpet.json"
+        },
+        {
+            "path": "recipes/blue_carpet_from_white.json"
+        },
+        {
+            "path": "recipes/blue_concrete_powder.json"
+        },
+        {
+            "path": "recipes/blue_concrete_powder_from_lapis_lazuli.json"
+        },
+        {
+            "path": "recipes/blue_stained_glass.json"
+        },
+        {
+            "path": "recipes/blue_stained_glass_from_lapis_lazuli.json"
+        },
+        {
+            "path": "recipes/blue_stained_glass_pane_from_pane.json"
+        },
+        {
+            "path": "recipes/blue_stained_hardened_clay.json"
+        },
+        {
+            "path": "recipes/blue_stained_hardened_clay_from_lapis_lazuli.json"
+        },
+        {
+            "path": "recipes/boat.json"
+        },
+        {
+            "path": "recipes/brown_banner.json"
+        },
+        {
+            "path": "recipes/brown_carpet.json"
+        },
+        {
+            "path": "recipes/brown_carpet_from_white.json"
+        },
+        {
+            "path": "recipes/brown_concrete_powder.json"
+        },
+        {
+            "path": "recipes/brown_concrete_powder_from_cocoa_beans.json"
+        },
+        {
+            "path": "recipes/brown_stained_glass.json"
+        },
+        {
+            "path": "recipes/brown_stained_glass_from_cocoa_beans.json"
+        },
+        {
+            "path": "recipes/brown_stained_glass_pane_from_pane.json"
+        },
+        {
+            "path": "recipes/brown_stained_hardened_clay.json"
+        },
+        {
+            "path": "recipes/brown_stained_hardened_clay_from_cocoa_beans.json"
+        },
+        {
+            "path": "recipes/bundle.json"
+        },
+        {
+            "path": "recipes/cyan_banner.json"
+        },
+        {
+            "path": "recipes/cyan_carpet.json"
+        },
+        {
+            "path": "recipes/cyan_carpet_from_white.json"
+        },
+        {
+            "path": "recipes/cyan_concrete_powder.json"
+        },
+        {
+            "path": "recipes/cyan_stained_glass.json"
+        },
+        {
+            "path": "recipes/cyan_stained_glass_pane_from_pane.json"
+        },
+        {
+            "path": "recipes/cyan_stained_hardened_clay.json"
+        },
+        {
+            "path": "recipes/dark_oak_boat.json"
+        },
+        {
+            "path": "recipes/dark_oak_door.json"
+        },
+        {
+            "path": "recipes/dark_oak_fence.json"
+        },
+        {
+            "path": "recipes/dark_oak_fence_gate.json"
+        },
+        {
+            "path": "recipes/dark_oak_planks.json"
+        },
+        {
+            "path": "recipes/dark_oak_planks_from_stripped.json"
+        },
+        {
+            "path": "recipes/dark_oak_stairs.json"
+        },
+        {
+            "path": "recipes/dark_oak_wooden_slab.json"
+        },
+        {
+            "path": "recipes/dark_prismarine.json"
+        },
+        {
+            "path": "recipes/dark_prismarine_from_ink_sac.json"
+        },
+        {
+            "path": "recipes/diorite.json"
+        },
+        {
+            "path": "recipes/diorite_stairs.json"
+        },
+        {
+            "path": "recipes/fence.json"
+        },
+        {
+            "path": "recipes/fence_gate.json"
+        },
+        {
+            "path": "recipes/furnace_stained_hardened_clay0.json"
+        },
+        {
+            "path": "recipes/furnace_stained_hardened_clay1.json"
+        },
+        {
+            "path": "recipes/furnace_stained_hardened_clay10.json"
+        },
+        {
+            "path": "recipes/furnace_stained_hardened_clay11.json"
+        },
+        {
+            "path": "recipes/furnace_stained_hardened_clay12.json"
+        },
+        {
+            "path": "recipes/furnace_stained_hardened_clay13.json"
+        },
+        {
+            "path": "recipes/furnace_stained_hardened_clay14.json"
+        },
+        {
+            "path": "recipes/furnace_stained_hardened_clay15.json"
+        },
+        {
+            "path": "recipes/furnace_stained_hardened_clay2.json"
+        },
+        {
+            "path": "recipes/furnace_stained_hardened_clay3.json"
+        },
+        {
+            "path": "recipes/furnace_stained_hardened_clay4.json"
+        },
+        {
+            "path": "recipes/furnace_stained_hardened_clay5.json"
+        },
+        {
+            "path": "recipes/furnace_stained_hardened_clay6.json"
+        },
+        {
+            "path": "recipes/furnace_stained_hardened_clay7.json"
+        },
+        {
+            "path": "recipes/furnace_stained_hardened_clay8.json"
+        },
+        {
+            "path": "recipes/furnace_stained_hardened_clay9.json"
+        },
+        {
+            "path": "recipes/granite.json"
+        },
+        {
+            "path": "recipes/granite_stairs.json"
+        },
+        {
+            "path": "recipes/gray_banner.json"
+        },
+        {
+            "path": "recipes/gray_carpet.json"
+        },
+        {
+            "path": "recipes/gray_carpet_from_white.json"
+        },
+        {
+            "path": "recipes/gray_concrete_powder.json"
+        },
+        {
+            "path": "recipes/gray_stained_glass.json"
+        },
+        {
+            "path": "recipes/gray_stained_glass_pane_from_pane.json"
+        },
+        {
+            "path": "recipes/gray_stained_hardened_clay.json"
+        },
+        {
+            "path": "recipes/green_banner.json"
+        },
+        {
+            "path": "recipes/green_carpet.json"
+        },
+        {
+            "path": "recipes/green_carpet_from_white.json"
+        },
+        {
+            "path": "recipes/green_concrete_powder.json"
+        },
+        {
+            "path": "recipes/green_stained_glass.json"
+        },
+        {
+            "path": "recipes/green_stained_glass_pane_from_pane.json"
+        },
+        {
+            "path": "recipes/green_stained_hardened_clay.json"
+        },
+        {
+            "path": "recipes/jungle_boat.json"
+        },
+        {
+            "path": "recipes/jungle_door.json"
+        },
+        {
+            "path": "recipes/jungle_fence.json"
+        },
+        {
+            "path": "recipes/jungle_fence_gate.json"
+        },
+        {
+            "path": "recipes/jungle_planks.json"
+        },
+        {
+            "path": "recipes/jungle_planks_from_stripped.json"
+        },
+        {
+            "path": "recipes/jungle_stairs.json"
+        },
+        {
+            "path": "recipes/jungle_wooden_slab.json"
+        },
+        {
+            "path": "recipes/light_blue_banner.json"
+        },
+        {
+            "path": "recipes/light_blue_carpet.json"
+        },
+        {
+            "path": "recipes/light_blue_carpet_from_white.json"
+        },
+        {
+            "path": "recipes/light_blue_concrete_powder.json"
+        },
+        {
+            "path": "recipes/light_blue_stained_glass.json"
+        },
+        {
+            "path": "recipes/light_blue_stained_glass_pane_from_pane.json"
+        },
+        {
+            "path": "recipes/light_blue_stained_hardened_clay.json"
+        },
+        {
+            "path": "recipes/light_gray_banner.json"
+        },
+        {
+            "path": "recipes/light_gray_carpet.json"
+        },
+        {
+            "path": "recipes/light_gray_carpet_from_white.json"
+        },
+        {
+            "path": "recipes/light_gray_concrete_powder.json"
+        },
+        {
+            "path": "recipes/light_gray_stained_glass.json"
+        },
+        {
+            "path": "recipes/light_gray_stained_glass_pane_from_pane.json"
+        },
+        {
+            "path": "recipes/light_gray_stained_hardened_clay.json"
+        },
+        {
+            "path": "recipes/lime_banner.json"
+        },
+        {
+            "path": "recipes/lime_carpet.json"
+        },
+        {
+            "path": "recipes/lime_carpet_from_white.json"
+        },
+        {
+            "path": "recipes/lime_concrete_powder.json"
+        },
+        {
+            "path": "recipes/lime_stained_glass.json"
+        },
+        {
+            "path": "recipes/lime_stained_glass_pane_from_pane.json"
+        },
+        {
+            "path": "recipes/lime_stained_hardened_clay.json"
+        },
+        {
+            "path": "recipes/magenta_banner.json"
+        },
+        {
+            "path": "recipes/magenta_carpet.json"
+        },
+        {
+            "path": "recipes/magenta_carpet_from_white.json"
+        },
+        {
+            "path": "recipes/magenta_concrete_powder.json"
+        },
+        {
+            "path": "recipes/magenta_dye_from_lilac.json"
+        },
+        {
+            "path": "recipes/magenta_stained_glass.json"
+        },
+        {
+            "path": "recipes/magenta_stained_glass_pane_from_pane.json"
+        },
+        {
+            "path": "recipes/magenta_stained_hardened_clay.json"
+        },
+        {
+            "path": "recipes/oak_fence.json"
+        },
+        {
+            "path": "recipes/oak_planks.json"
+        },
+        {
+            "path": "recipes/oak_planks_from_stripped.json"
+        },
+        {
+            "path": "recipes/oak_stairs.json"
+        },
+        {
+            "path": "recipes/oak_wooden_slab.json"
+        },
+        {
+            "path": "recipes/orange_banner.json"
+        },
+        {
+            "path": "recipes/orange_carpet.json"
+        },
+        {
+            "path": "recipes/orange_carpet_from_white.json"
+        },
+        {
+            "path": "recipes/orange_concrete_powder.json"
+        },
+        {
+            "path": "recipes/orange_stained_glass.json"
+        },
+        {
+            "path": "recipes/orange_stained_glass_pane_from_pane.json"
+        },
+        {
+            "path": "recipes/orange_stained_hardened_clay.json"
+        },
+        {
+            "path": "recipes/painting.json"
+        },
+        {
+            "path": "recipes/pink_banner.json"
+        },
+        {
+            "path": "recipes/pink_carpet.json"
+        },
+        {
+            "path": "recipes/pink_carpet_from_white.json"
+        },
+        {
+            "path": "recipes/pink_concrete_powder.json"
+        },
+        {
+            "path": "recipes/pink_dye_from_peony.json"
+        },
+        {
+            "path": "recipes/pink_stained_glass.json"
+        },
+        {
+            "path": "recipes/pink_stained_glass_pane_from_pane.json"
+        },
+        {
+            "path": "recipes/pink_stained_hardened_clay.json"
+        },
+        {
+            "path": "recipes/polished_andesite.json"
+        },
+        {
+            "path": "recipes/polished_andesite_stairs.json"
+        },
+        {
+            "path": "recipes/polished_diorite.json"
+        },
+        {
+            "path": "recipes/polished_diorite_stairs.json"
+        },
+        {
+            "path": "recipes/polished_granite.json"
+        },
+        {
+            "path": "recipes/polished_granite_stairs.json"
+        },
+        {
+            "path": "recipes/prismarine_bricks.json"
+        },
+        {
+            "path": "recipes/prismarine_stairs_bricks.json"
+        },
+        {
+            "path": "recipes/prismarine_stairs_dark.json"
+        },
+        {
+            "path": "recipes/purple_banner.json"
+        },
+        {
+            "path": "recipes/purple_carpet.json"
+        },
+        {
+            "path": "recipes/purple_carpet_from_white.json"
+        },
+        {
+            "path": "recipes/purple_concrete_powder.json"
+        },
+        {
+            "path": "recipes/purple_stained_glass.json"
+        },
+        {
+            "path": "recipes/purple_stained_glass_pane_from_pane.json"
+        },
+        {
+            "path": "recipes/purple_stained_hardened_clay.json"
+        },
+        {
+            "path": "recipes/red_banner.json"
+        },
+        {
+            "path": "recipes/red_carpet.json"
+        },
+        {
+            "path": "recipes/red_carpet_from_white.json"
+        },
+        {
+            "path": "recipes/red_concrete_powder.json"
+        },
+        {
+            "path": "recipes/red_dye_from_rose_bush.json"
+        },
+        {
+            "path": "recipes/red_stained_glass.json"
+        },
+        {
+            "path": "recipes/red_stained_glass_pane_from_pane.json"
+        },
+        {
+            "path": "recipes/red_stained_hardened_clay.json"
+        },
+        {
+            "path": "recipes/sign_acacia.json"
+        },
+        {
+            "path": "recipes/sign_birch.json"
+        },
+        {
+            "path": "recipes/sign_darkoak.json"
+        },
+        {
+            "path": "recipes/sign_jungle.json"
+        },
+        {
+            "path": "recipes/sign_oak.json"
+        },
+        {
+            "path": "recipes/sign_spruce.json"
+        },
+        {
+            "path": "recipes/spruce_boat.json"
+        },
+        {
+            "path": "recipes/spruce_door.json"
+        },
+        {
+            "path": "recipes/spruce_fence.json"
+        },
+        {
+            "path": "recipes/spruce_fence_gate.json"
+        },
+        {
+            "path": "recipes/spruce_planks.json"
+        },
+        {
+            "path": "recipes/spruce_planks_from_stripped.json"
+        },
+        {
+            "path": "recipes/spruce_stairs.json"
+        },
+        {
+            "path": "recipes/spruce_wooden_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_andesite_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_dark_prismarine_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_dark_prismarine_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_diorite_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_granite_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_mossy_cobblestone_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_polished_andesite.json"
+        },
+        {
+            "path": "recipes/stonecutter_polished_andesite_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_polished_andesite_stairs2.json"
+        },
+        {
+            "path": "recipes/stonecutter_polished_diorite.json"
+        },
+        {
+            "path": "recipes/stonecutter_polished_diorite_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_polished_diorite_stairs2.json"
+        },
+        {
+            "path": "recipes/stonecutter_polished_granite.json"
+        },
+        {
+            "path": "recipes/stonecutter_polished_granite_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_polished_granite_stairs2.json"
+        },
+        {
+            "path": "recipes/stonecutter_prismarine_brick_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_prismarine_brick_stairs.json"
+        },
+        {
+            "path": "recipes/stonecutter_prismarine_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_purpur_pillar.json"
+        },
+        {
+            "path": "recipes/stonecutter_purpur_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_red_nether_brick_slab.json"
+        },
+        {
+            "path": "recipes/stonecutter_smooth_sandstone_slab.json"
+        },
+        {
+            "path": "recipes/string_to_wool.json"
+        },
+        {
+            "path": "recipes/white_banner.json"
+        },
+        {
+            "path": "recipes/white_carpet.json"
+        },
+        {
+            "path": "recipes/white_concrete_powder.json"
+        },
+        {
+            "path": "recipes/white_concrete_powder_from_bonemeal.json"
+        },
+        {
+            "path": "recipes/white_stained_glass.json"
+        },
+        {
+            "path": "recipes/white_stained_glass_from_bonemeal.json"
+        },
+        {
+            "path": "recipes/white_stained_glass_pane_from_pane.json"
+        },
+        {
+            "path": "recipes/white_stained_hardened_clay.json"
+        },
+        {
+            "path": "recipes/white_stained_hardened_clay_from_bonemeal.json"
+        },
+        {
+            "path": "recipes/wooden_door.json"
+        },
+        {
+            "path": "recipes/yellow_banner.json"
+        },
+        {
+            "path": "recipes/yellow_carpet.json"
+        },
+        {
+            "path": "recipes/yellow_carpet_from_white.json"
+        },
+        {
+            "path": "recipes/yellow_concrete_powder.json"
+        },
+        {
+            "path": "recipes/yellow_dye_from_sunflower.json"
+        },
+        {
+            "path": "recipes/yellow_stained_glass.json"
+        },
+        {
+            "path": "recipes/yellow_stained_glass_pane_from_pane.json"
+        },
+        {
+            "path": "recipes/yellow_stained_hardened_clay.json"
+        },
+        {
+            "path": "spawn_rules/bat.json"
+        },
+        {
+            "path": "spawn_rules/chicken.json"
+        },
+        {
+            "path": "spawn_rules/cow.json"
+        },
+        {
+            "path": "spawn_rules/donkey.json"
+        },
+        {
+            "path": "spawn_rules/goat.json"
+        },
+        {
+            "path": "spawn_rules/horse.json"
+        },
+        {
+            "path": "spawn_rules/llama.json"
+        },
+        {
+            "path": "spawn_rules/ocelot.json"
+        },
+        {
+            "path": "spawn_rules/panda.json"
+        },
+        {
+            "path": "spawn_rules/parrot.json"
+        },
+        {
+            "path": "spawn_rules/pig.json"
+        },
+        {
+            "path": "spawn_rules/rabbit.json"
+        },
+        {
+            "path": "spawn_rules/sheep.json"
+        },
+        {
+            "path": "trading/economy_trades/shepherd_trades.json"
+        },
+        {
+            "path": "trading/economy_trades/stone_mason_trades.json"
+        },
+        {
+            "path": "trading/economy_trades/wandering_trader_trades.json"
+        }
+    ]
+}
