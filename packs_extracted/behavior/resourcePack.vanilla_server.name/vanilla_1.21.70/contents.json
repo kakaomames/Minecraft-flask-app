@@ -1,0 +1,334 @@
+{
+    "content": [
+        {
+            "path": "manifest.json"
+        },
+        {
+            "path": "entities/axolotl.json"
+        },
+        {
+            "path": "entities/bee.json"
+        },
+        {
+            "path": "entities/boat.json"
+        },
+        {
+            "path": "entities/chest_boat.json"
+        },
+        {
+            "path": "entities/chicken.json"
+        },
+        {
+            "path": "entities/cow.json"
+        },
+        {
+            "path": "entities/dolphin.json"
+        },
+        {
+            "path": "entities/egg.json"
+        },
+        {
+            "path": "entities/elder_guardian.json"
+        },
+        {
+            "path": "entities/fish.json"
+        },
+        {
+            "path": "entities/fox.json"
+        },
+        {
+            "path": "entities/glow_squid.json"
+        },
+        {
+            "path": "entities/guardian.json"
+        },
+        {
+            "path": "entities/minecart.json"
+        },
+        {
+            "path": "entities/pig.json"
+        },
+        {
+            "path": "entities/pufferfish.json"
+        },
+        {
+            "path": "entities/ravager.json"
+        },
+        {
+            "path": "entities/salmon.json"
+        },
+        {
+            "path": "entities/sheep.json"
+        },
+        {
+            "path": "entities/shulker.json"
+        },
+        {
+            "path": "entities/squid.json"
+        },
+        {
+            "path": "entities/tadpole.json"
+        },
+        {
+            "path": "entities/tropicalfish.json"
+        },
+        {
+            "path": "entities/turtle.json"
+        },
+        {
+            "path": "entities/wolf.json"
+        },
+        {
+            "path": "features/azalea_tree_feature.json"
+        },
+        {
+            "path": "features/birch_tree_feature.json"
+        },
+        {
+            "path": "features/bush_feature.json"
+        },
+        {
+            "path": "features/cherry_tree_feature.json"
+        },
+        {
+            "path": "features/fallen_birch_tree_feature.json"
+        },
+        {
+            "path": "features/fallen_jungle_tree_feature.json"
+        },
+        {
+            "path": "features/fallen_oak_tree_feature.json"
+        },
+        {
+            "path": "features/fallen_spruce_tree_feature.json"
+        },
+        {
+            "path": "features/fallen_super_birch_tree_feature.json"
+        },
+        {
+            "path": "features/fancy_oak_tree_feature.json"
+        },
+        {
+            "path": "features/fancy_oak_tree_with_leaf_litter_and_optional_beehive.json"
+        },
+        {
+            "path": "features/jungle_bush_feature.json"
+        },
+        {
+            "path": "features/jungle_tree_feature.json"
+        },
+        {
+            "path": "features/mangrove_tree_feature.json"
+        },
+        {
+            "path": "features/mega_jungle_tree_feature.json"
+        },
+        {
+            "path": "features/mega_pine_tree_feature.json"
+        },
+        {
+            "path": "features/mega_spruce_tree_feature.json"
+        },
+        {
+            "path": "features/mountain_pine_tree_feature.json"
+        },
+        {
+            "path": "features/mountain_spruce_tree_feature.json"
+        },
+        {
+            "path": "features/oak_tree_feature.json"
+        },
+        {
+            "path": "features/oak_tree_with_vines_feature.json"
+        },
+        {
+            "path": "features/pale_oak_tree_feature.json"
+        },
+        {
+            "path": "features/pine_tree_feature.json"
+        },
+        {
+            "path": "features/random_dry_grass_block_feature.json"
+        },
+        {
+            "path": "features/random_roofed_forest_feature_with_decoration_feature.json"
+        },
+        {
+            "path": "features/random_roofed_forest_feature_with_leaf_litter_feature.json"
+        },
+        {
+            "path": "features/roofed_tree_feature.json"
+        },
+        {
+            "path": "features/savanna_tree_feature.json"
+        },
+        {
+            "path": "features/scatter_birch_forest_wildflowers_feature.json"
+        },
+        {
+            "path": "features/scatter_bush_feature.json"
+        },
+        {
+            "path": "features/scatter_dry_grass_feature.json"
+        },
+        {
+            "path": "features/scatter_leaf_litter_feature.json"
+        },
+        {
+            "path": "features/scatter_meadow_tall_grass_feature.json"
+        },
+        {
+            "path": "features/scatter_meadow_wildflowers_feature.json"
+        },
+        {
+            "path": "features/select_birch_tree_with_leaf_litter_feature.json"
+        },
+        {
+            "path": "features/select_oak_tree_with_leaf_litter_feature.json"
+        },
+        {
+            "path": "features/short_dry_grass_feature.json"
+        },
+        {
+            "path": "features/spruce_tree_feature.json"
+        },
+        {
+            "path": "features/super_birch_tree_feature.json"
+        },
+        {
+            "path": "features/swamp_tree_feature.json"
+        },
+        {
+            "path": "features/tall_dry_grass_feature.json"
+        },
+        {
+            "path": "features/tall_mangrove_tree_feature.json"
+        },
+        {
+            "path": "features/undecorated_jungle_tree_feature.json"
+        },
+        {
+            "path": "feature_rules/birch_forest_before_surface_wildflowers_feature_rules.json"
+        },
+        {
+            "path": "feature_rules/desert_after_surface_dry_grass_feature_rules.json"
+        },
+        {
+            "path": "feature_rules/meadow_after_surface_tall_grass_feature_rules.json"
+        },
+        {
+            "path": "feature_rules/meadow_before_surface_wildflowers_feature_rules.json"
+        },
+        {
+            "path": "feature_rules/mesa_after_surface_dry_grass_feature_rules.json"
+        },
+        {
+            "path": "feature_rules/overworld_after_surface_bush_feature_rules.json"
+        },
+        {
+            "path": "feature_rules/overworld_after_surface_firefly_bush_water_cluster.json"
+        },
+        {
+            "path": "feature_rules/swamp_after_surface_firefly_bush_water_cluster.json"
+        },
+        {
+            "path": "feature_rules/swamp_after_surface_single_firefly_bush_cluster.json"
+        },
+        {
+            "path": "item_catalog/crafting_item_catalog.json"
+        },
+        {
+            "path": "loot_tables/chests/ruined_portal.json"
+        },
+        {
+            "path": "loot_tables/chests/village/village_bundle.json"
+        },
+        {
+            "path": "loot_tables/chests/village/village_cartographer.json"
+        },
+        {
+            "path": "loot_tables/chests/village/village_desert_house.json"
+        },
+        {
+            "path": "loot_tables/chests/village/village_plains_house.json"
+        },
+        {
+            "path": "loot_tables/chests/village/village_savanna_house.json"
+        },
+        {
+            "path": "loot_tables/chests/village/village_snowy_house.json"
+        },
+        {
+            "path": "loot_tables/chests/village/village_taiga_house.json"
+        },
+        {
+            "path": "loot_tables/chests/village/village_tannery.json"
+        },
+        {
+            "path": "loot_tables/chests/village/village_weaponsmith.json"
+        },
+        {
+            "path": "recipes/cake.json"
+        },
+        {
+            "path": "recipes/furnace_acacia_leaves.json"
+        },
+        {
+            "path": "recipes/furnace_azalea_leaves.json"
+        },
+        {
+            "path": "recipes/furnace_birch_leaves.json"
+        },
+        {
+            "path": "recipes/furnace_cherry_leaves.json"
+        },
+        {
+            "path": "recipes/furnace_dark_oak_leaves.json"
+        },
+        {
+            "path": "recipes/furnace_flowering_azalea_leaves.json"
+        },
+        {
+            "path": "recipes/furnace_jungle_leaves.json"
+        },
+        {
+            "path": "recipes/furnace_mangrove_leaves.json"
+        },
+        {
+            "path": "recipes/furnace_oak_leaves.json"
+        },
+        {
+            "path": "recipes/furnace_pale_oak_leaves.json"
+        },
+        {
+            "path": "recipes/furnace_spruce_leaves.json"
+        },
+        {
+            "path": "recipes/lodestone.json"
+        },
+        {
+            "path": "recipes/pink_dye_from_cactus_flower.json"
+        },
+        {
+            "path": "recipes/pumpkin_pie.json"
+        },
+        {
+            "path": "recipes/yellow_dye_from_wildflowers.json"
+        },
+        {
+            "path": "spawn_rules/camel.json"
+        },
+        {
+            "path": "spawn_rules/donkey.json"
+        },
+        {
+            "path": "spawn_rules/rabbit.json"
+        },
+        {
+            "path": "trading/economy_trades/cartographer_trades.json"
+        },
+        {
+            "path": "trading/economy_trades/wandering_trader_trades.json"
+        }
+    ]
+}
