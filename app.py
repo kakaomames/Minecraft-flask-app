@@ -992,7 +992,7 @@ SET WORLD_NAME={world_name}
 SET PLAYER_UUID={player_uuid}
 SET WORLD_UUID={world_uuid}
 SET RESOURCE_PACK_PATHS={resource_packs_paths_str}
-SET BEHAVIOR_PACK_PATHS={behavior_pack_paths_str}
+SET BEHAVIOR_PACK_PATHS={behavior_packs_paths_str}
 SET {github_token_env}
 SET {github_owner_env}
 SET {github_repo_env}
@@ -1007,7 +1007,7 @@ export WORLD_NAME="{world_name}"
 export PLAYER_UUID="{player_uuid}"
 export WORLD_UUID="{world_uuid}"
 export RESOURCE_PACK_PATHS="{resource_packs_paths_str}"
-export BEHAVIOR_PACK_PATHS="{behavior_pack_paths_str}"
+export BEHAVIOR_PACK_PATHS="{behavior_packs_paths_str}"
 export {github_token_env}
 export {github_owner_env}
 export {github_repo_env}
