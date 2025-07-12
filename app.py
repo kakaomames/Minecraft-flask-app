@@ -507,7 +507,7 @@ def index():
     message = request.args.get('message')
     return render_template('index.html', message=message)
 @app.route('/a')
-def index():
+def indexs():
     # 利用可能なパックのリストを取得 (例として固定値を返す)
     # 実際にはGitHub APIを叩いてリポジトリ内のパックを列挙するロジックが必要
     available_packs = [
