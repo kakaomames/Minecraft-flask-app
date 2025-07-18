@@ -1,0 +1,14 @@
+{
+    "player_uuid": "ac6a3162-a009-41ae-ad91-d2f2b7e7af4b",
+    "world_name": "\u306a",
+    "world_uuid": "e7fc80fa-ee6b-43a1-ad02-a3a20a156362",
+    "seed": "\u306a",
+    "game_mode": "creative",
+    "cheats_enabled": true,
+    "resource_packs": [
+        "vanilla_1.17.40.mcpack"
+    ],
+    "behavior_packs": [
+        "vanilla_1.21.0.mcpack"
+    ]
+}
